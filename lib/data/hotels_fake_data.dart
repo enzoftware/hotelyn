@@ -2,20 +2,17 @@ import 'package:buscatelo/model/hotel_model.dart';
 
 List<HotelModel> hotels = [
   HotelModel(
-      img:
-          'https://rew-feed-images.global.ssl.fastly.net/creb/_cloud_media/listing/detached/c4241465-3-o.jpg',
+      img: 'https://cde.urbania.g3c.pe/563561/avisos/4077826/resultado-responsive-aviso/563561_5ae3395fb9ec0.jpeg?1',
       address: '088 Alisha Hill Apt. 345',
       name: 'Family House',
       priceOff: '33%'),
   HotelModel(
-      img:
-          'http://www.grandviewriverhouse.com/box/sm/inspiring-european-cottage-style-house-plans-on-interior-decor_bathroom-inspiration.jpg',
+      img: 'https://t-ec.bstatic.com/images/hotel/max500/798/79872273.jpg',
       address: '55 Alisha Hill Apt. 345',
       name: 'ArtHouse',
       priceOff: '50%'),
   HotelModel(
-      img:
-          'https://www.ryanhomes.com/rh-community-gallery-NewAspectRatio/969616de-2e2c-4229-8941-05dcfc63f3b5/db/969616de-2e2c-4229-8941-05dcfc63f3b5.jpg',
+      img: 'https://media-cdn.tripadvisor.com/media/photo-s/07/a7/f3/b3/getlstd-property-photo.jpg',
       address: '088 Alisha Hill Apt. 345',
       name: 'Family House',
       priceOff: '15%')
