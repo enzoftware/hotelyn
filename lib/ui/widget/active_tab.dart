@@ -18,7 +18,7 @@ class ActiveTab extends AnimatedWidget {
         width: 120.0,
         height: 60.0,
         decoration: BoxDecoration(
-          color: AppConstants.tabBackgroundColor,
+          color: AppConstants.backgroundColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(AppConstants.radiusBorderValue),
             bottomLeft: Radius.circular(AppConstants.radiusBorderValue),
@@ -31,13 +31,13 @@ class ActiveTab extends AnimatedWidget {
           children: <Widget>[
             Icon(
               iconData,
-              color: AppConstants.tabActiveItemColor,
+              color: AppConstants.primaryColor,
               size: AppConstants.activeTabIconSize,
             ),
             Text(
               text,
               style: TextStyle(
-                color: AppConstants.tabActiveItemColor,
+                color: AppConstants.primaryColor,
                 fontSize: AppConstants.activeTabTextSize,
               ),
             ),
