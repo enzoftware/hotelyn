@@ -1,6 +1,7 @@
 import 'package:buscatelo/commons/app_constants.dart';
 import 'package:buscatelo/data/hotels_fake_data.dart';
 import 'package:buscatelo/model/hotel_model.dart';
+import 'package:buscatelo/ui/pages/hotel_detail_page.dart';
 import 'package:buscatelo/ui/widget/bottom_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -172,7 +173,9 @@ class HomePage extends StatelessWidget {
 
                       return InkWell(
                         onTap: () {
-                          // TODO : implement go to detail page of hotel passing the item object
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (c) => HotelDetailPage(hotelModel: item,) )
+                          );
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(right: 15, left: 15),

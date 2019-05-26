@@ -7,5 +7,5 @@ class AppConstants {
   static final double radiusBorderValue = 20.0;
   static final double activeTabIconSize = 30.0;
   static final double activeTabTextSize = 18.0;
-  static final String avatarImage = "http://www.usanetwork.com/sites/usanetwork/files/styles/629x720/public/suits_cast_harvey.jpg?itok=fpTOeeBb";
+  static final String avatarImage = "https://avatars3.githubusercontent.com/u/24485249?s=460&v=4";
 }
