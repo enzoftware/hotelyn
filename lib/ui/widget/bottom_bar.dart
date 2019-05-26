@@ -37,8 +37,7 @@ class BottomBarState extends State<BottomBar>
         children: <Widget>[
           _buildTab("Home", Icons.home, 0),
           _buildTab("Favorite", Icons.bookmark_border, 1),
-          _buildTab("Message", Icons.chat_bubble_outline, 2),
-          _buildTab("Profile", Icons.perm_identity, 3),
+          _buildTab("Profile", Icons.perm_identity, 2),
         ],
       ),
     );
@@ -47,26 +46,26 @@ class BottomBarState extends State<BottomBar>
   Widget _buildTab(String text, IconData icon, int index) {
     return currentTab == index
         ? ActiveTab(
-            animation: animation,
-            key: Key(text),
-            text: text,
-            iconData: icon,
-          )
+      animation: animation,
+      key: Key(text),
+      text: text,
+      iconData: icon,
+    )
         : Material(
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  currentTab = index;
-                  animationController.reset();
-                  animationController.forward();
-                });
-              },
-              child: Icon(
-                icon,
-                size: 35,
-              ),
-            ),
-          );
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            currentTab = index;
+            animationController.reset();
+            animationController.forward();
+          });
+        },
+        child: Icon(
+          icon,
+          size: 35,
+        ),
+      ),
+    );
   }
 
   @override

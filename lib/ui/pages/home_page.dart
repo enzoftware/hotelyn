@@ -10,11 +10,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
-        children: <Widget>[
-          _buildBackground(),
-          _buildTopBar(),
-          _buildBody()
-        ],
+        children: <Widget>[_buildBackground(), _buildTopBar(), _buildBody()],
       ),
     );
   }
@@ -33,50 +29,46 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildTopBar() {
-    return Builder(
-        builder: (BuildContext context) {
-          return Positioned(
-            top: 30,
-            height: 70,
-            width: MediaQuery
-                .of(context)
-                .size
-                .width,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Builder(builder: (BuildContext context) {
+      return Positioned(
+        top: 30,
+        height: 70,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        "Rodrigo",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      SizedBox(width: 5,),
-                      Text(
-                        "Guadalupe",
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold
-                        ),
-                      )
-                    ],
+                  Text(
+                    "Rodrigo",
+                    style: TextStyle(fontSize: 20),
                   ),
-                  CircleAvatar(
-                    foregroundColor: Theme
-                        .of(context)
-                        .primaryColor,
-                    backgroundColor: Colors.grey,
-                    backgroundImage: NetworkImage(
-                        AppConstants.avatarImage
-                    ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    "Guadalupe",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   )
                 ],
               ),
-            ),
-          );
-        });
+              CircleAvatar(
+                foregroundColor: Theme
+                    .of(context)
+                    .primaryColor,
+                backgroundColor: Colors.grey,
+                backgroundImage: NetworkImage(AppConstants.avatarImage),
+              )
+            ],
+          ),
+        ),
+      );
+    });
   }
 
   Widget _buildBody() {
@@ -98,18 +90,15 @@ class HomePage extends StatelessWidget {
               children: <Widget>[
                 Text(
                   "Discover",
-                  style: TextStyle(
-                      fontSize: 35,
-                      fontWeight: FontWeight.bold
-                  ),
+                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   "Suitable Hotels",
-                  style: TextStyle(
-                      fontSize: 35
-                  ),
+                  style: TextStyle(fontSize: 35),
                 ),
-                SizedBox(height: 15,),
+                SizedBox(
+                  height: 15,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -133,8 +122,7 @@ class HomePage extends StatelessWidget {
                             hintText: "Find a good hotel",
                             hintStyle: TextStyle(
                                 color: AppConstants.primaryColor,
-                                fontWeight: FontWeight.bold
-                            ),
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
@@ -159,12 +147,11 @@ class HomePage extends StatelessWidget {
                                 color: AppConstants.accentColor,
                               ),
                               child: Text(
-                                '2',
+                                '', // number of notifications
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 10,
-                                    fontWeight: FontWeight.bold
-                                ),
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
@@ -173,7 +160,9 @@ class HomePage extends StatelessWidget {
                     )
                   ],
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 Expanded(
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -196,23 +185,112 @@ class HomePage extends StatelessWidget {
                                     width: MediaQuery
                                         .of(context)
                                         .size
-                                        .width * 0.65,
+                                        .width *
+                                        0.65,
                                     height: constraints.maxHeight - 20,
                                     decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: NetworkImage(item.img),
-                                          colorFilter: ColorFilter.mode(
-                                            Colors.black.withOpacity(0.2),
-                                            BlendMode.hardLight,
-                                          ),
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: NetworkImage(item.img),
+                                        colorFilter: ColorFilter.mode(
+                                          Colors.black.withOpacity(0.2),
+                                          BlendMode.hardLight,
                                         ),
-                                        borderRadius: BorderRadius.only(
-
-                                        )
+                                      ),
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(35),
+                                        bottomLeft: Radius.circular(35),
+                                        bottomRight: Radius.circular(35),
+                                      ),
                                     ),
                                   );
                                 },
+                              ),
+                              Positioned(
+                                top: 15,
+                                left: 15,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: 55.0,
+                                  width: 55.0,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        width: 2.0,
+                                        color: Colors.white,
+                                      ),
+                                      color: AppConstants.primaryColor
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .center,
+                                    children: <Widget>[
+                                      Text(
+                                        item.priceOff,
+                                        style: TextStyle(
+                                            color: Colors.white
+                                        ),
+                                      ),
+                                      Text(
+                                        ' DSCT',
+                                        style: TextStyle(
+                                            color: Colors.white
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Container(
+                                  height: 45.0,
+                                  width: 45.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppConstants.accentColor,
+                                  ),
+                                  child: Icon(
+                                    Icons.navigate_next,
+                                    size: 40.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 35.0,
+                                left: 10.0,
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * 0.65,
+                                child: ListTile(
+                                  title: Text(
+                                    item.name,
+                                    style: TextStyle(
+                                        fontSize: 20.0,
+                                        color: Colors.white
+                                    ),
+                                  ),
+                                  subtitle: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.room,
+                                        color: Colors.white,
+                                        size: 18.0,
+                                      ),
+                                      Text(
+                                        item.address,
+                                        style: TextStyle(
+                                            color: Colors.white
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
                               )
                             ],
                           ),
