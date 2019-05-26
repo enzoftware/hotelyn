@@ -89,11 +89,11 @@ class HomePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "Discover",
+                  "Descubre",
                   style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "Suitable Hotels",
+                  "nuestros hoteles",
                   style: TextStyle(fontSize: 35),
                 ),
                 SizedBox(
@@ -119,7 +119,7 @@ class HomePage extends StatelessWidget {
                               Icons.search,
                               color: AppConstants.primaryColor,
                             ),
-                            hintText: "Find a good hotel",
+                            hintText: "Encuentra tu hotel",
                             hintStyle: TextStyle(
                                 color: AppConstants.primaryColor,
                                 fontWeight: FontWeight.bold),
