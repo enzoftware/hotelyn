@@ -34,10 +34,7 @@ class HomePage extends StatelessWidget {
       return Positioned(
         top: 30,
         height: 70,
-        width: MediaQuery
-            .of(context)
-            .size
-            .width,
+        width: MediaQuery.of(context).size.width,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
@@ -59,9 +56,7 @@ class HomePage extends StatelessWidget {
                 ],
               ),
               CircleAvatar(
-                foregroundColor: Theme
-                    .of(context)
-                    .primaryColor,
+                foregroundColor: Theme.of(context).primaryColor,
                 backgroundColor: Colors.grey,
                 backgroundImage: NetworkImage(AppConstants.avatarImage),
               )
@@ -78,88 +73,57 @@ class HomePage extends StatelessWidget {
         return Positioned(
           top: 90,
           child: Container(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height - 100,
-            width: MediaQuery
-                .of(context)
-                .size
-                .width,
+            height: MediaQuery.of(context).size.height - 100,
+            width: MediaQuery.of(context).size.width,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  "Descubre",
-                  style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "nuestros hoteles",
-                  style: TextStyle(fontSize: 35),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "Descubre",
+                        style: TextStyle(
+                            fontSize: 35, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "nuestros hoteles",
+                        style: TextStyle(fontSize: 35),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: 15,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: AppConstants.backgroundColor,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            bottomLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                          ),
-                        ),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            prefixIcon: Icon(
-                              Icons.search,
-                              color: AppConstants.primaryColor,
-                            ),
-                            hintText: "Encuentra tu hotel",
-                            hintStyle: TextStyle(
-                                color: AppConstants.primaryColor,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppConstants.backgroundColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20),
+                        topRight: Radius.circular(20),
                       ),
                     ),
-                    Container(
-                      width: 50,
-                      alignment: Alignment.center,
-                      child: Stack(
-                        children: <Widget>[
-                          Icon(
-                            Icons.notifications_none,
-                            size: 35,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: AppConstants.primaryColor,
+                        ),
+                        hintText: "Encuentra tu hotel",
+                        hintStyle: TextStyle(
                             color: AppConstants.primaryColor,
-                          ),
-                          Positioned(
-                            top: -1,
-                            right: 2,
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppConstants.accentColor,
-                              ),
-                              child: Text(
-                                '', // number of notifications
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                        ],
+                            fontWeight: FontWeight.bold),
                       ),
-                    )
-                  ],
+                    ),
+                  ),
                 ),
                 SizedBox(
                   height: 20,
@@ -174,8 +138,9 @@ class HomePage extends StatelessWidget {
                       return InkWell(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (c) => HotelDetailPage(hotelModel: item,) )
-                          );
+                              builder: (c) => HotelDetailPage(
+                                    hotelModel: item,
+                                  )));
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(right: 15, left: 15),
@@ -185,10 +150,7 @@ class HomePage extends StatelessWidget {
                                 builder: (BuildContext context,
                                     BoxConstraints constraints) {
                                   return Container(
-                                    width: MediaQuery
-                                        .of(context)
-                                        .size
-                                        .width *
+                                    width: MediaQuery.of(context).size.width *
                                         0.65,
                                     height: constraints.maxHeight - 20,
                                     decoration: BoxDecoration(
@@ -222,24 +184,19 @@ class HomePage extends StatelessWidget {
                                         width: 2.0,
                                         color: Colors.white,
                                       ),
-                                      color: AppConstants.primaryColor
-                                  ),
+                                      color: AppConstants.primaryColor),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: <Widget>[
                                       Text(
                                         item.priceOff,
-                                        style: TextStyle(
-                                            color: Colors.white
-                                        ),
+                                        style: TextStyle(color: Colors.white),
                                       ),
                                       Text(
                                         ' DSCT',
-                                        style: TextStyle(
-                                            color: Colors.white
-                                        ),
+                                        style: TextStyle(color: Colors.white),
                                       ),
                                     ],
                                   ),
@@ -265,17 +222,12 @@ class HomePage extends StatelessWidget {
                               Positioned(
                                 bottom: 35.0,
                                 left: 10.0,
-                                width: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width * 0.65,
+                                width: MediaQuery.of(context).size.width * 0.65,
                                 child: ListTile(
                                   title: Text(
                                     item.name,
                                     style: TextStyle(
-                                        fontSize: 20.0,
-                                        color: Colors.white
-                                    ),
+                                        fontSize: 20.0, color: Colors.white),
                                   ),
                                   subtitle: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -287,9 +239,7 @@ class HomePage extends StatelessWidget {
                                       ),
                                       Text(
                                         item.address,
-                                        style: TextStyle(
-                                            color: Colors.white
-                                        ),
+                                        style: TextStyle(color: Colors.white),
                                       )
                                     ],
                                   ),

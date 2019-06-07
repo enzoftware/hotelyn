@@ -1,12 +1,20 @@
 import 'package:buscatelo/commons/app_constants.dart';
 import 'package:buscatelo/model/hotel_model.dart';
+import 'package:buscatelo/ui/pages/room_detail/room_detail_page.dart';
 import 'package:buscatelo/ui/widget/star_display.dart';
 import 'package:flutter/material.dart';
 
-class HotelDetailPage extends StatelessWidget {
+class HotelDetailPage extends StatefulWidget {
   final HotelModel hotelModel;
 
   HotelDetailPage({Key key, this.hotelModel}) : super(key: key);
+
+  @override
+  _HotelDetailPageState createState() => _HotelDetailPageState();
+}
+
+class _HotelDetailPageState extends State<HotelDetailPage> {
+  bool isFav = false;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +30,7 @@ class HotelDetailPage extends StatelessWidget {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: NetworkImage(hotelModel.img),
+                  image: NetworkImage(widget.hotelModel.img),
                   colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(0.2),
                     BlendMode.hardLight,
@@ -78,16 +86,25 @@ class HotelDetailPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          "${hotelModel.name}",
+                          "${widget.hotelModel.name}",
                           style: TextStyle(
                             color: Color(0xff632bbf),
                             fontSize: 25,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Icon(
-                          Icons.bookmark_border,
-                          size: 30,
+                        InkWell(
+                          child: Icon(
+                            isFav 
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                            size: 30,
+                          ),
+                          onTap: (){
+                            setState(() {
+                              isFav = !isFav;
+                            });
+                          },
                         )
                       ],
                     ),
@@ -131,7 +148,7 @@ class HotelDetailPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "Calculadora de habitaciones",
+                            "Tipos de habitaciones",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
@@ -146,7 +163,7 @@ class HotelDetailPage extends StatelessWidget {
                               ),
                             ),
                             subtitle: Text(
-                              "S/50 por hora",
+                              "Desde S/50 por hora",
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 12,
@@ -160,19 +177,8 @@ class HotelDetailPage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   Container(
-                                    width: 10,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFfed19a),
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(20),
-                                        bottomLeft: Radius.circular(20),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 25,
-                                    height: 25,
+                                    width: 40,
+                                    height: 40,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: Color(0xFF632bbf),
@@ -180,23 +186,19 @@ class HotelDetailPage extends StatelessWidget {
                                     child: Icon(
                                       Icons.remove_red_eye,
                                       color: Colors.white,
-                                      size: 15,
+                                      size: 20,
                                     ),
                                   ),
-                                  Container(
-                                    width: 10,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFfed19a),
-                                      borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(20),
-                                        bottomRight: Radius.circular(20),
-                                      ),
-                                    ),
-                                  )
                                 ],
                               ),
                             ),
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (c) => RoomDetailPage(
+                                        imageUrl:
+                                            'http://www.lapintahotel.mx/wp-content/uploads/2015/10/pinta46.jpg',
+                                      )));
+                            },
                           ),
                           ListTile(
                             contentPadding: const EdgeInsets.all(0),
@@ -207,7 +209,7 @@ class HotelDetailPage extends StatelessWidget {
                               ),
                             ),
                             subtitle: Text(
-                              "S/80 por hora",
+                              "Desde S/80 por hora",
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 12,
@@ -221,19 +223,8 @@ class HotelDetailPage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   Container(
-                                    width: 10,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFfed19a),
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(20),
-                                        bottomLeft: Radius.circular(20),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 25,
-                                    height: 25,
+                                    width: 40,
+                                    height: 40,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: Color(0xFF632bbf),
@@ -241,23 +232,19 @@ class HotelDetailPage extends StatelessWidget {
                                     child: Icon(
                                       Icons.remove_red_eye,
                                       color: Colors.white,
-                                      size: 15,
+                                      size: 20,
                                     ),
                                   ),
-                                  Container(
-                                    width: 10,
-                                    height: 8,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFfed19a),
-                                      borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(20),
-                                        bottomRight: Radius.circular(20),
-                                      ),
-                                    ),
-                                  )
                                 ],
                               ),
                             ),
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (c) => RoomDetailPage(
+                                        imageUrl:
+                                            'https://sofiabarcelona.com/wp-content/uploads/sites/4/2018/02/SOFIA_Hotel_HARMONI-HABITACION-06-1024x682.jpg',
+                                      )));
+                            },
                           ),
                         ],
                       ),
