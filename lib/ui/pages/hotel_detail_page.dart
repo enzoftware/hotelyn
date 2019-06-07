@@ -3,6 +3,7 @@ import 'package:buscatelo/model/hotel_model.dart';
 import 'package:buscatelo/ui/pages/room_detail/room_detail_page.dart';
 import 'package:buscatelo/ui/widget/star_display.dart';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class HotelDetailPage extends StatefulWidget {
   final HotelModel hotelModel;
@@ -95,12 +96,10 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                         ),
                         InkWell(
                           child: Icon(
-                            isFav 
-                            ? Icons.favorite
-                            : Icons.favorite_border,
+                            isFav ? Icons.favorite : Icons.favorite_border,
                             size: 30,
                           ),
-                          onTap: (){
+                          onTap: () {
                             setState(() {
                               isFav = !isFav;
                             });
@@ -254,7 +253,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                       children: <Widget>[
                         _buildCustomButton('Hacer una pregunta'),
                         SizedBox(width: 8),
-                        _buildCustomButton('Productos'),
+                        _buildExpandedBtn('Productos'),
                       ],
                     ),
                     SizedBox(height: 10),
@@ -270,32 +269,63 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
 
   Widget _buildExpandedBtn(String msg) {
     return Expanded(
-      child: Container(
-        alignment: Alignment.center,
-        height: 50,
-        decoration: BoxDecoration(
-          color: AppConstants.backgroundColor,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            bottomLeft: Radius.circular(20),
-            bottomRight: Radius.circular(20),
-            topRight: Radius.circular(20),
+      child: RaisedButton(
+        child: Container(
+          alignment: Alignment.center,
+          height: 50,
+          decoration: BoxDecoration(
+            color: AppConstants.backgroundColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Text(
+            msg,
+            style: TextStyle(
+              color: AppConstants.primaryColor,
+              fontSize: 18,
+            ),
           ),
         ),
-        child: Text(
-          msg,
-          style: TextStyle(
-            color: AppConstants.primaryColor,
-            fontSize: 18,
-          ),
-        ),
+        onPressed: () {
+          
+        },
       ),
     );
   }
 
   Widget _buildCustomButton(String msg) {
     return RaisedButton(
-      onPressed: () {},
+      onPressed: () {
+        Alert(
+            context: context,
+            title: "Pregunta",
+            image: Image.network(
+              'https://img.pngio.com/question-png-solar-in-the-community-vector-freeuse-download-question-png-512_512.png',
+              height: 50,
+              width: 50,
+            ),
+            content: TextField(
+              maxLines: 4,
+              textCapitalization: TextCapitalization.sentences,
+              decoration: InputDecoration(
+                icon: Icon(Icons.input),
+                labelText: 'Pregunta',
+              ),
+            ),
+            buttons: [
+              DialogButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  "Enviar",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              )
+            ]).show();
+      },
       shape:
           RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
       child: Text(
