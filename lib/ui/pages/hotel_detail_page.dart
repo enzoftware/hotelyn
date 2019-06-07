@@ -82,17 +82,28 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                 ),
                 child: Column(
                   children: <Widget>[
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "${widget.hotelModel.name}",
+                        style: TextStyle(
+                          color: Color(0xff632bbf),
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 15),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Text(
-                          "${widget.hotelModel.name}",
-                          style: TextStyle(
-                            color: Color(0xff632bbf),
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
+                        IconTheme(
+                          data: IconThemeData(
+                            color: Colors.amber,
+                            size: 18,
                           ),
+                          child: StarDisplay(value: 4),
                         ),
                         InkWell(
                           child: Icon(
@@ -105,32 +116,6 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                             });
                           },
                         )
-                      ],
-                    ),
-                    SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          width: 100,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              _buildRow(Icons.wifi),
-                              _buildRow(Icons.fastfood),
-                              _buildRow(Icons.tv),
-                            ],
-                          ),
-                        ),
-                        IconTheme(
-                          data: IconThemeData(
-                            color: Colors.amber,
-                            size: 18,
-                          ),
-                          child: StarDisplay(value: 4),
-                        ),
                       ],
                     ),
                     SizedBox(height: 15),
@@ -161,12 +146,29 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                                 fontSize: 18,
                               ),
                             ),
-                            subtitle: Text(
-                              "Desde S/50 por hora",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12,
-                              ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "Desde S/50 por hora",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                Container(
+                                  width: 100,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      _buildRow(Icons.wifi),
+                                      _buildRow(Icons.radio),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                             trailing: Container(
                               alignment: Alignment.center,
@@ -207,12 +209,31 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                                 fontSize: 18,
                               ),
                             ),
-                            subtitle: Text(
-                              "Desde S/80 por hora",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12,
-                              ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "Desde S/80 por hora",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                Container(
+                                  width: 100,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      _buildRow(Icons.wifi),
+                                      _buildRow(Icons.radio),
+                                      _buildRow(Icons.tv),
+                                      _buildRow(Icons.movie),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                             trailing: Container(
                               alignment: Alignment.center,
@@ -270,29 +291,16 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
   Widget _buildExpandedBtn(String msg) {
     return Expanded(
       child: RaisedButton(
-        child: Container(
-          alignment: Alignment.center,
-          height: 50,
-          decoration: BoxDecoration(
-            color: AppConstants.backgroundColor,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-          ),
-          child: Text(
-            msg,
-            style: TextStyle(
-              color: AppConstants.primaryColor,
-              fontSize: 18,
-            ),
+        child: Text(
+          msg,
+          style: TextStyle(
+            color: AppConstants.primaryColor,
+            fontSize: 18,
           ),
         ),
-        onPressed: () {
-          
-        },
+        onPressed: () {},
+        shape:
+          RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
       ),
     );
   }
@@ -341,10 +349,13 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
   Widget _buildRow(IconData iconData) {
     return Row(
       children: <Widget>[
-        Icon(
-          iconData,
-          size: 16,
-          color: Colors.grey,
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Icon(
+            iconData,
+            size: 16,
+            color: Colors.grey,
+          ),
         ),
         SizedBox(width: 1),
       ],
