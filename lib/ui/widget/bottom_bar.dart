@@ -35,9 +35,9 @@ class BottomBarState extends State<BottomBar>
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          _buildTab("Home", Icons.home, 0),
-          _buildTab("Favorite", Icons.bookmark_border, 1),
-          _buildTab("Profile", Icons.perm_identity, 2),
+          _buildTab("Hoteles", Icons.hotel, 0),
+          _buildTab("Favoritos", Icons.bookmark_border, 1),
+          _buildTab("Perfil", Icons.perm_identity, 2),
         ],
       ),
     );
