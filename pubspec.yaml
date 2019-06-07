@@ -21,6 +21,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   flutter_fluid_slider: ^0.0.1
   rflutter_alert: ^1.0.2
+  carousel_slider: ^1.3.0
 
 dev_dependencies:
   flutter_test:

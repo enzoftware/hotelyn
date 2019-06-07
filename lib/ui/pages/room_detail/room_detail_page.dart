@@ -1,71 +1,107 @@
 import 'package:buscatelo/commons/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fluid_slider/flutter_fluid_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class RoomDetailPage extends StatefulWidget {
-  String imageUrl;
+  final List<String> listImageUrl;
 
-  RoomDetailPage({Key key, this.imageUrl}) : super(key: key);
+  RoomDetailPage({Key key, this.listImageUrl}) : super(key: key);
 
   _RoomDetailPageState createState() => _RoomDetailPageState();
 }
 
 class _RoomDetailPageState extends State<RoomDetailPage> {
   int _price = 50;
-  double _sliderValue = 1;
+  int _sliderValue = 1;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              expandedHeight: 200,
-              pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                title: Text('Habitaciones'),
-                background: Image.network(
-                  widget.imageUrl,
-                  fit: BoxFit.cover,
-                ),
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
+            children: <Widget>[
+              CarouselSlider(
+                height: MediaQuery.of(context).size.height * 0.40,
+                items: widget.listImageUrl.map((i) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return Container(
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.symmetric(horizontal: 5.0),
+                          decoration: BoxDecoration(color: Colors.amber),
+                          child: Image.network(
+                            '$i',
+                            fit: BoxFit.cover,
+                          ));
+                    },
+                  );
+                }).toList(),
               ),
-            ),
-            SliverFillRemaining(
-                child: SingleChildScrollView(
-              child: Container(
-                margin: const EdgeInsets.only(top: 90),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "S/.$_price",
-                      style: TextStyle(
-                          fontSize: 32.0,
-                          color: primaryColor,
-                          fontWeight: FontWeight.w900),
+              Positioned(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * .6 + 50,
+                top: MediaQuery.of(context).size.height * .4 - 50,
+                child: Container(
+                  padding: const EdgeInsets.only(left: 30, right: 20, top: 30),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(80),
                     ),
-                    Container(
-                      margin: EdgeInsets.all(72.0),
-                      child: FluidSlider(
-                        thumbColor: Colors.white,
-                        sliderColor: accentColor,
-                        value: _sliderValue,
-                        onChanged: (double newValue) {
-                          setState(() {
-                            _sliderValue = newValue;
-                            _price = _sliderValue.round() * 50;
-                          });
-                        },
-                        min: 1.0,
-                        max: 12.0,
+                    color: Colors.white,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Habitacion XXXXXXXX',
+                        style: TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w900,
+                            color: primaryColor),
                       ),
-                    ),
-                  ],
+                      Text(
+                        'S/.$_price',
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w900,
+                            color: primaryColor),
+                      ),
+                      Container(
+                        child: FluidSlider(
+                          value: _sliderValue.toDouble(),
+                          onChanged: (double newValue) {
+                            setState(() {
+                              _sliderValue = newValue.round();
+                              _price = _sliderValue * 50;
+                            });
+                          },
+                          min: 1.0,
+                          max: 12.0,
+                          sliderColor: accentColor,
+                        ),
+                        margin: EdgeInsets.only(top: 64.0),
+                      ),
+                      Spacer(),
+                      Container(
+                        alignment: Alignment.center,
+                        child: MaterialButton(
+                          shape: StadiumBorder(),
+                          child: Text('Reservar'),
+                          color: accentColor,
+                          textColor: primaryColor,
+                          onPressed: () {},
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ))
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

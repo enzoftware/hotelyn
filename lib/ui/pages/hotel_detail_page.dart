@@ -41,35 +41,6 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
             ),
             Positioned(
               width: MediaQuery.of(context).size.width,
-              top: MediaQuery.of(context).size.height * 0.4 - 90,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 30, right: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        _buildIndicator(),
-                        SizedBox(
-                          width: 5.0,
-                        ),
-                        _buildIndicator(),
-                        SizedBox(
-                          width: 5.0,
-                        ),
-                        _buildIndicator(),
-                        SizedBox(
-                          width: 5.0,
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * .6 + 50,
               top: MediaQuery.of(context).size.height * .4 - 50,
               child: Container(
@@ -196,8 +167,12 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (c) => RoomDetailPage(
-                                        imageUrl:
-                                            'http://www.lapintahotel.mx/wp-content/uploads/2015/10/pinta46.jpg',
+                                        listImageUrl:[
+                                          'https://losmejoresdelima.com/wp-content/uploads/2019/01/hotel-el-gaucho-sjl.jpg',
+                                          'http://www.lapintahotel.mx/wp-content/uploads/2015/10/pinta46.jpg',
+                                          'http://compras.cuponidad.pe/images/Deals/12459b.jpg'
+                                        ]
+                                            
                                       )));
                             },
                           ),
@@ -261,8 +236,12 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (c) => RoomDetailPage(
-                                        imageUrl:
-                                            'https://sofiabarcelona.com/wp-content/uploads/sites/4/2018/02/SOFIA_Hotel_HARMONI-HABITACION-06-1024x682.jpg',
+                                        listImageUrl:[
+                                          'https://sofiabarcelona.com/wp-content/uploads/sites/4/2018/02/SOFIA_Hotel_HARMONI-HABITACION-06-1024x682.jpg',
+                                          'http://adsensr.com/g/b/ro/romantic-decorations-for-bedroom-things-to-do-in-hotel-room-with-your-boyfriend-ideas-candles-and-rose-petals-as-the-best-place-celebrate-photo-gallery-of-valentines-day-him-how-decorate.jpg',
+                                          'https://static.laterooms.com/hotelphotos/laterooms/286423/gallery/falls-of-lora-hotel-oban_260520141227477461.jpg'
+                                        ]
+                                            
                                       )));
                             },
                           ),
