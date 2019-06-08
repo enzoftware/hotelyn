@@ -18,6 +18,8 @@ To install and run Flutter, your development environment must meet these minimum
 ### Requirements:
 - [Download the last version of Android Studio SDK](https://developer.android.com/studio)
 - [Download and Install Flutter SDK](https://flutter.dev/docs/get-started/install)
+- Install the plugin ```Flutter``` and ```Dart``` for VS Code or ```Flutter``` in Android Studio
+
 
 ### Run on the project folder:
 
