@@ -16,6 +16,12 @@ To install and run Flutter, your development environment must meet these minimum
 - [Git for Windows 2.x](https://git-scm.com/download/win), with the Use Git from the Windows Command Prompt option.
 
 ### Requirements:
-- Download Android Studio SDK 
+- Download Android Studio SDK version ```28.0.5```
 - [Download and Install Flutter SDK](https://flutter.dev/docs/get-started/install)
+
+### Run:
+
+- Check if the branch is ```origin/develop``` .
+- Then run in terminal ```flutter package get``` .
+- After that run with ```F5``` if you use Visual studio code or run with the ```button play``` in Android Studio.
 
