@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:buscatelo/ui/pages/home_page.dart';
+import 'package:buscatelo/ui/pages/register_page.dart';
+
 class LoginPage extends StatefulWidget{
   static String tag = 'login-page';
   @override
@@ -9,7 +11,6 @@ class LoginPage extends StatefulWidget{
 
 class LoginPageState extends State<LoginPage>{
 
-  
   @override
   Widget build(BuildContext context) {
     final logo=Hero(
@@ -76,7 +77,7 @@ class LoginPageState extends State<LoginPage>{
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(builder: (context) => RegisterPage()),
             );
           }
         
