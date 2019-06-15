@@ -1,24 +1,58 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:http/http.dart';
 
 class BuscateloApi {
-  final String _baseUrl = 'https://buscatelo-api-rest.herokuapp.com';
+  final String _baseUrl = 'buscatelo-api-rest.herokuapp.com';
+  final headers = {'Content-Type': 'application/json'};
   final String _authLogin = '/auth/login';
   final String _registerNewUser = '/user';
-  final HttpClient _httpClient = HttpClient();
 
-  Future<Map<String, dynamic>> login(Uri uri) async {
+  Future<String> login(String username, String password) async {
+    // ! todo : change to login request model
+    var body = {"username": username, "password": password};
+    final uri = Uri.https(_baseUrl, _authLogin);
+    final response = await _getJson(uri, body);
+    if (response == null || response['token'] == null) {
+      print('Api.login(): Error while retriving jwt');
+      return null;
+    }
+    return response['token'];
+  }
+
+  Future<String> register(
+      String username, String email, String password) async {
+    // ! todo : change to register request model
+    var body = {
+      "username": username,
+      "password": password,
+      "email": email,
+      "role": "USER"
+    };
+    final uri = Uri.https(_baseUrl, _registerNewUser);
+    final response = await _getJson(uri, body);
+    if (response.toString() == null) {
+      print('Api.login(): Error while register');
+      return null;
+    }
+    print(response.toString());
+    return response.toString();
+  }
+
+  Future<Map<String, dynamic>> _getJson(Uri uri, dynamic body) async {
     try {
-      final request = await _httpClient.getUrl(uri);
-      final response = await request.close();
+      print(body);
+      var response = await post(uri,
+          body: json.encode(body),
+          encoding: Encoding.getByName("utf-8"),
+          headers: headers);
 
-      if (response.statusCode != HttpStatus.OK) {
+      if (response.statusCode != HttpStatus.CREATED) {
         print('Api._getJson($uri) status code is ${response.statusCode}');
         return null;
       }
-      final responseBody = await response.transform(utf8.decoder).join();
-      return json.decode(responseBody);
+      return json.decode(response.body);
     } on Exception catch (e) {
       print('Api._getJson($uri) exception thrown $e');
       return null;
