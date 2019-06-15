@@ -1,6 +1,8 @@
-import 'package:buscatelo/ui/pages/home_page.dart';
+
+import 'package:buscatelo/ui/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:buscatelo/commons/theme.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -10,8 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'BuscaTelo',
-      home: HomePage(),
+      title: 'BuscaTelo',      
       theme: ThemeData(
           primarySwatch: primarySwatch,
           canvasColor: Colors.transparent,
@@ -20,6 +21,8 @@ class MyApp extends StatelessWidget {
           fontFamily: 'avenir',
           scaffoldBackgroundColor: backgroundColor,
           cardColor: Colors.white),
+      home: LoginPage(),
+
     );
   }
 }
