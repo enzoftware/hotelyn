@@ -48,7 +48,7 @@ class BuscateloApi {
           encoding: Encoding.getByName("utf-8"),
           headers: headers);
 
-      if (response.statusCode != HttpStatus.CREATED) {
+      if (response.statusCode != HttpStatus.created || response.statusCode != HttpStatus.ok) {
         print('Api._getJson($uri) status code is ${response.statusCode}');
         return null;
       }
