@@ -48,11 +48,13 @@ class BuscateloApi {
           encoding: Encoding.getByName("utf-8"),
           headers: headers);
 
-      if (response.statusCode != HttpStatus.created || response.statusCode != HttpStatus.ok) {
+      if (response.statusCode == HttpStatus.created ||
+          response.statusCode == HttpStatus.ok) {
+        return json.decode(response.body);
+      } else {
         print('Api._getJson($uri) status code is ${response.statusCode}');
         return null;
       }
-      return json.decode(response.body);
     } on Exception catch (e) {
       print('Api._getJson($uri) exception thrown $e');
       return null;
