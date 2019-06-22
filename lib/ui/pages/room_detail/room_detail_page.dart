@@ -5,8 +5,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 class RoomDetailPage extends StatefulWidget {
   final List<String> listImageUrl;
+  String roomName;
 
-  RoomDetailPage({Key key, this.listImageUrl}) : super(key: key);
+  RoomDetailPage({Key key, this.listImageUrl, this.roomName}) : super(key: key);
 
   _RoomDetailPageState createState() => _RoomDetailPageState();
 }

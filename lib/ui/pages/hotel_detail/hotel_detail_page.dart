@@ -171,8 +171,8 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                                           'https://losmejoresdelima.com/wp-content/uploads/2019/01/hotel-el-gaucho-sjl.jpg',
                                           'http://www.lapintahotel.mx/wp-content/uploads/2015/10/pinta46.jpg',
                                           'http://compras.cuponidad.pe/images/Deals/12459b.jpg'
-                                        ]
-                                            
+                                        ],
+                                        roomName: 'Habitacion normal',
                                       )));
                             },
                           ),
@@ -240,7 +240,8 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                                           'https://sofiabarcelona.com/wp-content/uploads/sites/4/2018/02/SOFIA_Hotel_HARMONI-HABITACION-06-1024x682.jpg',
                                           'http://adsensr.com/g/b/ro/romantic-decorations-for-bedroom-things-to-do-in-hotel-room-with-your-boyfriend-ideas-candles-and-rose-petals-as-the-best-place-celebrate-photo-gallery-of-valentines-day-him-how-decorate.jpg',
                                           'https://static.laterooms.com/hotelphotos/laterooms/286423/gallery/falls-of-lora-hotel-oban_260520141227477461.jpg'
-                                        ]
+                                        ],
+                                        roomName: 'Habitacion premium',
                                             
                                       )));
                             },
