@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:buscatelo/ui/pages/home_page/home_page.dart';
-import 'package:buscatelo/ui/pages/register_page.dart';
+import 'package:buscatelo/ui/pages/register_page/register_page.dart';
 import 'package:buscatelo/network/buscatelo_api.dart';
 
 class LoginPage extends StatefulWidget {
@@ -73,7 +73,7 @@ class LoginPageState extends State<LoginPage> {
       child: Text(
         '¿Olvidaste tu contraseña?',
         style: TextStyle(color: Colors.black54),
-      ),
+      ), onPressed: () {},
     );
 
     final registerLabel = GestureDetector(
