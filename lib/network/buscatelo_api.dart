@@ -10,7 +10,6 @@ class BuscateloApi {
   final String _registerNewUser = '/user';
 
   Future<String> login(String username, String password) async {
-    // ! todo : change to login request model
     var body = {"username": username, "password": password};
     final uri = Uri.https(_baseUrl, _authLogin);
     final response = await _getJson(uri, body);
@@ -23,7 +22,6 @@ class BuscateloApi {
 
   Future<String> register(
       String username, String email, String password) async {
-    // ! todo : change to register request model
     var body = {
       "username": username,
       "password": password,
