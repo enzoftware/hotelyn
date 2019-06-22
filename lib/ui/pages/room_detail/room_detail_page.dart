@@ -5,19 +5,21 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 class RoomDetailPage extends StatefulWidget {
   final List<String> listImageUrl;
-  String roomName;
+  final String roomName;
+  final int startPrice;
 
-  RoomDetailPage({Key key, this.listImageUrl, this.roomName}) : super(key: key);
+  RoomDetailPage({Key key, this.listImageUrl, this.roomName, this.startPrice}) : super(key: key);
 
   _RoomDetailPageState createState() => _RoomDetailPageState();
 }
 
 class _RoomDetailPageState extends State<RoomDetailPage> {
-  int _price = 50;
+ 
   int _sliderValue = 1;
 
   @override
   Widget build(BuildContext context) {
+    int _price = widget.startPrice;
     return Container(
       child: Scaffold(
         body: Container(
@@ -58,7 +60,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        'Habitacion XXXXXXXX',
+                        widget.roomName,
                         style: TextStyle(
                             fontSize: 24.0,
                             fontWeight: FontWeight.w900,

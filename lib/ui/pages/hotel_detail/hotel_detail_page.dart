@@ -173,6 +173,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                                           'http://compras.cuponidad.pe/images/Deals/12459b.jpg'
                                         ],
                                         roomName: 'Habitacion normal',
+                                        startPrice: 50,
                                       )));
                             },
                           ),
@@ -242,7 +243,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                                           'https://static.laterooms.com/hotelphotos/laterooms/286423/gallery/falls-of-lora-hotel-oban_260520141227477461.jpg'
                                         ],
                                         roomName: 'Habitacion premium',
-                                            
+                                        startPrice: 80,
                                       )));
                             },
                           ),
