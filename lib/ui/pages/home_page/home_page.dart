@@ -2,7 +2,6 @@ import 'package:buscatelo/commons/app_constants.dart';
 import 'package:buscatelo/data/hotels_fake_data.dart';
 import 'package:buscatelo/model/hotel_model.dart';
 import 'package:buscatelo/ui/pages/hotel_detail/hotel_detail_page.dart';
-import 'package:buscatelo/ui/widget/bottom_bar.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
