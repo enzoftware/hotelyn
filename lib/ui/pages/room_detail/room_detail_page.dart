@@ -8,18 +8,22 @@ class RoomDetailPage extends StatefulWidget {
   final String roomName;
   final int startPrice;
 
-  RoomDetailPage({Key key, this.listImageUrl, this.roomName, this.startPrice}) : super(key: key);
+  RoomDetailPage({Key key, this.listImageUrl, this.roomName, this.startPrice})
+      : super(key: key);
 
-  _RoomDetailPageState createState() => _RoomDetailPageState();
+  _RoomDetailPageState createState() => _RoomDetailPageState(startPrice);
 }
 
 class _RoomDetailPageState extends State<RoomDetailPage> {
- 
-  int _sliderValue = 1;
 
+  int _sliderValue = 1;
+  int _price;
+  _RoomDetailPageState(int price){
+    this._price = price;
+  }
+  
   @override
   Widget build(BuildContext context) {
-    int _price = widget.startPrice;
     return Container(
       child: Scaffold(
         body: Container(
@@ -29,7 +33,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
             children: <Widget>[
               CarouselSlider(
                 height: MediaQuery.of(context).size.height * 0.40,
-                items: widget.listImageUrl.map((i) {
+                items: widget.listImageUrl.map((image) {
                   return Builder(
                     builder: (BuildContext context) {
                       return Container(
@@ -37,7 +41,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                           margin: EdgeInsets.symmetric(horizontal: 5.0),
                           decoration: BoxDecoration(color: Colors.amber),
                           child: Image.network(
-                            '$i',
+                            '$image',
                             fit: BoxFit.cover,
                           ));
                     },
@@ -69,9 +73,10 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                       Text(
                         'S/.$_price',
                         style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w900,
-                            color: primaryColor),
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w900,
+                          color: primaryColor,
+                        ),
                       ),
                       Container(
                         child: FluidSlider(
@@ -79,7 +84,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                           onChanged: (double newValue) {
                             setState(() {
                               _sliderValue = newValue.round();
-                              _price = _sliderValue * 50;
+                              _price = _sliderValue * widget.startPrice;
                             });
                           },
                           min: 1.0,
@@ -96,7 +101,9 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                           child: Text('Reservar'),
                           color: accentColor,
                           textColor: primaryColor,
-                          onPressed: () {},
+                          onPressed: () {
+
+                          },
                         ),
                       )
                     ],
