@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:buscatelo/ui/utils/base_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:buscatelo/ui/pages/home_page/home_page.dart';
 import 'package:buscatelo/ui/pages/register_page/register_page.dart';
@@ -11,7 +12,7 @@ class LoginPage extends StatefulWidget {
   LoginPageState createState() => new LoginPageState();
 }
 
-class LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> with BaseDialogs{
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -42,7 +43,6 @@ class LoginPageState extends State<LoginPage> {
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
     );
-
     final password = TextFormField(
       autofocus: false,
       obscureText: true,
@@ -53,7 +53,6 @@ class LoginPageState extends State<LoginPage> {
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
     );
-
     final loginButton = Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
       child: RaisedButton(
@@ -68,14 +67,12 @@ class LoginPageState extends State<LoginPage> {
         child: Text('Iniciar sesión', style: TextStyle(color: Colors.white)),
       ),
     );
-
     final forgotLabel = FlatButton(
       child: Text(
         '¿Olvidaste tu contraseña?',
         style: TextStyle(color: Colors.black54),
       ), onPressed: () {},
     );
-
     final registerLabel = GestureDetector(
         child: Text(
           'Si no tienes cuenta Registrate aquí',
@@ -112,7 +109,9 @@ class LoginPageState extends State<LoginPage> {
 
   Future<void> login(String username, String password) async {
     final api = BuscateloApi();
+    showLoadingDialog(context);
     await api.login(username, password).then((jwt) {
+      hideDialog(context);
       if (jwt != null) {
         Navigator.pushReplacement(
           context,
