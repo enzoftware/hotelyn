@@ -32,7 +32,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: NetworkImage(widget.hotelModel.img),
+                  image: NetworkImage('https://t-ec.bstatic.com/images/hotel/max500/798/79872273.jpg'), // TODO CHANGE TO API IMG
                   colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(0.2),
                     BlendMode.hardLight,
@@ -62,6 +62,16 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                           color: Color(0xff632bbf),
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "${widget.hotelModel.description}",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
                         ),
                       ),
                     ),
