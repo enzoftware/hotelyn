@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:buscatelo/ui/pages/home_page/home_page.dart';
@@ -22,27 +23,49 @@ class RegisterPageState extends State<RegisterPage> {
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
       controller: usernameController,
+      style: TextStyle(
+        color: Colors.white,
+      ),
       decoration: InputDecoration(
+        hintStyle: TextStyle(
+          color: Colors.white,
+        ),
         hintText: 'Username',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
     );
+
+
     final email = TextFormField(
       controller: emailController,
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
+      style: TextStyle(
+        color: Colors.white,
+      ),
       decoration: InputDecoration(
+        hintStyle: TextStyle(
+          color: Colors.white,
+        ),
         hintText: 'Email',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
     );
+
+
     final password = TextFormField(
       controller: passwordController,
       autofocus: false,
       obscureText: true,
+      style: TextStyle(
+        color: Colors.white,
+      ),
       decoration: InputDecoration(
+        hintStyle: TextStyle(
+          color: Colors.white,
+        ),
         hintText: 'Password',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
@@ -53,7 +76,13 @@ class RegisterPageState extends State<RegisterPage> {
       autofocus: false,
       obscureText: true,
       controller: passwordConfirmController,
+      style: TextStyle(
+        color: Colors.white,
+      ),
       decoration: InputDecoration(
+        hintStyle: TextStyle(
+          color: Colors.white,
+        ),
         hintText: 'Confirm Password',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
@@ -80,23 +109,45 @@ class RegisterPageState extends State<RegisterPage> {
       ),
     );
 
+    final coverPhoto = Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: ExactAssetImage('assets/img/background-ui.jpg'),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: BackdropFilter(
+        filter: new ImageFilter.blur(sigmaX: 7.0, sigmaY: 7.0),
+        child: new Container(
+          decoration: new BoxDecoration(color: Colors.white.withOpacity(0.0)),
+        ),
+      ),
+    );
+
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-          child: ListView(
+      //backgroundColor: Colors.white,
+      body: Stack(
+        children: <Widget>[
+          coverPhoto,
+          Center(
+            child: ListView(
               shrinkWrap: true,
               padding: EdgeInsets.only(left: 24.0, right: 24.0),
               children: <Widget>[
-            username,
-            SizedBox(height: 15.0),
-            email,
-            SizedBox(height: 15.0),
-            password,
-            SizedBox(height: 15.0),
-            confirmPassword,
-            SizedBox(height: 15.0),
-            registerButton,
-          ])),
+                username,
+                SizedBox(height: 15.0),
+                email,
+                SizedBox(height: 15.0),
+                password,
+                SizedBox(height: 15.0),
+                confirmPassword,
+                SizedBox(height: 15.0),
+                registerButton,
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
