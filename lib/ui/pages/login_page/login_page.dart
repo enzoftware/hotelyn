@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ui';
-
 import 'package:buscatelo/ui/utils/base_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:buscatelo/ui/pages/home_page/home_page.dart';
@@ -151,14 +150,28 @@ class LoginPageState extends State<LoginPage> with BaseDialogs {
     await api.login(username, password).then((jwt) {
       hideDialog(context);
       if (jwt != null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
+        getUserId(username, jwt).then((result){
+          Navigator.pushReplacement(
+           context,
+            MaterialPageRoute(builder: (context) => HomePage(userId: result, token: jwt,)),
+          );
+        });
       } else {
         _showLoginErrorDialog();
       }
     });
+  }
+
+  Future<int> getUserId(String username, String token) async{
+    final api = BuscateloApi();
+    int id;
+    await api.getUser(username, token).then((userId){
+      id = userId;
+    });
+    if (id != null){
+      return id;
+    }
+    return null;
   }
 
   void _showLoginErrorDialog() {

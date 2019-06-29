@@ -2,9 +2,16 @@ import 'package:buscatelo/commons/app_constants.dart';
 import 'package:buscatelo/model/hotel_model.dart';
 import 'package:buscatelo/network/hotel_api.dart';
 import 'package:buscatelo/ui/pages/hotel_detail/hotel_detail_page.dart';
+import 'package:buscatelo/ui/pages/user_profile/user_profile_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
+
+  final int userId;
+  final String token;
+
+  HomePage({Key key, @required this.userId, @required this.token}):super(key:key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +49,7 @@ class HomePage extends StatelessWidget {
               Row(
                 children: <Widget>[
                   Text(
-                    "Rodrigo",
+                    "Rodrigo"+this.userId.toString(),
                     style: TextStyle(fontSize: 20),
                   ),
                   SizedBox(
@@ -54,11 +61,19 @@ class HomePage extends StatelessWidget {
                   )
                 ],
               ),
-              CircleAvatar(
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (c) => UserProfilePage(
+                      userId: this.userId, token: this.token,
+                    )));
+                },
+                child: CircleAvatar(
                 foregroundColor: Theme.of(context).primaryColor,
                 backgroundColor: Colors.grey,
                 backgroundImage: NetworkImage(AppConstants.avatarImage),
-              )
+                )
+              ),
             ],
           ),
         ),
