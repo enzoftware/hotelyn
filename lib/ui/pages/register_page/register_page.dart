@@ -15,6 +15,7 @@ class RegisterPageState extends State<RegisterPage> {
   final passwordController = TextEditingController();
   final passwordConfirmController = TextEditingController();
   final emailController = TextEditingController();
+  int userId;
 
   @override
   Widget build(BuildContext context) {
@@ -106,12 +107,24 @@ class RegisterPageState extends State<RegisterPage> {
       if (response != null) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => HomePage(userId: this.userId, token: response,)),
         );
       } else {
         _showRegisterErrorDialog("Error al registrar usuario");
       }
     });
+  }
+
+  Future<int> getUserId(String username, String token) async{
+    final api = BuscateloApi();
+    int id;
+    await api.getUser(username, token ).then((userId){
+      id = userId;
+    });
+    if (id != null){
+      return id;
+    }
+    return null;
   }
 
   void _showRegisterErrorDialog(String description) {

@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'BuscaTelo',      
+      title: 'BuscaTelo',
       theme: ThemeData(
           primarySwatch: primarySwatch,
           canvasColor: Colors.transparent,
