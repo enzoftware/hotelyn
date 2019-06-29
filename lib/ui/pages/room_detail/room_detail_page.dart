@@ -2,6 +2,7 @@ import 'package:buscatelo/commons/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fluid_slider/flutter_fluid_slider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:buscatelo/ui/pages/booking_page/booking_page.dart';
 
 class RoomDetailPage extends StatefulWidget {
   final List<String> listImageUrl;
@@ -152,7 +153,9 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                           color: accentColor,
                           minWidth: MediaQuery.of(context).size.width * 0.7,
                           textColor: primaryColor,
-                          onPressed: () {},
+                          onPressed: () {
+                            _showDialog();
+                          },
                         ),
                       ),
                     )
@@ -174,4 +177,34 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
     'https://i.pinimg.com/originals/b6/a5/5f/b6a55fbc10e424116aa4a8dfa1858ae0.jpg',
     'https://cdn0.iconfinder.com/data/icons/food-2-11/128/food-13-512.png'
   ];
+
+//  final _showDialog = showDialog(
+  void _showDialog (){ showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: new Text("¿Deseas confirmar la reserva?"),
+          content: new Text("Si confirmas tendrás un plazo de máximo 30 minutos para acercarte al hostal que reservaste"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Aceptar"),
+              onPressed: (){
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => BookingPage())
+                );
+              },
+            ),
+            new FlatButton(
+              child: new Text("Cerrar"),
+              onPressed: (){
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      }
+    );
+  }
 }
