@@ -1,54 +1,63 @@
+import 'package:buscatelo/model/product_model.dart';
 import 'package:flutter/material.dart';
 
-class OneProductPage extends StatefulWidget{
+class OneProductPage extends StatefulWidget {
+  final ProductModel product;
+  OneProductPage(this.product);
   @override
-  _ProductPageState createState()=>_ProductPageState();
+  _ProductPageState createState() => _ProductPageState();
 }
 
-class _ProductPageState extends State<OneProductPage>{
+class _ProductPageState extends State<OneProductPage> {
   @override
   Widget build(BuildContext context) {
-    Widget _titleSection = new Container(
-      padding: const EdgeInsets.all(10.0),
-      child: new Row(
-        children: <Widget>[
-          new Expanded(
-            child: new Column(
+    Widget _titleSection = Container(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                new Container(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: new Text("Name of Product",
-                    style: new TextStyle(
+                Container(
+                  padding: const EdgeInsets.only(
+                    bottom: 10.0,
+                  ),
+                  child: Text(
+                    widget.product.name,
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 18.0 
+                      fontSize: 18.0,
                     ),
                   ),
                 ),
-                new Text("This is a Description",
-                  style: new TextStyle(
+                Text(
+                  widget.product.description,
+                  style: TextStyle(
                     color: Colors.grey[850],
-                    fontSize: 16.0
-                  )
+                    fontSize: 16.0,
+                  ),
+                ),
+                Text(
+                  "S/. ${widget.product.price}",
+                  style: TextStyle(
+                    color: Colors.grey[850],
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold
+                  ),
                 )
               ],
-            )
-          ),
-        ],
-        )
-    );
+            )),
+          ],
+        ));
 
-    return new Scaffold(
-      body: new ListView(
+    return Scaffold(
+      body: ListView(
         children: <Widget>[
-          new Image.asset(
-            'assets/img/botella.jpg',
-            fit: BoxFit.cover
-          ),
+          Image.network(widget.product.imgUrl, fit: BoxFit.cover),
           _titleSection
         ],
       ),
     );
-
   }
 }

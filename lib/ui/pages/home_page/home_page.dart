@@ -1,5 +1,4 @@
 import 'package:buscatelo/commons/app_constants.dart';
-import 'package:buscatelo/data/hotels_fake_data.dart';
 import 'package:buscatelo/model/hotel_model.dart';
 import 'package:buscatelo/network/hotel_api.dart';
 import 'package:buscatelo/ui/pages/hotel_detail/hotel_detail_page.dart';

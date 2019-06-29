@@ -49,7 +49,7 @@ class _ProductPageState extends State<ProductPage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => OneProductPage()),
+                  MaterialPageRoute(builder: (context) => OneProductPage(products[index])),
                 );
               }),
           Container(
