@@ -5,7 +5,7 @@ List<HotelModel> hotels = [
       img:
           'https://cde.urbania.g3c.pe/563561/avisos/4077826/resultado-responsive-aviso/563561_5ae3395fb9ec0.jpeg?1',
       address: 'Av. Aviacion 1234',
-      name: 'Hotel Pasaycahca',
+      name: 'Hotel 5 Estrellas',
       priceOff: '33%'),
   HotelModel(
       img: 'https://t-ec.bstatic.com/images/hotel/max500/798/79872273.jpg',

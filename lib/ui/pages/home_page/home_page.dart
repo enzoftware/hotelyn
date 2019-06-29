@@ -2,7 +2,6 @@ import 'package:buscatelo/commons/app_constants.dart';
 import 'package:buscatelo/data/hotels_fake_data.dart';
 import 'package:buscatelo/model/hotel_model.dart';
 import 'package:buscatelo/ui/pages/hotel_detail/hotel_detail_page.dart';
-import 'package:buscatelo/ui/widget/bottom_bar.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -98,33 +97,33 @@ class HomePage extends StatelessWidget {
                 SizedBox(
                   height: 15,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppConstants.backgroundColor,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        bottomLeft: Radius.circular(20),
-                        bottomRight: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
-                    ),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: AppConstants.primaryColor,
-                        ),
-                        hintText: "Encuentra tu hotel",
-                        hintStyle: TextStyle(
-                            color: AppConstants.primaryColor,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: Container(
+                //     decoration: BoxDecoration(
+                //       color: AppConstants.backgroundColor,
+                //       borderRadius: BorderRadius.only(
+                //         topLeft: Radius.circular(20),
+                //         bottomLeft: Radius.circular(20),
+                //         bottomRight: Radius.circular(20),
+                //         topRight: Radius.circular(20),
+                //       ),
+                //     ),
+                //     child: TextField(
+                //       decoration: InputDecoration(
+                //         border: InputBorder.none,
+                //         prefixIcon: Icon(
+                //           Icons.search,
+                //           color: AppConstants.primaryColor,
+                //         ),
+                //         hintText: "Encuentra tu hotel",
+                //         hintStyle: TextStyle(
+                //             color: AppConstants.primaryColor,
+                //             fontWeight: FontWeight.bold),
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 SizedBox(
                   height: 20,
                 ),
@@ -166,6 +165,7 @@ class HomePage extends StatelessWidget {
                                         topLeft: Radius.circular(35),
                                         bottomLeft: Radius.circular(35),
                                         bottomRight: Radius.circular(35),
+                                        topRight: Radius.circular(35)
                                       ),
                                     ),
                                   );
@@ -252,7 +252,7 @@ class HomePage extends StatelessWidget {
                     },
                   ),
                 ),
-                BottomBar(),
+                // BottomBar(),
               ],
             ),
           ),

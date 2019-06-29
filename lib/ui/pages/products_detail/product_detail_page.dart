@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:buscatelo/ui/pages/products_detail/one_product_detail_page.dart';
 import 'package:buscatelo/model/product_model.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+
 
 class ProductPage extends StatefulWidget{
   final List<ProductModel> products;
@@ -11,7 +13,7 @@ class ProductPage extends StatefulWidget{
 }
 
 class _ProductPageState extends State<ProductPage>{
-  
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -20,7 +22,7 @@ class _ProductPageState extends State<ProductPage>{
         maxCrossAxisExtent: 150.0,
         mainAxisSpacing: 5.0,
         crossAxisSpacing: 5.0,
-        children: _buildGridTiles(2)
+        children: _buildGridTiles(29)
       )
     );
   }
@@ -28,9 +30,9 @@ class _ProductPageState extends State<ProductPage>{
   List<Widget> _buildGridTiles(numberOfTiles){
     List<Stack> containers= new List<Stack>.generate(numberOfTiles, 
     (int index){
-      //final imageName='assets/img/botella.jpg';
-      final imageUrl=widget.products[0].imgUrl;
-      final imageName=widget.products[0].name;
+      final imageUrl='assets/img/botella.jpg';
+      //final imageUrl=widget.products[0].imgUrl;
+      //final imageName=widget.products[0].name;
       return new Stack(
         alignment: const Alignment(1.0, 1.0),
         children: <Widget>[
@@ -56,7 +58,7 @@ class _ProductPageState extends State<ProductPage>{
               color: new Color.fromARGB(150, 71, 150, 236)
             ),
             //child: new Text('${index+1}',style: new TextStyle(
-            child: new Text(imageName,style: new TextStyle(
+            child: new Text('Agua Cielo',style: new TextStyle(
               fontSize: 15.0,
               fontWeight: FontWeight.bold,
               color: Colors.white
@@ -69,8 +71,7 @@ class _ProductPageState extends State<ProductPage>{
     );
     return containers;
   }
-
-
+  
 
 
 

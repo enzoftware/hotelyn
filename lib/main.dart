@@ -1,4 +1,4 @@
-import 'package:buscatelo/ui/pages/login_page.dart';
+import 'package:buscatelo/ui/pages/login_page/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:buscatelo/commons/theme.dart';
 
