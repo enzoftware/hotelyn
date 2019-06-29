@@ -15,6 +15,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  random_string: ^1.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -55,6 +56,7 @@ flutter:
   assets:
     - assets/img/buscatelo_bg_home.png
     - assets/img/logo.png
+    - assets/img/botella.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

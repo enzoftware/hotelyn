@@ -1,5 +1,6 @@
 import 'package:buscatelo/commons/app_constants.dart';
 import 'package:buscatelo/model/hotel_model.dart';
+import 'package:buscatelo/ui/pages/products_detail/product_detail_page.dart';
 import 'package:buscatelo/ui/pages/room_detail/room_detail_page.dart';
 import 'package:buscatelo/ui/widget/star_display.dart';
 import 'package:flutter/material.dart';
@@ -282,9 +283,14 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
             fontSize: 18,
           ),
         ),
-        onPressed: () {},
-        shape: RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(30.0)),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ProductPage()),
+          );
+          },
+        shape:
+          RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
       ),
     );
   }

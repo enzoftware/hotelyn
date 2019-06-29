@@ -9,6 +9,7 @@ class BuscateloApi {
   final String _authLogin = '/auth/login';
   final String _registerNewUser = '/user';
 
+
   Future<String> login(String username, String password) async {
     var body = {"username": username, "password": password};
     final uri = Uri.https(_baseUrl, _authLogin);
@@ -31,12 +32,13 @@ class BuscateloApi {
     final uri = Uri.https(_baseUrl, _registerNewUser);
     final response = await _getJson(uri, body);
     if (response.toString() == null) {
-      print('Api.login(): Error while register');
+      print('Api.register(): Error while register');
       return null;
     }
     print(response.toString());
     return response.toString();
   }
+
 
   Future<Map<String, dynamic>> _getJson(Uri uri, dynamic body) async {
     try {
@@ -58,4 +60,6 @@ class BuscateloApi {
       return null;
     }
   }
+
+
 }

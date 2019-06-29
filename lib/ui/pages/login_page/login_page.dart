@@ -77,7 +77,8 @@ class LoginPageState extends State<LoginPage> with BaseDialogs{
         child: Text(
           'Si no tienes cuenta Registrate aquí',
           style: TextStyle(
-              decoration: TextDecoration.underline, color: Colors.blue),
+              decoration: TextDecoration.underline, color: Colors.blue
+              ),
           textAlign: TextAlign.center,
         ),
         onTap: () {
