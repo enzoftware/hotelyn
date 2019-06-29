@@ -126,7 +126,7 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
                               crossAxisSpacing: 5.0,
                               crossAxisCount: 3,
                               children:
-                                  List.generate(_services.length, (index) {
+                                  List.generate(widget.startPrice < 15 ? _services.length ~/ 2 : _services.length, (index) {
                                 return Card(
                                   child: Image.network(_services[index]),
                                 );
@@ -172,9 +172,8 @@ class _RoomDetailPageState extends State<RoomDetailPage> {
   var _services = [
     'http://icons.iconarchive.com/icons/papirus-team/papirus-apps/256/netflix-icon.png',
     'https://cdn3.iconfinder.com/data/icons/home-appliances-24/512/015-512.png',
-    'https://cdn3.iconfinder.com/data/icons/dark-side-of-web/64/xxx_adult_content_porn_sex_doll_sexual_online_pornography-512.png',
+    'https://cdn1.iconfinder.com/data/icons/airport-set-1/512/29-512.png',
     'https://banner2.kisspng.com/20180504/vye/kisspng-shower-bathtub-computer-icons-clip-art-take-a-shower-5aebdd3c512092.2282529015254070363323.jpg',
-    'https://i.pinimg.com/originals/b6/a5/5f/b6a55fbc10e424116aa4a8dfa1858ae0.jpg',
     'https://cdn0.iconfinder.com/data/icons/food-2-11/128/food-13-512.png'
   ];
 
