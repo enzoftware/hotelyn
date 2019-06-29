@@ -1,6 +1,7 @@
 import 'package:buscatelo/commons/app_constants.dart';
 import 'package:buscatelo/data/hotels_fake_data.dart';
 import 'package:buscatelo/model/hotel_model.dart';
+import 'package:buscatelo/network/hotel_api.dart';
 import 'package:buscatelo/ui/pages/hotel_detail/hotel_detail_page.dart';
 import 'package:flutter/material.dart';
 
@@ -67,6 +68,7 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildBody() {
+    var api = HotelApi();
     return Builder(
       builder: (BuildContext context) {
         return Positioned(
@@ -97,158 +99,156 @@ class HomePage extends StatelessWidget {
                 SizedBox(
                   height: 15,
                 ),
-                // Padding(
-                //   padding: const EdgeInsets.all(8.0),
-                //   child: Container(
-                //     decoration: BoxDecoration(
-                //       color: AppConstants.backgroundColor,
-                //       borderRadius: BorderRadius.only(
-                //         topLeft: Radius.circular(20),
-                //         bottomLeft: Radius.circular(20),
-                //         bottomRight: Radius.circular(20),
-                //         topRight: Radius.circular(20),
-                //       ),
-                //     ),
-                //     child: TextField(
-                //       decoration: InputDecoration(
-                //         border: InputBorder.none,
-                //         prefixIcon: Icon(
-                //           Icons.search,
-                //           color: AppConstants.primaryColor,
-                //         ),
-                //         hintText: "Encuentra tu hotel",
-                //         hintStyle: TextStyle(
-                //             color: AppConstants.primaryColor,
-                //             fontWeight: FontWeight.bold),
-                //       ),
-                //     ),
-                //   ),
-                // ),
                 SizedBox(
                   height: 20,
                 ),
                 Expanded(
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: hotels.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final HotelModel item = hotels[index];
-
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (c) => HotelDetailPage(
-                                    hotelModel: item,
-                                  )));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 15, left: 15),
-                          child: Stack(
-                            children: <Widget>[
-                              LayoutBuilder(
-                                builder: (BuildContext context,
-                                    BoxConstraints constraints) {
-                                  return Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.65,
-                                    height: constraints.maxHeight - 20,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: NetworkImage(item.img),
-                                        colorFilter: ColorFilter.mode(
-                                          Colors.black.withOpacity(0.2),
-                                          BlendMode.hardLight,
+                  child: FutureBuilder(
+                    future: api.getHotels(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<HotelModel>> snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final HotelModel item = snapshot.data[index];
+                            return InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (c) => HotelDetailPage(
+                                          hotelModel: item,
+                                        )));
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(right: 15, left: 15),
+                                child: Stack(
+                                  children: <Widget>[
+                                    LayoutBuilder(
+                                      builder: (BuildContext context,
+                                          BoxConstraints constraints) {
+                                        return Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.65,
+                                          height: constraints.maxHeight - 20,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: NetworkImage(
+                                                  'https://t-ec.bstatic.com/images/hotel/max500/798/79872273.jpg'), // TODO : CHANGE IMG API
+                                              colorFilter: ColorFilter.mode(
+                                                Colors.black.withOpacity(0.2),
+                                                BlendMode.hardLight,
+                                              ),
+                                            ),
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(35),
+                                                bottomLeft: Radius.circular(35),
+                                                bottomRight:
+                                                    Radius.circular(35),
+                                                topRight: Radius.circular(35)),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    Positioned(
+                                      top: 15,
+                                      left: 15,
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        height: 55.0,
+                                        width: 55.0,
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              width: 2.0,
+                                              color: Colors.white,
+                                            ),
+                                            color: AppConstants.primaryColor),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(
+                                              '10%',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            Text(
+                                              ' DSCT',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(35),
-                                        bottomLeft: Radius.circular(35),
-                                        bottomRight: Radius.circular(35),
-                                        topRight: Radius.circular(35)
+                                    ),
+                                    Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      child: Container(
+                                        height: 45.0,
+                                        width: 45.0,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: AppConstants.accentColor,
+                                        ),
+                                        child: Icon(
+                                          Icons.navigate_next,
+                                          size: 40.0,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
-                                  );
-                                },
-                              ),
-                              Positioned(
-                                top: 15,
-                                left: 15,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  height: 55.0,
-                                  width: 55.0,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        width: 2.0,
-                                        color: Colors.white,
+                                    Positioned(
+                                      bottom: 35.0,
+                                      left: 10.0,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.65,
+                                      child: ListTile(
+                                        title: Text(
+                                          item.name,
+                                          style: TextStyle(
+                                              fontSize: 20.0,
+                                              color: Colors.white),
+                                        ),
+                                        subtitle: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.room,
+                                              color: Colors.white,
+                                              size: 18.0,
+                                            ),
+                                            Flexible(
+                                              child: Text(
+                                                item.address,
+                                                textAlign: TextAlign.justify,
+                                                overflow: TextOverflow.fade,
+                                                maxLines: 2,
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      color: AppConstants.primaryColor),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text(
-                                        item.priceOff,
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      Text(
-                                        ' DSCT',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
+                                    )
+                                  ],
                                 ),
                               ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: Container(
-                                  height: 45.0,
-                                  width: 45.0,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppConstants.accentColor,
-                                  ),
-                                  child: Icon(
-                                    Icons.navigate_next,
-                                    size: 40.0,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 35.0,
-                                left: 10.0,
-                                width: MediaQuery.of(context).size.width * 0.65,
-                                child: ListTile(
-                                  title: Text(
-                                    item.name,
-                                    style: TextStyle(
-                                        fontSize: 20.0, color: Colors.white),
-                                  ),
-                                  subtitle: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.room,
-                                        color: Colors.white,
-                                        size: 18.0,
-                                      ),
-                                      Text(
-                                        item.address,
-                                        style: TextStyle(color: Colors.white),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
+                            );
+                          },
+                        );
+                      }
+                      return Container();
                     },
                   ),
                 ),

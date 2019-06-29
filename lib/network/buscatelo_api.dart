@@ -2,12 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart';
-
+import 'package:barbarian/barbarian.dart';
 class BuscateloApi {
   final String _baseUrl = 'buscatelo-api-rest.herokuapp.com';
   final headers = {'Content-Type': 'application/json'};
   final String _authLogin = '/auth/login';
   final String _registerNewUser = '/user';
+
+  BuscateloApi(){
+    Barbarian.init();
+  }
 
 
   Future<String> login(String username, String password) async {
@@ -18,6 +22,7 @@ class BuscateloApi {
       print('Api.login(): Error while retriving jwt');
       return null;
     }
+    Barbarian.write('userJwt', response['token']);
     return response['token'];
   }
 

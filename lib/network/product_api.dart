@@ -9,7 +9,7 @@ class ProductApi {
   final String _baseUrl = 'buscatelo-api-rest.herokuapp.com';
   final String _getProductsUrl = '/product';
 
-  ProductApi(){
+  ProductApi() {
     Barbarian.init();
   }
 
@@ -25,10 +25,8 @@ class ProductApi {
 
   Future<List<dynamic>> _getJson(Uri uri) async {
     try {
-      final headers = {
-        'auth':
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE1NjE3ODAxODcsImV4cCI6MTU2MTc4Mzc4N30.Lc_xZbPZZDujWCevOB9SwopcKKTm0pJhjYcTK4wMyKE'
-      };
+      String jwt = Barbarian.read('userJwt') ?? 'webadaDeJwt';
+      final headers = {'auth': jwt};
       var response = await get(uri, headers: headers);
 
       if (response.statusCode == HttpStatus.ok) {

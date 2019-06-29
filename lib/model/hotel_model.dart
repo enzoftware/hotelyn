@@ -1,28 +1,20 @@
 class HotelModel {
   int id;
-  String img;
   String address;
   String phone;
   String description;
   String email;
   String rate;
   String name;
-  String createdAt;
-  String updatedAt;
-  String priceOff;
 
   HotelModel(
       {this.id,
       this.address,
       this.phone,
-      this.img,
-      this.priceOff,
       this.description,
       this.email,
       this.rate,
-      this.name,
-      this.createdAt,
-      this.updatedAt});
+      this.name});
 
   HotelModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -32,10 +24,6 @@ class HotelModel {
     email = json['email'];
     rate = json['rate'];
     name = json['name'];
-    img = json['img'];
-    priceOff = json['priceOff'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
   }
 
   Map<String, dynamic> toJson() {
@@ -47,10 +35,6 @@ class HotelModel {
     data['email'] = this.email;
     data['rate'] = this.rate;
     data['name'] = this.name;
-    data['img'] = this.img;
-    data['priceOff'] = this.priceOff;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
     return data;
   }
 }
