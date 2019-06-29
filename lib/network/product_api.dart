@@ -1,67 +1,53 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/foundation.dart';//compute
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:buscatelo/model/product_model.dart';
-
+import 'package:barbarian/barbarian.dart';
 
 class ProductApi {
   final String _baseUrl = 'buscatelo-api-rest.herokuapp.com';
-  final headers = {'Content-Type': 'application/json'};
-  final String _getProducts = '/product/';
+  final String _getProductsUrl = '/product';
 
-  final HttpClient _httpClient = HttpClient();
+  ProductApi(){
+    Barbarian.init();
+  }
 
-
-  Future<List<ProductModel>> getProducts(http.Client client) async {
-  final response = await client.get('https://jsonplaceholder.typicode.com/photos');
+  Future<List<ProductModel>> getProducts() async {
+    final uri = Uri.https(_baseUrl, _getProductsUrl);
+    final response = await _getJson(uri);
     if (response == null) {
-      print('Api._getProducts(): Error while retriving products');
+      print('Api.getProducts() : Error jwt');
       return null;
     }
-    // Use the compute function to run parsePhotos in a separate isolate.
-    return compute(parsePhotos, response.body);
-
+    return _convert(response);
   }
-  
-  List<ProductModel> parsePhotos(String responseBody) {
-    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
 
-    return parsed.map<ProductModel>((json) => ProductModel.fromJson(json)).toList();
-  }
-/*
-  final _loadProducts = FutureBuilder<List<ProductModel>>(
-        future: widget.productApi.getProducts(http.Client()),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) print(snapshot.error);
-
-          return snapshot.hasData
-              ? PhotosList(photos: snapshot.data)
-              : Center(child: CircularProgressIndicator());
-        },
-      );*/
-/*
-  Future<Map<String, dynamic>> _getJson(Uri uri, dynamic body) async {
+  Future<List<dynamic>> _getJson(Uri uri) async {
     try {
-      print(body);
-      var response = await post(uri,
-          body: json.encode(body),
-          encoding: Encoding.getByName("utf-8"),
-          headers: headers);
+      final headers = {
+        'auth':
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE1NjE3ODAxODcsImV4cCI6MTU2MTc4Mzc4N30.Lc_xZbPZZDujWCevOB9SwopcKKTm0pJhjYcTK4wMyKE'
+      };
+      var response = await get(uri, headers: headers);
 
-      if (response.statusCode == HttpStatus.created ||
-          response.statusCode == HttpStatus.ok) {
+      if (response.statusCode == HttpStatus.ok) {
         return json.decode(response.body);
       } else {
-        print('Api._getJson($uri) status code is ${response.statusCode}');
+        print('Api get products status is ${response.statusCode}');
         return null;
       }
     } on Exception catch (e) {
-      print('Api._getJson($uri) exception thrown $e');
+      print('Api._getProducts($uri) exception thrown $e');
       return null;
     }
-  }*/
+  }
 
-
+  List<ProductModel> _convert(List productJson) {
+    List<ProductModel> items = <ProductModel>[];
+    productJson.forEach((item) {
+      items.add(ProductModel.fromJson(item));
+    });
+    return items;
+  }
 }
