@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:buscatelo/commons/app_constants.dart';
 import 'package:buscatelo/model/user_model.dart';
 import 'package:buscatelo/network/buscatelo_api.dart';
 import 'package:flutter/material.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 class UserProfilePage extends StatefulWidget {
 
@@ -16,9 +17,7 @@ class UserProfilePage extends StatefulWidget {
 }
 
 class _UserProfileState extends State<UserProfilePage>{
-  int _userId;
   UserModel user;
-  String _token;
 
   _UserProfileState(int userId, String token){
     getUser(userId, token).then((result){
@@ -28,7 +27,7 @@ class _UserProfileState extends State<UserProfilePage>{
 
   @override
   Widget build(BuildContext context) {
-
+    final api = BuscateloApi();
     return new Scaffold(
       body: new Stack(
         children: <Widget>[
@@ -66,12 +65,14 @@ class _UserProfileState extends State<UserProfilePage>{
                       ),
                     ),
                     SizedBox(height: 20.0),
-                    Text(
-                      "Rodrigo Guadalupe",
-                      style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.bold,
-                      ) ,
+                    FutureBuilder(
+                      future: api.getUserbyId(widget.userId, widget.token),
+                      builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot){
+                        if(snapshot.hasData){
+                          return Text('${snapshot.data.firstName} ${snapshot.data.lastName}');
+                        }
+                        return Container();
+                      },
                     ),
                     SizedBox(height: 30.0),
                     Container(
@@ -158,8 +159,10 @@ class _UserProfileState extends State<UserProfilePage>{
       ),
     );
   }
+
   final firstName = TextFormField(
       autofocus: false,
+      // initialValue: user.firstName,
       decoration: InputDecoration(
         hintText: 'First Name',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -168,6 +171,7 @@ class _UserProfileState extends State<UserProfilePage>{
   );
   final lastName = TextFormField(
       autofocus: false,
+      // initialValue: user.lastName,
       decoration: InputDecoration(
         hintText: 'Last Name',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -176,6 +180,7 @@ class _UserProfileState extends State<UserProfilePage>{
   );
   final email = TextFormField(
       autofocus: false,
+      // initialValue: user.email,
       decoration: InputDecoration(
         hintText: 'Email',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -184,6 +189,7 @@ class _UserProfileState extends State<UserProfilePage>{
   );
   final age = TextFormField(
       autofocus: false,
+      // initialValue: user.age.toString(),
       decoration: InputDecoration(
         hintText: 'Age',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),

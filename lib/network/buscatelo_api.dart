@@ -53,7 +53,7 @@ class BuscateloApi {
 
   Future<UserModel> getUserbyId(int id, String token) async{
     final uri = Uri.https(_baseUrl, _getUser+id.toString());
-    final response = await _get(uri, token);
+    final response = await _getByIdUser(uri, token);
     if(response.toString() == null){
       print('Api(): Error getting user info');
       return null;
@@ -90,10 +90,27 @@ class BuscateloApi {
       var response = await get(uri,
           headers: headers);
 
-      if (response.statusCode == HttpStatus.created ||
-          response.statusCode == HttpStatus.ok) {
-        print(json.decode(response.body));
+      if (response.statusCode == HttpStatus.ok) {
+        print("Hola111 : ${json.decode(response.body)}");
         return json.decode(response.body)[0];
+      } else {
+        print('Api._getJson($uri) status code is ${response.statusCode}');
+        return null;
+      }
+    } on Exception catch (e) {
+      print('Api._getJson($uri) exception thrown $e');
+      return null;
+    }
+  }
+  Future<Map<String, dynamic>> _getByIdUser(Uri uri, String token) async {
+    try{
+      headers['auth'] = token;
+      var response = await get(uri,
+          headers: headers);
+
+      if (response.statusCode == HttpStatus.ok) {
+        print("Hola222 : ${json.decode(response.body)}");
+        return json.decode(response.body);
       } else {
         print('Api._getJson($uri) status code is ${response.statusCode}');
         return null;
