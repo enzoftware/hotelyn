@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:buscatelo/ui/utils/base_dialogs.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class LoginPage extends StatefulWidget {
   LoginPageState createState() => new LoginPageState();
 }
 
-class LoginPageState extends State<LoginPage> with BaseDialogs{
+class LoginPageState extends State<LoginPage> with BaseDialogs {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -26,33 +27,45 @@ class LoginPageState extends State<LoginPage> with BaseDialogs{
         child: Text(
           'BuscaTelo',
           style: TextStyle(
-            fontSize: 40.0,
-            fontWeight: FontWeight.w800,
-            color: Colors.black
-          ),
+              fontSize: 40.0, fontWeight: FontWeight.w800, color: Colors.white),
         ),
       ),
     );
+
     final email = TextFormField(
       keyboardType: TextInputType.emailAddress,
       controller: usernameController,
       autofocus: false,
+      style: TextStyle(
+        color: Colors.white,
+      ),
       decoration: InputDecoration(
+        hintStyle: TextStyle(
+          color: Colors.white,
+        ),
         hintText: 'Email',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
     );
+
     final password = TextFormField(
       autofocus: false,
       obscureText: true,
       controller: passwordController,
+      style: TextStyle(
+        color: Colors.white,
+      ),
       decoration: InputDecoration(
+        hintStyle: TextStyle(
+          color: Colors.white,
+        ),
         hintText: 'Password',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
       ),
     );
+
     final loginButton = Padding(
       padding: EdgeInsets.symmetric(vertical: 16.0),
       child: RaisedButton(
@@ -67,18 +80,20 @@ class LoginPageState extends State<LoginPage> with BaseDialogs{
         child: Text('Iniciar sesión', style: TextStyle(color: Colors.white)),
       ),
     );
+
     final forgotLabel = FlatButton(
       child: Text(
         '¿Olvidaste tu contraseña?',
-        style: TextStyle(color: Colors.black54),
-      ), onPressed: () {},
+        style: TextStyle(color: Colors.white),
+      ),
+      onPressed: () {},
     );
+
     final registerLabel = GestureDetector(
         child: Text(
           'Si no tienes cuenta Registrate aquí',
           style: TextStyle(
-              decoration: TextDecoration.underline, color: Colors.blue
-              ),
+              decoration: TextDecoration.underline, color: Colors.blue),
           textAlign: TextAlign.center,
         ),
         onTap: () {
@@ -88,23 +103,45 @@ class LoginPageState extends State<LoginPage> with BaseDialogs{
           );
         });
 
+    final coverPhoto = Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: ExactAssetImage('assets/img/background-ui.jpg'),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: BackdropFilter(
+        filter: new ImageFilter.blur(sigmaX: 7.0, sigmaY: 7.0),
+        child: new Container(
+          decoration: new BoxDecoration(color: Colors.white.withOpacity(0.0)),
+        ),
+      ),
+    );
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      //backgroundColor: Colors.white,
       body: Center(
-          child: ListView(
+        child: Stack(
+          children: <Widget>[
+            coverPhoto,
+            ListView(
               shrinkWrap: true,
               padding: EdgeInsets.only(left: 24.0, right: 24.0),
               children: <Widget>[
-            logo,
-            SizedBox(height: 34.0),
-            email,
-            SizedBox(height: 8.0),
-            password,
-            SizedBox(height: 15.0),
-            loginButton,
-            forgotLabel,
-            registerLabel
-          ])),
+                logo,
+                SizedBox(height: 34.0),
+                email,
+                SizedBox(height: 8.0),
+                password,
+                SizedBox(height: 15.0),
+                loginButton,
+                forgotLabel,
+                registerLabel
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
