@@ -352,7 +352,4 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
     );
   }
 
-  Widget _buildIndicator() {
-    return Container(width: 20, height: 5, color: Colors.white);
-  }
 }
