@@ -1,4 +1,4 @@
-# BuscaTelo-mobile
+# TelOh-mobile
 
 Buscatelo app made with Flutter.
 
