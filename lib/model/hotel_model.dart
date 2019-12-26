@@ -7,14 +7,15 @@ class HotelModel {
   String rate;
   String name;
 
-  HotelModel(
-      {this.id,
-      this.address,
-      this.phone,
-      this.description,
-      this.email,
-      this.rate,
-      this.name});
+  HotelModel({
+    this.id,
+    this.address,
+    this.phone,
+    this.description,
+    this.email,
+    this.rate,
+    this.name,
+  });
 
   HotelModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
