@@ -1,6 +1,6 @@
-# TelOh-mobile
+# Hotel Booking App
 
-Buscatelo app made with Flutter.
+![design](https://cdn.dribbble.com/users/443226/screenshots/6111374/hotel_app_exploration_4x.jpg)
 
 ## System requirements
 To install and run Flutter, your development environment must meet these minimum requirements:
