@@ -35,9 +35,9 @@ class BottomBarState extends State<BottomBar>
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          _buildTab("Hoteles", Icons.hotel, 0),
-          _buildTab("Favoritos", Icons.favorite, 1),
-          _buildTab("Mapa", Icons.map, 2),
+          _buildTab("Hotels", Icons.hotel, 0),
+          _buildTab("Favorites", Icons.favorite, 1),
+          _buildTab("Map", Icons.map, 2),
         ],
       ),
     );
@@ -46,26 +46,26 @@ class BottomBarState extends State<BottomBar>
   Widget _buildTab(String text, IconData icon, int index) {
     return currentTab == index
         ? ActiveTab(
-      animation: animation,
-      key: Key(text),
-      text: text,
-      iconData: icon,
-    )
+            animation: animation,
+            key: Key(text),
+            text: text,
+            iconData: icon,
+          )
         : Material(
-      child: InkWell(
-        onTap: () {
-          setState(() {
-            currentTab = index;
-            animationController.reset();
-            animationController.forward();
-          });
-        },
-        child: Icon(
-          icon,
-          size: 35,
-        ),
-      ),
-    );
+            child: InkWell(
+              onTap: () {
+                setState(() {
+                  currentTab = index;
+                  animationController.reset();
+                  animationController.forward();
+                });
+              },
+              child: Icon(
+                icon,
+                size: 35,
+              ),
+            ),
+          );
   }
 
   @override

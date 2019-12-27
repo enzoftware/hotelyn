@@ -14,11 +14,9 @@ class MyApp extends StatelessWidget {
       title: 'BuscaTelo',
       theme: ThemeData(
         primarySwatch: primarySwatch,
-        canvasColor: Colors.transparent,
         primaryColor: primaryColor,
         accentColor: accentColor,
         fontFamily: 'avenir',
-        scaffoldBackgroundColor: backgroundColor,
         cardColor: Colors.white,
       ),
       home: HotelSearchPage(),

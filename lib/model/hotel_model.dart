@@ -6,6 +6,10 @@ class HotelModel {
   String email;
   String rate;
   String name;
+  String imageUrl;
+  double price;
+  List<Amenities> amenities;
+
 
   HotelModel({
     this.id,
@@ -15,6 +19,9 @@ class HotelModel {
     this.email,
     this.rate,
     this.name,
+    this.imageUrl,
+    this.price,
+    // this.amenities,
   });
 
   HotelModel.fromJson(Map<String, dynamic> json) {
@@ -38,4 +45,12 @@ class HotelModel {
     data['name'] = this.name;
     return data;
   }
+}
+
+
+class Amenities{
+  String title;
+  String iconUrl;
+
+  
 }
