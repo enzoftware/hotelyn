@@ -4,6 +4,36 @@ import 'package:buscatelo/ui/widgets/bottom_bar.dart';
 import 'package:flutter/material.dart';
 
 class HotelSearchPage extends StatelessWidget {
+  final List<Widget> hotels = [
+    HotelItem(
+      hotel: HotelModel(
+        name: 'ArtHouse New York City',
+        address: '90% Upper West Side',
+        price: 1440.0,
+      ),
+    ),
+    HotelItem(
+      hotel: HotelModel(
+        name: 'ArtHouse New York City',
+        address: '90% Upper West Side',
+        price: 1440.0,
+      ),
+    ),
+    HotelItem(
+      hotel: HotelModel(
+        name: 'ArtHouse New York City',
+        address: '90% Upper West Side',
+        price: 1440.0,
+      ),
+    ),
+    HotelItem(
+      hotel: HotelModel(
+        name: 'ArtHouse New York City',
+        address: '90% Upper West Side',
+        price: 1440.0,
+      ),
+    ),
+  ];
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -11,18 +41,9 @@ class HotelSearchPage extends StatelessWidget {
         body: Column(
           children: <Widget>[
             Expanded(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    child: HotelItem(
-                      hotel: HotelModel(
-                        name: 'eL MATI',
-                        address: 'el mati no se bana',
-                        price: 233.0,
-                      ),
-                    ),
-                  ),
-                ],
+              child: ListView.builder(
+                itemCount: hotels.length,
+                itemBuilder: (_, index) => hotels[index],
               ),
             ),
             BottomBar(),
