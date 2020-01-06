@@ -11,13 +11,10 @@ class HotelDetailPage extends StatefulWidget {
 }
 
 class _HotelDetailPageState extends State<HotelDetailPage> {
-  bool isFav = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-        )
+      body: Container(),
     );
   }
 }

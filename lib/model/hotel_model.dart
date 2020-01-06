@@ -10,7 +10,6 @@ class HotelModel {
   double price;
   List<Amenities> amenities;
 
-
   HotelModel({
     this.id,
     this.address,
@@ -47,10 +46,7 @@ class HotelModel {
   }
 }
 
-
-class Amenities{
+class Amenities {
   String title;
   String iconUrl;
-
-  
 }
