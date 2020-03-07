@@ -24,9 +24,10 @@ class HotelItem extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(40.0),
             child: Card(
-              margin: const EdgeInsets.only(
-                top: 150,
-              ),
+              elevation: 8,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              margin: const EdgeInsets.only(top: 200),
               child: Column(
                 children: <Widget>[
                   Row(
@@ -36,20 +37,14 @@ class HotelItem extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                8.00,
-                              ),
-                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
                             color: primaryColor,
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               'FOR RENT',
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
+                              style: TextStyle(color: Colors.white),
                             ),
                           ),
                         ),
@@ -57,7 +52,7 @@ class HotelItem extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          'S/. ${hotel.price.toString()}',
+                          'S/ ${hotel.price.toString()}',
                           style: priceTextStyle,
                         ),
                       ),
