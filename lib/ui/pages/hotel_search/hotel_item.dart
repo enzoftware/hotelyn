@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 
 class HotelItem extends StatelessWidget {
   final HotelModel hotel;
-  static const String HOTEL_IMG_URL =
-      'https://r-cf.bstatic.com/images/hotel/max1024x768/146/146489863.jpg';
 
   const HotelItem({Key key, this.hotel}) : super(key: key);
 
@@ -18,7 +16,7 @@ class HotelItem extends StatelessWidget {
             padding: const EdgeInsets.all(32.0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
-              child: Image.network(HOTEL_IMG_URL),
+              child: Image.network(hotel.imageUrl),
             ),
           ),
           Padding(

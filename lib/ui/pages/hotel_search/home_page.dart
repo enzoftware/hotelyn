@@ -1,53 +1,45 @@
-import 'package:buscatelo/model/hotel_model.dart';
+import 'package:buscatelo/bloc/hotel_bloc.dart';
 import 'package:buscatelo/ui/pages/hotel_search/hotel_item.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HotelSearchPage extends StatelessWidget {
-  final List<Widget> hotels = [
-    HotelItem(
-      hotel: HotelModel(
-        name: 'ArtHouse New York City',
-        address: '90% Upper West Side',
-        price: 1440.0,
-      ),
-    ),
-    HotelItem(
-      hotel: HotelModel(
-        name: 'ArtHouse New York City',
-        address: '90% Upper West Side',
-        price: 1440.0,
-      ),
-    ),
-    HotelItem(
-      hotel: HotelModel(
-        name: 'ArtHouse New York City',
-        address: '90% Upper West Side',
-        price: 1440.0,
-      ),
-    ),
-    HotelItem(
-      hotel: HotelModel(
-        name: 'ArtHouse New York City',
-        address: '90% Upper West Side',
-        price: 1440.0,
-      ),
-    ),
-  ];
   @override
   Widget build(BuildContext context) {
+    final hotelBloc = Provider.of<HotelBloc>(context);
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          children: <Widget>[
-            Expanded(
-              child: ListView.builder(
-                itemCount: hotels.length,
-                itemBuilder: (_, index) => hotels[index],
-              ),
-            ),
-          ],
-        ),
+        body: HotelListBody(hotelBloc: hotelBloc),
       ),
+    );
+  }
+}
+
+class HotelListBody extends StatelessWidget {
+  const HotelListBody({
+    Key key,
+    @required this.hotelBloc,
+  }) : super(key: key);
+
+  final HotelBloc hotelBloc;
+
+  @override
+  Widget build(BuildContext context) {
+    if (hotelBloc.hotels == null) {
+      return Center(child: CircularProgressIndicator());
+    }
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: ListView.builder(
+            itemCount: hotelBloc.hotels.length,
+            itemBuilder: (_, index) => HotelItem(
+              hotel: hotelBloc.hotels[index],
+              key: UniqueKey(),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
