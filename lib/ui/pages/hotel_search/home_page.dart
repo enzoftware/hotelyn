@@ -7,10 +7,8 @@ class HotelSearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hotelBloc = Provider.of<HotelBloc>(context);
-    return SafeArea(
-      child: Scaffold(
-        body: HotelListBody(hotelBloc: hotelBloc),
-      ),
+    return Scaffold(
+      body: HotelListBody(hotelBloc: hotelBloc),
     );
   }
 }

@@ -8,7 +8,7 @@ class AppCommons {
 class _Colors {
   final Color backgroundColor = Color(0xFFe2d7f5);
   final Color primaryColor = Color(0xff6732c1);
-  final Color accentColor = Color(0xfffd8c00);
+  final Color accentColor = Color(0xff4caf50);
 }
 
 class _Dimens {
