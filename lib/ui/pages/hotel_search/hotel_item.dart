@@ -11,15 +11,23 @@ class HotelItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => HotelDetailPage.navigate(hotel),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => HotelDetailPage(hotel),
+        ),
+      ),
       child: Container(
         child: Stack(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: Image.network(hotel.imageUrl),
+            Hero(
+              tag: Key("key" + hotel.imageUrl),
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Image.network(hotel.imageUrl),
+                ),
               ),
             ),
             Padding(
