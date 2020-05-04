@@ -2,6 +2,8 @@
     {
         "name": "hotel 1",
         "address": "address 12",
+        "price": 5240,
+        "imageUrl": "https://www.libertador.com.pe/wp-content/uploads/2015/06/Cusco-Palacio.jpg",
         "rooms": [
             {
                 "imageUrl": "https://f4photographystudio.com/wp-content/uploads/2019/12/Colorful-Hotel-Room.jpg",
@@ -57,7 +59,9 @@
     },
     {
         "name": "hotel 2",
+        "price": 2430,
         "address": "awesome 1234",
+        "imageUrl": "https://www.ahstatic.com/photos/1867_ho_00_p_1024x768.jpg",
         "rooms": [
             {
                 "imageUrl": "https://f4photographystudio.com/wp-content/uploads/2019/12/Colorful-Hotel-Room.jpg",
@@ -110,6 +114,8 @@
     {
         "name": "hotel 3",
         "address": "Funny street 12",
+        "price": 1240,
+        "imageUrl": "https://q-cf.bstatic.com/images/hotel/max1024x768/209/209735787.jpg",
         "rooms": [
             {
                 "imageUrl": "https://f4photographystudio.com/wp-content/uploads/2019/12/Colorful-Hotel-Room.jpg",
