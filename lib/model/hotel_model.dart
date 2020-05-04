@@ -13,6 +13,7 @@ class HotelModel {
     this.imageUrl,
     this.rooms,
     this.reviews,
+    this.price,
     this.amenities,
   });
 
