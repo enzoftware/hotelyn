@@ -1,0 +1,162 @@
+[
+    {
+        "name": "hotel 1",
+        "address": "address 12",
+        "rooms": [
+            {
+                "imageUrl": "https://f4photographystudio.com/wp-content/uploads/2019/12/Colorful-Hotel-Room.jpg",
+                "name": "Room 1"
+            },
+            {
+                "imageUrl": "https://kivea.net/wp-content/uploads/2019/08/73118462.jpg",
+                "name": "Room 2"
+            },
+            {
+                "imageUrl": "https://www.ggrasia.com/wp-content/uploads/2015/05/JW-Marriot-hotel-room-Galaxy-Macau-Phase-2-e1432637852679.jpg",
+                "name": "Room 3"
+            }
+        ],
+        "reviews": [
+            {
+                "message": "Hi, really nice place!!",
+                "user": "Nan",
+                "userImage": "https://www.dittolanding.org/templates/semantic/img/nan.jpg",
+                "rate": 4
+            },
+            {
+                "message": "Could be better :(",
+                "user": "Elliot",
+                "userImage": "https://react.semantic-ui.com/images/avatar/large/elliot.jpg",
+                "rate": 3
+            },
+            {
+                "message": "Best place to stay :)",
+                "user": "Matt",
+                "userImage": "https://image.ibb.co/gmbNQT/matthew.png",
+                "rate": 5
+            }
+        ],
+        "amenities": [
+            {
+                "name": "WiFi",
+                "imageUrl": "https://cdn1.iconfinder.com/data/icons/social-messaging-ui-color/254000/09-512.png"
+            },
+            {
+                "name": "Parking",
+                "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Parking_icon.svg/1200px-Parking_icon.svg.png"
+            },
+            {
+                "name": "Beach view",
+                "imageUrl": "https://cdn4.iconfinder.com/data/icons/summer-and-the-beach-in-filled-outline-style/512/Summer_and_The_Beach_in_Filled_Outline_Style-16-512.png"
+            },
+            {
+                "name": "164 rooms",
+                "imageUrl": "https://img.icons8.com/all/500/room.png"
+            }
+        ]
+    },
+    {
+        "name": "hotel 2",
+        "address": "awesome 1234",
+        "rooms": [
+            {
+                "imageUrl": "https://f4photographystudio.com/wp-content/uploads/2019/12/Colorful-Hotel-Room.jpg",
+                "name": "Room abc"
+            },
+            {
+                "imageUrl": "https://kivea.net/wp-content/uploads/2019/08/73118462.jpg",
+                "name": "Room def"
+            },
+            {
+                "imageUrl": "https://www.ggrasia.com/wp-content/uploads/2015/05/JW-Marriot-hotel-room-Galaxy-Macau-Phase-2-e1432637852679.jpg",
+                "name": "Room ghi"
+            }
+        ],
+        "reviews": [
+            {
+                "message": "Hi, really nice place!!",
+                "user": "Nani",
+                "userImage": "https://www.dittolanding.org/templates/semantic/img/nan.jpg",
+                "rate": 4
+            },
+            {
+                "message": "Could be better :(",
+                "user": "Ellioto",
+                "userImage": "https://react.semantic-ui.com/images/avatar/large/elliot.jpg",
+                "rate": 3
+            },
+            {
+                "message": "Best place to stay :)",
+                "user": "Matti",
+                "userImage": "https://image.ibb.co/gmbNQT/matthew.png",
+                "rate": 5
+            }
+        ],
+        "amenities": [
+            {
+                "name": "WiFi",
+                "imageUrl": "https://cdn1.iconfinder.com/data/icons/social-messaging-ui-color/254000/09-512.png"
+            },
+            {
+                "name": "Parking",
+                "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Parking_icon.svg/1200px-Parking_icon.svg.png"
+            },
+            {
+                "name": "164 rooms",
+                "imageUrl": "https://img.icons8.com/all/500/room.png"
+            }
+        ]
+    },
+    {
+        "name": "hotel 3",
+        "address": "Funny street 12",
+        "rooms": [
+            {
+                "imageUrl": "https://f4photographystudio.com/wp-content/uploads/2019/12/Colorful-Hotel-Room.jpg",
+                "name": "Room X"
+            },
+            {
+                "imageUrl": "https://kivea.net/wp-content/uploads/2019/08/73118462.jpg",
+                "name": "Room Y"
+            },
+            {
+                "imageUrl": "https://www.ggrasia.com/wp-content/uploads/2015/05/JW-Marriot-hotel-room-Galaxy-Macau-Phase-2-e1432637852679.jpg",
+                "name": "Room Z"
+            }
+        ],
+        "reviews": [
+            {
+                "message": "Hi, really nice place!!",
+                "user": "Messi",
+                "userImage": "https://image.flaticon.com/icons/png/512/805/805404.png",
+                "rate": 4
+            },
+            {
+                "message": "Could be better :(",
+                "user": "Neymar",
+                "userImage": "https://cdn3.iconfinder.com/data/icons/diversity-avatars-vol-2/64/footballer-soccer-neymar-njr-psg-brazil-512.png",
+                "rate": 3
+            },
+            {
+                "message": "Best place to stay :)",
+                "user": "Cristiano",
+                "userImage": "https://cdn4.iconfinder.com/data/icons/diversity-v2-0-volume-03/64/footballers-cristiano-ronaldo-512.png",
+                "rate": 5
+            }
+        ],
+        "amenities": [
+            {
+                "name": "WiFi",
+                "imageUrl": "https://cdn1.iconfinder.com/data/icons/social-messaging-ui-color/254000/09-512.png"
+            },
+            {
+                "name": "Parking",
+                "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Parking_icon.svg/1200px-Parking_icon.svg.png"
+            },
+            {
+                "name": "Beach view",
+                "imageUrl": "https://cdn4.iconfinder.com/data/icons/summer-and-the-beach-in-filled-outline-style/512/Summer_and_The_Beach_in_Filled_Outline_Style-16-512.png"
+            }
+        ]
+    }
+]
