@@ -1,6 +1,7 @@
 class HotelModel {
   String name;
   String address;
+  String description;
   String imageUrl;
   int price;
   List<Rooms> rooms;
@@ -14,12 +15,14 @@ class HotelModel {
     this.rooms,
     this.reviews,
     this.price,
+    this.description,
     this.amenities,
   });
 
   HotelModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     price = json['price'];
+    description = json['description'];
     imageUrl = json['imageUrl'];
     address = json['address'];
     if (json['rooms'] != null) {
@@ -46,6 +49,7 @@ class HotelModel {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['name'] = this.name;
     data['price'] = this.price;
+    data['description'] = this.description;
     data['address'] = this.address;
     data['imageUrl'] = this.imageUrl;
     if (this.rooms != null) {

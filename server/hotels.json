@@ -3,7 +3,8 @@
         "name": "hotel 1",
         "address": "address 12",
         "price": 5240,
-        "imageUrl": "https://www.libertador.com.pe/wp-content/uploads/2015/06/Cusco-Palacio.jpg",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "imageUrl": "https://q-cf.bstatic.com/images/hotel/max1280x900/488/48858480.jpg",
         "rooms": [
             {
                 "imageUrl": "https://f4photographystudio.com/wp-content/uploads/2019/12/Colorful-Hotel-Room.jpg",
@@ -61,6 +62,7 @@
         "name": "hotel 2",
         "price": 2430,
         "address": "awesome 1234",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         "imageUrl": "https://www.ahstatic.com/photos/1867_ho_00_p_1024x768.jpg",
         "rooms": [
             {
@@ -115,6 +117,7 @@
         "name": "hotel 3",
         "address": "Funny street 12",
         "price": 1240,
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         "imageUrl": "https://q-cf.bstatic.com/images/hotel/max1024x768/209/209735787.jpg",
         "rooms": [
             {
