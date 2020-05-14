@@ -1,4 +1,7 @@
 import 'package:buscatelo/model/hotel_model.dart';
+import 'package:buscatelo/ui/pages/hotel_detail/info/hotel_info_tab.dart';
+import 'package:buscatelo/ui/pages/hotel_detail/review/hotel_review_tab.dart';
+import 'package:buscatelo/ui/pages/hotel_detail/room/hotel_room_tab.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -113,7 +116,7 @@ class RecipeBody extends StatelessWidget {
                           padding: const EdgeInsets.all(20),
                           child: TabBarView(
                             children: [
-                              HotelDetailTab(hotel: hotel),
+                              HotelInformationTab(hotel: hotel),
                               HotelRoomTab(),
                               HotelReviewTab(),
                             ],
@@ -129,7 +132,7 @@ class RecipeBody extends StatelessWidget {
                         tabs: [
                           Tab(
                             child: Text(
-                              "DETAILS",
+                              "INFO",
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
@@ -155,59 +158,6 @@ class RecipeBody extends StatelessWidget {
           )
         ],
       ),
-    );
-  }
-}
-
-class HotelReviewTab extends StatelessWidget {
-  const HotelReviewTab({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Icon(Icons.directions_bike);
-  }
-}
-
-class HotelRoomTab extends StatelessWidget {
-  const HotelRoomTab({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Icon(Icons.directions_transit);
-  }
-}
-
-class HotelDetailTab extends StatelessWidget {
-  const HotelDetailTab({
-    Key key,
-    @required this.hotel,
-  }) : super(key: key);
-
-  final HotelModel hotel;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          hotel.name,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 32,
-            fontFamily: 'Avenir',
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        Divider(
-          height: 2,
-          color: Colors.grey,
-        )
-      ],
     );
   }
 }
