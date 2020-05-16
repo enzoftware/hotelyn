@@ -88,7 +88,7 @@ class Review {
   String message;
   String user;
   String userImage;
-  int rate;
+  double rate;
 
   Review({this.message, this.user, this.userImage, this.rate});
 
