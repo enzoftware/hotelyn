@@ -4,9 +4,9 @@ class HotelModel {
   String description;
   String imageUrl;
   int price;
-  List<Rooms> rooms;
-  List<Reviews> reviews;
-  List<Amenities> amenities;
+  List<Room> rooms;
+  List<Review> reviews;
+  List<Amenitie> amenities;
 
   HotelModel({
     this.name,
@@ -26,21 +26,21 @@ class HotelModel {
     imageUrl = json['imageUrl'];
     address = json['address'];
     if (json['rooms'] != null) {
-      rooms = List<Rooms>();
+      rooms = List<Room>();
       json['rooms'].forEach((v) {
-        rooms.add(Rooms.fromJson(v));
+        rooms.add(Room.fromJson(v));
       });
     }
     if (json['reviews'] != null) {
-      reviews = List<Reviews>();
+      reviews = List<Review>();
       json['reviews'].forEach((v) {
-        reviews.add(Reviews.fromJson(v));
+        reviews.add(Review.fromJson(v));
       });
     }
     if (json['amenities'] != null) {
-      amenities = List<Amenities>();
+      amenities = List<Amenitie>();
       json['amenities'].forEach((v) {
-        amenities.add(Amenities.fromJson(v));
+        amenities.add(Amenitie.fromJson(v));
       });
     }
   }
@@ -65,13 +65,13 @@ class HotelModel {
   }
 }
 
-class Rooms {
+class Room {
   String imageUrl;
   String name;
 
-  Rooms({this.imageUrl, this.name});
+  Room({this.imageUrl, this.name});
 
-  Rooms.fromJson(Map<String, dynamic> json) {
+  Room.fromJson(Map<String, dynamic> json) {
     imageUrl = json['imageUrl'];
     name = json['name'];
   }
@@ -84,15 +84,15 @@ class Rooms {
   }
 }
 
-class Reviews {
+class Review {
   String message;
   String user;
   String userImage;
   int rate;
 
-  Reviews({this.message, this.user, this.userImage, this.rate});
+  Review({this.message, this.user, this.userImage, this.rate});
 
-  Reviews.fromJson(Map<String, dynamic> json) {
+  Review.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     user = json['user'];
     userImage = json['userImage'];
@@ -109,13 +109,13 @@ class Reviews {
   }
 }
 
-class Amenities {
+class Amenitie {
   String name;
   String imageUrl;
 
-  Amenities({this.name, this.imageUrl});
+  Amenitie({this.name, this.imageUrl});
 
-  Amenities.fromJson(Map<String, dynamic> json) {
+  Amenitie.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     imageUrl = json['imageUrl'];
   }
