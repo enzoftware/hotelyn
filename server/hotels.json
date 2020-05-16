@@ -1,7 +1,7 @@
 [
     {
-        "name": "hotel 1",
-        "address": "address 12",
+        "name": "Hotel RecarlisonsPlace",
+        "address": "Av. Main Street 1212. Near from KFC",
         "price": 5240,
         "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
         "imageUrl": "https://q-cf.bstatic.com/images/hotel/max1280x900/488/48858480.jpg",
@@ -21,13 +21,13 @@
         ],
         "reviews": [
             {
-                "message": "Hi, really nice place!!",
+                "message": "Very confortable rooms!!",
                 "user": "Nan",
                 "userImage": "https://www.dittolanding.org/templates/semantic/img/nan.jpg",
                 "rate": 4
             },
             {
-                "message": "Could be better :(",
+                "message": "Good attention, good food, good rooms. Amazing places",
                 "user": "Elliot",
                 "userImage": "https://react.semantic-ui.com/images/avatar/large/elliot.jpg",
                 "rate": 3
