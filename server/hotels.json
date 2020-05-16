@@ -8,15 +8,15 @@
         "rooms": [
             {
                 "imageUrl": "https://f4photographystudio.com/wp-content/uploads/2019/12/Colorful-Hotel-Room.jpg",
-                "name": "Room 1"
+                "name": "Standard Room"
             },
             {
                 "imageUrl": "https://kivea.net/wp-content/uploads/2019/08/73118462.jpg",
-                "name": "Room 2"
+                "name": "Premium Room"
             },
             {
                 "imageUrl": "https://www.ggrasia.com/wp-content/uploads/2015/05/JW-Marriot-hotel-room-Galaxy-Macau-Phase-2-e1432637852679.jpg",
-                "name": "Room 3"
+                "name": "Deluxe Room"
             }
         ],
         "reviews": [
@@ -24,7 +24,7 @@
                 "message": "Very confortable rooms!!",
                 "user": "Nan",
                 "userImage": "https://www.dittolanding.org/templates/semantic/img/nan.jpg",
-                "rate": 4
+                "rate": 4.2
             },
             {
                 "message": "Good attention, good food, good rooms. Amazing places",
