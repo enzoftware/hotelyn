@@ -26,7 +26,9 @@ class HotelInformationTab extends StatelessWidget {
         Divider(
           height: 2,
           color: Colors.grey,
-        )
+        ),
+        SizedBox(height: 16),
+        Text(hotel.description)
       ],
     );
   }
