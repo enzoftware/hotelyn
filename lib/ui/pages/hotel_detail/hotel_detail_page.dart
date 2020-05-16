@@ -117,8 +117,8 @@ class RecipeBody extends StatelessWidget {
                           child: TabBarView(
                             children: [
                               HotelInformationTab(hotel: hotel),
-                              HotelRoomTab(),
-                              HotelReviewTab(),
+                              HotelRoomTab(rooms: hotel.rooms),
+                              HotelReviewTab(reviews: hotel.reviews),
                             ],
                           ),
                         ),
