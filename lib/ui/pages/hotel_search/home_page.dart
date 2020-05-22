@@ -23,6 +23,9 @@ class HotelListBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (hotelBloc.failure != null) {
+      return Center(child: Text(hotelBloc.failure.toString()));
+    }
     if (hotelBloc.hotels == null) {
       return Center(child: CircularProgressIndicator());
     }
