@@ -1,11 +1,18 @@
+import 'dart:io';
+
 import 'package:buscatelo/bloc/hotel_bloc.dart';
 import 'package:buscatelo/commons/theme.dart';
 import 'package:buscatelo/ui/pages/hotel_search/home_page.dart';
 import 'package:buscatelo/ui/utils/error_widget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.dumpErrorToConsole(details);
+    if (kReleaseMode) exit(1);
+  };
   ErrorWidget.builder = (FlutterErrorDetails details) => CustomErrorWidget();
   runApp(MyApp());
 }
