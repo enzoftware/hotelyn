@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 class HotelApi {
   final String _baseUrl = 'https://raw.githubusercontent.com';
   final String _endPoint =
-      "/enzoftware/hotel_booking_app/master/server/hotels.json";
+      '/enzoftware/hotel_booking_app/master/server/hotels.json';
 
   Future<List<HotelModel>> getHotels() async {
     final data = await http.get(_baseUrl + _endPoint);

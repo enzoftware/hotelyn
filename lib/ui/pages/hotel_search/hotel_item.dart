@@ -21,7 +21,7 @@ class HotelItem extends StatelessWidget {
         child: Stack(
           children: <Widget>[
             Hero(
-              tag: Key("key" + hotel.imageUrl),
+              tag: Key('key' + hotel.imageUrl),
               child: Padding(
                 padding: const EdgeInsets.all(32.0),
                 child: ClipRRect(

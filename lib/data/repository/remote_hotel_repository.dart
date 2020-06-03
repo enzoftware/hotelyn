@@ -12,13 +12,13 @@ class RemoteHotelRepository extends HotelRepository {
       final api = HotelApi();
       return await api.getHotels();
     } on SocketException {
-      throw Failure("No internet connection", 400);
+      throw Failure('No internet connection', 400);
     } on HttpException {
-      throw Failure("Not found request", 404);
+      throw Failure('Not found request', 404);
     } on FormatException {
-      throw Failure("Invalid JSON format", 666);
+      throw Failure('Invalid JSON format', 666);
     } catch (e) {
-      throw Failure("Unknown error", 888);
+      throw Failure('Unknown error', 888);
     }
   }
 }

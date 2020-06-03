@@ -60,7 +60,7 @@ class RecipeBodyBackground extends StatelessWidget {
       right: 0,
       bottom: MediaQuery.of(context).size.height * .60,
       child: Hero(
-        tag: Key("key" + hotel.imageUrl),
+        tag: Key('key' + hotel.imageUrl),
         child: Container(
           height: MediaQuery.of(context).size.height * .25,
           width: double.infinity,
@@ -132,19 +132,19 @@ class RecipeBody extends StatelessWidget {
                         tabs: [
                           Tab(
                             child: Text(
-                              "INFO",
+                              'INFO',
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
                           Tab(
                             child: Text(
-                              "ROOMS",
+                              'ROOMS',
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
                           Tab(
                             child: Text(
-                              "REVIEW",
+                              'REVIEW',
                               style: TextStyle(color: Colors.black),
                             ),
                           ),

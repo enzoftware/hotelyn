@@ -5,5 +5,5 @@ class Failure {
   Failure(this.message, this.statusCode);
 
   @override
-  String toString() => "Error $statusCode. $message.";
+  String toString() => 'Error $statusCode. $message.';
 }

@@ -26,19 +26,19 @@ class HotelModel {
     imageUrl = json['imageUrl'];
     address = json['address'];
     if (json['rooms'] != null) {
-      rooms = List<Room>();
+      rooms = <Room>[];
       json['rooms'].forEach((v) {
         rooms.add(Room.fromJson(v));
       });
     }
     if (json['reviews'] != null) {
-      reviews = List<Review>();
+      reviews = <Review>[];
       json['reviews'].forEach((v) {
         reviews.add(Review.fromJson(v));
       });
     }
     if (json['amenities'] != null) {
-      amenities = List<Amenitie>();
+      amenities = <Amenitie>[];
       json['amenities'].forEach((v) {
         amenities.add(Amenitie.fromJson(v));
       });
@@ -46,20 +46,20 @@ class HotelModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['name'] = this.name;
-    data['price'] = this.price;
-    data['description'] = this.description;
-    data['address'] = this.address;
-    data['imageUrl'] = this.imageUrl;
-    if (this.rooms != null) {
-      data['rooms'] = this.rooms.map((v) => v.toJson()).toList();
+    final data = <String, dynamic>{};
+    data['name'] = name;
+    data['price'] = price;
+    data['description'] = description;
+    data['address'] = address;
+    data['imageUrl'] = imageUrl;
+    if (rooms != null) {
+      data['rooms'] = rooms.map((v) => v.toJson()).toList();
     }
-    if (this.reviews != null) {
-      data['reviews'] = this.reviews.map((v) => v.toJson()).toList();
+    if (reviews != null) {
+      data['reviews'] = reviews.map((v) => v.toJson()).toList();
     }
-    if (this.amenities != null) {
-      data['amenities'] = this.amenities.map((v) => v.toJson()).toList();
+    if (amenities != null) {
+      data['amenities'] = amenities.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -77,9 +77,9 @@ class Room {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['imageUrl'] = this.imageUrl;
-    data['name'] = this.name;
+    final data = <String, dynamic>{};
+    data['imageUrl'] = imageUrl;
+    data['name'] = name;
     return data;
   }
 }
@@ -90,7 +90,12 @@ class Review {
   String userImage;
   int rate;
 
-  Review({this.message, this.user, this.userImage, this.rate});
+  Review({
+    this.message,
+    this.user,
+    this.userImage,
+    this.rate,
+  });
 
   Review.fromJson(Map<String, dynamic> json) {
     message = json['message'];
@@ -100,11 +105,11 @@ class Review {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['message'] = this.message;
-    data['user'] = this.user;
-    data['userImage'] = this.userImage;
-    data['rate'] = this.rate;
+    final data = <String, dynamic>{};
+    data['message'] = message;
+    data['user'] = user;
+    data['userImage'] = userImage;
+    data['rate'] = rate;
     return data;
   }
 }
@@ -121,9 +126,9 @@ class Amenitie {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['name'] = this.name;
-    data['imageUrl'] = this.imageUrl;
+    final data = <String, dynamic>{};
+    data['name'] = name;
+    data['imageUrl'] = imageUrl;
     return data;
   }
 }
