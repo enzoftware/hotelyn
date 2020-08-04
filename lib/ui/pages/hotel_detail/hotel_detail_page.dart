@@ -20,7 +20,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
         color: Theme.of(context).canvasColor,
         child: Stack(
           children: <Widget>[
-            RecipeBodyBackground(hotel: widget.hotel),
+            HotelFeedBodyBackground(hotel: widget.hotel),
             Positioned(
               left: 0,
               top: 0,
@@ -36,7 +36,7 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                   elevation: 0,
                 ),
                 backgroundColor: Colors.transparent,
-                body: RecipeBody(hotel: widget.hotel),
+                body: HotelFeedBody(hotel: widget.hotel),
               ),
             ),
           ],
@@ -44,8 +44,8 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
       );
 }
 
-class RecipeBodyBackground extends StatelessWidget {
-  const RecipeBodyBackground({
+class HotelFeedBodyBackground extends StatelessWidget {
+  const HotelFeedBodyBackground({
     Key key,
     @required this.hotel,
   }) : super(key: key);
@@ -86,10 +86,10 @@ class RecipeBodyBackground extends StatelessWidget {
   }
 }
 
-class RecipeBody extends StatelessWidget {
+class HotelFeedBody extends StatelessWidget {
   final HotelModel hotel;
 
-  const RecipeBody({Key key, this.hotel}) : super(key: key);
+  const HotelFeedBody({Key key, this.hotel}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -106,7 +106,6 @@ class RecipeBody extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(16)),
               elevation: 8,
               child: Container(
-                // padding: EdgeInsets.all(24),
                 child: DefaultTabController(
                   length: 3,
                   child: Column(

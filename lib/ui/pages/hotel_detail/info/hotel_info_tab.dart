@@ -23,10 +23,7 @@ class HotelInformationTab extends StatelessWidget {
             fontWeight: FontWeight.w700,
           ),
         ),
-        Divider(
-          height: 2,
-          color: Colors.grey,
-        ),
+        Divider(height: 2, color: Colors.grey),
         SizedBox(height: 16),
         Text(hotel.description)
       ],
