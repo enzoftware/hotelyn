@@ -12,6 +12,8 @@ dependencies:
   http: any
   provider: any
   bordered_text: ^1.0.0
+  get_it: ^4.0.4
+  mockito: ^4.1.1
 
 dev_dependencies:
   flutter_test:
