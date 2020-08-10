@@ -1,5 +1,5 @@
 import 'package:bordered_text/bordered_text.dart';
-import 'package:buscatelo/model/hotel_model.dart';
+import 'package:buscatelo/model/room_model.dart';
 import 'package:flutter/material.dart';
 
 class RoomItem extends StatelessWidget {

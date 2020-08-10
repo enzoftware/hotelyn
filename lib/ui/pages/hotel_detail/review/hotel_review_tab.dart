@@ -1,4 +1,4 @@
-import 'package:buscatelo/model/hotel_model.dart';
+import 'package:buscatelo/model/review_model.dart';
 import 'package:buscatelo/ui/pages/hotel_detail/review/review_item.dart';
 import 'package:flutter/material.dart';
 

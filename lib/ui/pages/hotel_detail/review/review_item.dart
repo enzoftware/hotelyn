@@ -1,4 +1,4 @@
-import 'package:buscatelo/model/hotel_model.dart';
+import 'package:buscatelo/model/review_model.dart';
 import 'package:flutter/material.dart';
 
 class ReviewItem extends StatelessWidget {
