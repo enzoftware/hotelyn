@@ -94,12 +94,12 @@ class HotelFeedBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.only(left: 32, right: 32, bottom: 112, top: 144),
+      padding: EdgeInsets.only(left: 32, right: 32, bottom: 60, top: 144),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          SizedBox(height: 16),
+          SizedBox(height: 8),
           Expanded(
             child: Material(
               color: Colors.white,
