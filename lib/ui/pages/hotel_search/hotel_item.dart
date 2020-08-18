@@ -1,5 +1,7 @@
 import 'package:buscatelo/commons/theme.dart';
 import 'package:buscatelo/model/hotel_model.dart';
+import 'package:buscatelo/ui/common/hotel_price_text.dart';
+import 'package:buscatelo/ui/common/ticket_rent.dart';
 import 'package:buscatelo/ui/pages/hotel_detail/hotel_detail_page.dart';
 import 'package:flutter/material.dart';
 
@@ -44,27 +46,14 @@ class HotelItem extends StatelessWidget {
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              color: primaryColor,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                'FOR RENT',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
+                          child: TicketRent(
+                            color: primaryColor,
+                            title: 'FOR RENT',
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'S/ ${hotel.price.toString()}',
-                            style: priceTextStyle,
-                          ),
+                          child: HotelPriceText(price: hotel.price.toDouble()),
                         ),
                       ],
                     ),
@@ -96,12 +85,6 @@ class HotelItem extends StatelessWidget {
       ),
     );
   }
-
-  final TextStyle priceTextStyle = const TextStyle(
-    color: Colors.black,
-    fontSize: 24.0,
-    fontWeight: FontWeight.bold,
-  );
 
   final TextStyle titleTextStyle = const TextStyle(
     color: Colors.black,
