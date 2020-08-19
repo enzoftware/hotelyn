@@ -1,11 +1,12 @@
 import 'package:buscatelo/data/network/failure_error_handler.dart';
 import 'package:buscatelo/data/repository/hotel_repository.dart';
 import 'package:buscatelo/data/repository/remote_hotel_repository.dart';
+import 'package:buscatelo/dependencies.dart';
 import 'package:buscatelo/model/hotel_model.dart';
 import 'package:flutter/material.dart';
 
 class HotelBloc extends ChangeNotifier {
-  HotelRepository repository = RemoteHotelRepository();
+  HotelRepository repository = getIt<RemoteHotelRepository>();
 
   /// Private list of [HotelModel]
   List<HotelModel> _hotels;

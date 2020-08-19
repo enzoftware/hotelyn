@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:buscatelo/bloc/hotel_bloc.dart';
 import 'package:buscatelo/commons/theme.dart';
+import 'package:buscatelo/dependencies.dart';
 import 'package:buscatelo/ui/pages/hotel_search/home_page.dart';
 import 'package:buscatelo/ui/utils/error_widget.dart';
 import 'package:flutter/foundation.dart';
@@ -14,11 +15,13 @@ void main() {
     if (kReleaseMode) exit(1);
   };
   ErrorWidget.builder = (FlutterErrorDetails details) => CustomErrorWidget();
+  setupDependencies();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  final hotelBloc = getIt<HotelBloc>();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,7 +35,7 @@ class MyApp extends StatelessWidget {
         cardColor: Colors.white,
       ),
       home: ChangeNotifierProvider(
-        create: (_) => HotelBloc()..retrieveHotels(),
+        create: (_) => hotelBloc..retrieveHotels(),
         child: HotelSearchPage(),
       ),
     );
