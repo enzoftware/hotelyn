@@ -23,6 +23,7 @@ To install and run Flutter, your development environment must meet these minimum
 
 ### Run on the project folder:
 
+
 - Check if the branch is ```origin/develop``` .
 - Then run in terminal ```flutter packages get``` .
 - If you don't want to emulate the sdk in your computer, you need to connect your mobile phone. Here you can find a tutorial for this [Run on your phone](https://www.youtube.com/watch?v=NIp7yGxf30I).
