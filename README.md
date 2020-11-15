@@ -27,4 +27,3 @@ To install and run Flutter, your development environment must meet these minimum
 - Then run in terminal ```flutter packages get``` .
 - If you don't want to emulate the sdk in your computer, you need to connect your mobile phone. Here you can find a tutorial for this [Run on your phone](https://www.youtube.com/watch?v=NIp7yGxf30I).
 - After that run with ```F5``` if you use Visual studio code or run with the ```button play``` in Android Studio.
-
