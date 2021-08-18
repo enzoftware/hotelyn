@@ -21,7 +21,7 @@ void main() {
     expect(hotels.length, 3);
 
     for (var i = 0; i < hotels.length; i++) {
-      assert(hotels[i].name != null);
+      assert(hotels[i].name.isNotEmpty);
     }
   });
 }

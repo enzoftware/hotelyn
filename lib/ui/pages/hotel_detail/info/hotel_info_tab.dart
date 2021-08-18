@@ -61,7 +61,7 @@ class _HotelInformationTabState extends State<HotelInformationTab> {
             });
           },
           child: Text(
-            'More info',
+            selected ? 'Less information' : 'More information',
             style: TextStyle(color: primaryColor),
           ),
         ),
