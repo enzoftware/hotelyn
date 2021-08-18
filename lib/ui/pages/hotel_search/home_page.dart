@@ -29,9 +29,42 @@ class HotelListBody extends StatelessWidget {
     if (hotelBloc.hotels == null) {
       return Center(child: CircularProgressIndicator());
     }
-    return Column(
-      children: <Widget>[
-        Expanded(
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: Container(
+            height: 280,
+            width: 320,
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(40),
+                bottomRight: Radius.circular(220),
+                topRight: Radius.circular(30),
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 64.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Discover\nSuitable Hotel',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
+                ),
+              ),
+              Icon(Icons.search, size: 36)
+            ],
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.fromLTRB(0, 105, 0, 0),
           child: ListView.builder(
             itemCount: hotelBloc.hotels!.length,
             itemBuilder: (_, index) => HotelItem(
