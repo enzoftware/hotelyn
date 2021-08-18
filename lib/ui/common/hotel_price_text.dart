@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 class HotelPriceText extends StatelessWidget {
   final double price;
 
-  const HotelPriceText({Key key, this.price}) : super(key: key);
+  const HotelPriceText({Key? key, this.price = 0.0}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Text(
-      '\$' + price.toString(),
+      '\$ ${price}',
       style: TextStyle(
         color: Colors.black,
         fontSize: 24.0,

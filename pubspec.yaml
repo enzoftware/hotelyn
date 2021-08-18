@@ -3,23 +3,23 @@ description: Hotel finding. An awesome Flutter challenge.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^0.1.2
-  http: any
-  provider: any
-  bordered_text: ^1.0.0
-  get_it: ^4.0.4
-  mockito: ^4.1.1
+  cupertino_icons: ^1.0.3
+  http: 0.13.3
+  provider: 5.0.0
+  bordered_text: 2.0.0
+  get_it: 7.2.0
+  mockito: 5.0.14
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: "^0.7.0"
-  pedantic: ^1.8.0
+  flutter_launcher_icons: 0.9.1
+  pedantic: 1.11.1
 
 flutter_icons:
   ios: true

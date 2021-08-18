@@ -21,7 +21,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-  final hotelBloc = getIt<HotelBloc>();
+  final HotelBloc hotelBloc = getIt<HotelBloc>();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

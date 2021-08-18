@@ -9,16 +9,16 @@ class HotelBloc extends ChangeNotifier {
   HotelRepository repository = getIt<RemoteHotelRepository>();
 
   /// Private list of [HotelModel]
-  List<HotelModel> _hotels;
+  List<HotelModel>? _hotels;
 
   /// Public getter for hotels
-  List<HotelModel> get hotels => _hotels;
+  List<HotelModel>? get hotels => _hotels;
 
   /// [Failure] instance
-  Failure _failure;
-  Failure get failure => _failure;
+  Failure? _failure;
+  Failure? get failure => _failure;
 
-  void retrieveHotels() async {
+  Future<void> retrieveHotels() async {
     try {
       _hotels = await repository.fetchHotels();
     } on Failure catch (e) {

@@ -14,7 +14,7 @@ class CustomErrorWidget extends StatelessWidget {
           height: 200,
         ),
         Text(
-          'Ocurrio un error :(',
+          'Something its wrong. Please open an issue :(',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,

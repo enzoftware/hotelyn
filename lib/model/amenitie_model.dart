@@ -1,6 +1,6 @@
 class Amenitie {
-  String name;
-  String imageUrl;
+  String? name;
+  String? imageUrl;
 
   Amenitie({this.name, this.imageUrl});
 

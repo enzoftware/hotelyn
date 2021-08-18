@@ -2,9 +2,9 @@ import 'package:buscatelo/model/amenitie_model.dart';
 import 'package:flutter/material.dart';
 
 class AmenitieItem extends StatelessWidget {
-  final Amenitie amenitie;
+  final Amenitie? amenitie;
 
-  const AmenitieItem({Key key, this.amenitie}) : super(key: key);
+  const AmenitieItem({Key? key, this.amenitie}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +17,12 @@ class AmenitieItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(45),
             ),
             child: Image.network(
-              amenitie.imageUrl,
+              amenitie!.imageUrl!,
               height: 40,
               width: 40,
             ),
           ),
-          Text(amenitie.name),
+          Text(amenitie!.name!),
         ],
       ),
     );
