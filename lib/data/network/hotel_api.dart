@@ -13,6 +13,7 @@ class HotelApi {
   Future<List<HotelModel>> getHotels() async {
     final data = await client.get(Uri.parse(_baseUrl + _endPoint));
     final responseList = json.decode(data.body);
+    await Future.delayed(Duration(seconds: 2));
     return [for (final hotel in responseList) HotelModel.fromJson(hotel)];
   }
 }
