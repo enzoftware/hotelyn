@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 
 class HotelInformationTab extends StatefulWidget {
   HotelInformationTab({
-    Key key,
-    @required this.hotel,
+    Key? key,
+    required this.hotel,
   }) : super(key: key);
 
   final HotelModel hotel;
@@ -49,20 +49,19 @@ class _HotelInformationTabState extends State<HotelInformationTab> {
         AnimatedContainer(
           width: 200.0,
           height: selected ? 250.0 : 100.0,
-          alignment:
-              selected ? Alignment.center : AlignmentDirectional.topCenter,
+          alignment: selected ? Alignment.center : AlignmentDirectional.topCenter,
           duration: Duration(seconds: 2),
           curve: Curves.fastOutSlowIn,
           child: Text(widget.hotel.description),
         ),
-        FlatButton(
+        TextButton(
           onPressed: () {
             setState(() {
               selected = !selected;
             });
           },
           child: Text(
-            'More info',
+            selected ? 'Less information' : 'More information',
             style: TextStyle(color: primaryColor),
           ),
         ),
@@ -73,8 +72,7 @@ class _HotelInformationTabState extends State<HotelInformationTab> {
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             itemCount: widget.hotel.amenities.length,
-            itemBuilder: (_, index) =>
-                AmenitieItem(amenitie: widget.hotel.amenities[index]),
+            itemBuilder: (_, index) => AmenitieItem(amenitie: widget.hotel.amenities[index]),
           ),
         ),
       ],

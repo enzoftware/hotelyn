@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class TicketRent extends StatelessWidget {
   final String title;
-  final Color color;
+  final Color? color;
 
-  const TicketRent({Key key, this.title, this.color}) : super(key: key);
+  const TicketRent({Key? key, this.title = '', this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

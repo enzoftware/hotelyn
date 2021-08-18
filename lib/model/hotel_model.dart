@@ -3,24 +3,24 @@ import 'package:buscatelo/model/review_model.dart';
 import 'package:buscatelo/model/room_model.dart';
 
 class HotelModel {
-  String name;
-  String address;
-  String description;
-  String imageUrl;
-  int price;
-  List<Room> rooms;
-  List<Review> reviews;
-  List<Amenitie> amenities;
+  late String name;
+  late String address;
+  late String description;
+  late String imageUrl;
+  late int price;
+  late List<Room> rooms;
+  late List<Review> reviews;
+  late List<Amenitie> amenities;
 
   HotelModel({
-    this.name,
-    this.address,
-    this.imageUrl,
-    this.rooms,
-    this.reviews,
-    this.price,
-    this.description,
-    this.amenities,
+    required this.name,
+    required this.address,
+    required this.imageUrl,
+    required this.rooms,
+    required this.reviews,
+    required this.price,
+    required this.description,
+    required this.amenities,
   });
 
   HotelModel.fromJson(Map<String, dynamic> json) {
@@ -56,15 +56,9 @@ class HotelModel {
     data['description'] = description;
     data['address'] = address;
     data['imageUrl'] = imageUrl;
-    if (rooms != null) {
-      data['rooms'] = rooms.map((v) => v.toJson()).toList();
-    }
-    if (reviews != null) {
-      data['reviews'] = reviews.map((v) => v.toJson()).toList();
-    }
-    if (amenities != null) {
-      data['amenities'] = amenities.map((v) => v.toJson()).toList();
-    }
+    data['rooms'] = rooms.map((v) => v.toJson()).toList();
+    data['reviews'] = reviews.map((v) => v.toJson()).toList();
+    data['amenities'] = amenities.map((v) => v.toJson()).toList();
     return data;
   }
 }

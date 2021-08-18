@@ -15,8 +15,8 @@ class HotelSearchPage extends StatelessWidget {
 
 class HotelListBody extends StatelessWidget {
   const HotelListBody({
-    Key key,
-    @required this.hotelBloc,
+    Key? key,
+    required this.hotelBloc,
   }) : super(key: key);
 
   final HotelBloc hotelBloc;
@@ -33,9 +33,9 @@ class HotelListBody extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: ListView.builder(
-            itemCount: hotelBloc.hotels.length,
+            itemCount: hotelBloc.hotels!.length,
             itemBuilder: (_, index) => HotelItem(
-              hotel: hotelBloc.hotels[index],
+              hotel: hotelBloc.hotels![index],
               key: UniqueKey(),
             ),
           ),

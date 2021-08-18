@@ -1,6 +1,6 @@
 class Room {
-  String imageUrl;
-  String name;
+  String? imageUrl;
+  String? name;
 
   Room({this.imageUrl, this.name});
 

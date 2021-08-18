@@ -3,9 +3,9 @@ import 'package:buscatelo/ui/pages/hotel_detail/review/review_item.dart';
 import 'package:flutter/material.dart';
 
 class HotelReviewTab extends StatelessWidget {
-  final List<Review> reviews;
+  final List<Review>? reviews;
   const HotelReviewTab({
-    Key key,
+    Key? key,
     this.reviews,
   }) : super(key: key);
 
@@ -14,8 +14,8 @@ class HotelReviewTab extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: ListView.builder(
-        itemCount: reviews.length,
-        itemBuilder: (context, index) => ReviewItem(review: reviews[index]),
+        itemCount: reviews!.length,
+        itemBuilder: (context, index) => ReviewItem(review: reviews![index]),
       ),
     );
   }

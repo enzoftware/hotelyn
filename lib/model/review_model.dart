@@ -1,8 +1,8 @@
 class Review {
-  String message;
-  String user;
-  String userImage;
-  int rate;
+  String? message;
+  String? user;
+  String? userImage;
+  int? rate;
 
   Review({
     this.message,

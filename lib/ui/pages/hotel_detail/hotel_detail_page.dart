@@ -46,8 +46,8 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
 
 class HotelFeedBodyBackground extends StatelessWidget {
   const HotelFeedBodyBackground({
-    Key key,
-    @required this.hotel,
+    Key? key,
+    required this.hotel,
   }) : super(key: key);
 
   final HotelModel hotel;
@@ -65,20 +65,16 @@ class HotelFeedBodyBackground extends StatelessWidget {
           height: MediaQuery.of(context).size.height * .25,
           width: double.infinity,
           decoration: BoxDecoration(
-            image: DecorationImage(
-                image: NetworkImage(hotel.imageUrl), fit: BoxFit.cover),
+            image: DecorationImage(image: NetworkImage(hotel.imageUrl), fit: BoxFit.cover),
           ),
           child: Container(
             width: double.infinity,
             height: MediaQuery.of(context).size.height * .25,
             decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment(0, .8),
-                    end: Alignment(0, 0),
-                    colors: [
-                  Color(0xEE000000),
-                  Color(0x33000000),
-                ])),
+                gradient: LinearGradient(begin: Alignment(0, .8), end: Alignment(0, 0), colors: [
+              Color(0xEE000000),
+              Color(0x33000000),
+            ])),
           ),
         ),
       ),
@@ -89,12 +85,12 @@ class HotelFeedBodyBackground extends StatelessWidget {
 class HotelFeedBody extends StatelessWidget {
   final HotelModel hotel;
 
-  const HotelFeedBody({Key key, this.hotel}) : super(key: key);
+  const HotelFeedBody({Key? key, required this.hotel}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.only(left: 32, right: 32, bottom: 60, top: 144),
+      padding: EdgeInsets.only(left: 32, right: 32, bottom: 60, top: 220),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.max,
@@ -124,8 +120,7 @@ class HotelFeedBody extends StatelessWidget {
                       ),
                       TabBar(
                         indicator: UnderlineTabIndicator(
-                          borderSide:
-                              BorderSide(color: Color(0xDD613896), width: 4.0),
+                          borderSide: BorderSide(color: Color(0xDD613896), width: 4.0),
                           insets: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 40.0),
                         ),
                         tabs: [

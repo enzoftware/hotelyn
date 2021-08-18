@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class HotelItem extends StatelessWidget {
   final HotelModel hotel;
 
-  const HotelItem({Key key, this.hotel}) : super(key: key);
+  const HotelItem({Key? key, required this.hotel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +36,7 @@ class HotelItem extends StatelessWidget {
               padding: const EdgeInsets.all(40.0),
               child: Card(
                 elevation: 8,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                 margin: const EdgeInsets.only(top: 200),
                 child: Column(
                   children: <Widget>[
@@ -64,8 +63,7 @@ class HotelItem extends StatelessWidget {
                       ),
                       subtitle: Text(hotel.address),
                       trailing: Container(
-                        decoration: BoxDecoration(
-                            color: accentColor, shape: BoxShape.circle),
+                        decoration: BoxDecoration(color: accentColor, shape: BoxShape.circle),
                         child: Transform.rotate(
                           angle: 25 * 3.1416 / 180,
                           child: IconButton(
