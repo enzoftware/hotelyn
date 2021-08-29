@@ -1,12 +1,12 @@
-import 'package:buscatelo/bloc/hotel_bloc.dart';
-import 'package:buscatelo/ui/pages/hotel_search/hotel_item.dart';
+import 'package:buscatelo/features/home/provider/hotel_provider.dart';
+import 'package:buscatelo/features/home/ui/hotel_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HotelSearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final hotelBloc = Provider.of<HotelBloc>(context);
+    final hotelBloc = Provider.of<HotelProvider>(context);
     return Scaffold(
       body: HotelListBody(hotelBloc: hotelBloc),
     );
@@ -19,7 +19,7 @@ class HotelListBody extends StatelessWidget {
     required this.hotelBloc,
   }) : super(key: key);
 
-  final HotelBloc hotelBloc;
+  final HotelProvider hotelBloc;
 
   @override
   Widget build(BuildContext context) {

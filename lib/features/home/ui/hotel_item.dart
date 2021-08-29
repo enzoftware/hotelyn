@@ -1,8 +1,8 @@
 import 'package:buscatelo/commons/theme.dart';
 import 'package:buscatelo/model/hotel_model.dart';
-import 'package:buscatelo/ui/common/hotel_price_text.dart';
-import 'package:buscatelo/ui/common/ticket_rent.dart';
-import 'package:buscatelo/ui/pages/hotel_detail/hotel_detail_page.dart';
+import 'package:buscatelo/features/detail/ui/hotel_detail_page.dart';
+import 'package:buscatelo/widgets/hotel_price_text.dart';
+import 'package:buscatelo/widgets/ticket_rent.dart';
 import 'package:flutter/material.dart';
 
 class HotelItem extends StatelessWidget {
@@ -41,7 +41,8 @@ class HotelItem extends StatelessWidget {
               padding: const EdgeInsets.all(40.0),
               child: Card(
                 elevation: 8,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
                 margin: const EdgeInsets.only(top: 200),
                 child: Column(
                   children: <Widget>[
@@ -68,7 +69,8 @@ class HotelItem extends StatelessWidget {
                       ),
                       subtitle: Text(hotel.address),
                       trailing: Container(
-                        decoration: BoxDecoration(color: accentColor, shape: BoxShape.circle),
+                        decoration: BoxDecoration(
+                            color: accentColor, shape: BoxShape.circle),
                         child: Transform.rotate(
                           angle: 25 * 3.1416 / 180,
                           child: IconButton(

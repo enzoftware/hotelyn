@@ -1,12 +1,11 @@
-import 'package:buscatelo/bloc/hotel_bloc.dart';
-import 'mock_hotel_repository.dart';
+import 'package:buscatelo/features/home/provider/hotel_provider.dart';
+
 import 'package:buscatelo/dependencies.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  setupDependencies();
-  var hotelBloc = getIt<HotelBloc>();
-  hotelBloc.repository = MockHotelRepository();
+  setupTestDependencies();
+  var hotelBloc = getIt<HotelProvider>();
 
   group('Hotel list page loads', () {
     test('Loads hotels from repository', () async {

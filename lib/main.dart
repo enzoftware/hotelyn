@@ -1,13 +1,12 @@
 import 'dart:io';
-
-import 'package:buscatelo/bloc/hotel_bloc.dart';
 import 'package:buscatelo/commons/theme.dart';
 import 'package:buscatelo/dependencies.dart';
-import 'package:buscatelo/ui/pages/hotel_search/home_page.dart';
-import 'package:buscatelo/ui/utils/error_widget.dart';
+import 'package:buscatelo/features/home/ui/home_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'features/home/provider/hotel_provider.dart';
+import 'widgets/error_widget.dart';
 
 void main() {
   FlutterError.onError = (FlutterErrorDetails details) {
@@ -21,7 +20,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-  final HotelBloc hotelBloc = getIt<HotelBloc>();
+  final hotelBloc = getIt<HotelProvider>();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
