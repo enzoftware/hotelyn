@@ -33,3 +33,4 @@ flutter:
 
   assets:
     - assets/img/logo.png
+    - assets/img/error_image.jpeg

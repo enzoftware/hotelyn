@@ -1,49 +1,58 @@
+import 'package:buscatelo/dependencies.dart';
+import 'package:buscatelo/features/detail/provider/hotel_detail_provider.dart';
 import 'package:buscatelo/model/hotel_model.dart';
+import 'package:buscatelo/widgets/error_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import 'info/hotel_info_tab.dart';
 import 'review/hotel_review_tab.dart';
 import 'room/hotel_room_tab.dart';
 
-class HotelDetailPage extends StatefulWidget {
-  HotelDetailPage(this.hotel);
+class HotelDetailPage extends StatelessWidget {
+  static Widget init(String name) {
+    final provider = getIt<HotelDetailProvider>();
+    return ChangeNotifierProvider.value(
+      value: provider..fetchHotelDetail(name),
+      child: HotelDetailPage(),
+    );
+  }
 
-  final HotelModel hotel;
-
-  @override
-  _HotelDetailPageState createState() => _HotelDetailPageState();
-}
-
-class _HotelDetailPageState extends State<HotelDetailPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).canvasColor,
-      child: Stack(
-        children: <Widget>[
-          HotelFeedBodyBackground(hotel: widget.hotel),
-          Positioned(
-            left: 0,
-            top: 0,
-            bottom: 0,
-            right: 0,
-            child: Scaffold(
-              appBar: AppBar(
-                iconTheme: IconThemeData(
-                  color: Colors.white,
-                  size: 32,
+    final provider = Provider.of<HotelDetailProvider>(context);
+    if (provider.failure != null) return CustomErrorWidget();
+    if (provider.hotelModel == null) {
+      return Center(child: CircularProgressIndicator());
+    } else {
+      final hotel = provider.hotelModel!;
+      return Container(
+        color: Theme.of(context).canvasColor,
+        child: Stack(
+          children: <Widget>[
+            HotelFeedBodyBackground(hotel: hotel),
+            Positioned(
+              left: 0,
+              top: 0,
+              bottom: 0,
+              right: 0,
+              child: Scaffold(
+                appBar: AppBar(
+                  iconTheme: IconThemeData(
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
                 ),
                 backgroundColor: Colors.transparent,
-                elevation: 0,
+                body: HotelFeedBody(hotel: hotel),
               ),
-              backgroundColor: Colors.transparent,
-              body: HotelFeedBody(hotel: widget.hotel),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    }
   }
 }
 

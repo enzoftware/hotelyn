@@ -16,7 +16,7 @@ class HotelItem extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => HotelDetailPage(hotel),
+          builder: (_) => HotelDetailPage.init(hotel.name),
         ),
       ),
       child: Container(
