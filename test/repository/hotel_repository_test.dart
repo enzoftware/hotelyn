@@ -1,4 +1,3 @@
-import 'package:buscatelo/data/network/failure_error_handler.dart';
 import 'package:buscatelo/data/network/hotel_api.dart';
 import 'package:buscatelo/data/repository/hotel_repository.dart';
 import 'package:buscatelo/data/repository/remote_hotel_repository.dart';
