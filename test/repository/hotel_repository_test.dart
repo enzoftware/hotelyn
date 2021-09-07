@@ -3,7 +3,6 @@ import 'package:buscatelo/data/network/hotel_api.dart';
 import 'package:buscatelo/data/repository/hotel_repository.dart';
 import 'package:buscatelo/data/repository/remote_hotel_repository.dart';
 import 'package:buscatelo/model/hotel_model.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
