@@ -13,13 +13,14 @@ dependencies:
   provider: 5.0.0
   bordered_text: 2.0.0
   get_it: 7.2.0
-  mockito: 5.0.14
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: 0.9.1
   pedantic: 1.11.1
+  flutter_lints: 1.0.4
+  mocktail: 0.1.4
 
 flutter_icons:
   ios: true
@@ -32,3 +33,4 @@ flutter:
 
   assets:
     - assets/img/logo.png
+    - assets/img/error_image.jpeg

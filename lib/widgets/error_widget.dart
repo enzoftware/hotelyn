@@ -8,8 +8,8 @@ class CustomErrorWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Image.network(
-          'https://i.pinimg.com/originals/3f/87/c5/3f87c5b2a2e06bfaf5d37d974f607a02.jpg',
+        Image.asset(
+          'assets/img/error_image.jpeg',
           width: 200,
           height: 200,
         ),

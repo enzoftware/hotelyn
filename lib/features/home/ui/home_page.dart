@@ -1,14 +1,23 @@
-import 'package:buscatelo/bloc/hotel_bloc.dart';
-import 'package:buscatelo/ui/pages/hotel_search/hotel_item.dart';
+import 'package:buscatelo/features/home/provider/hotel_provider.dart';
+import 'package:buscatelo/features/home/ui/hotel_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../dependencies.dart';
+
 class HotelSearchPage extends StatelessWidget {
+  static Widget init() {
+    final provider = getIt<HotelProvider>();
+    return ChangeNotifierProvider.value(
+      value: provider..retrieveHotels(),
+      child: HotelSearchPage(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final hotelBloc = Provider.of<HotelBloc>(context);
     return Scaffold(
-      body: HotelListBody(hotelBloc: hotelBloc),
+      body: HotelListBody(provider: Provider.of<HotelProvider>(context)),
     );
   }
 }
@@ -16,17 +25,17 @@ class HotelSearchPage extends StatelessWidget {
 class HotelListBody extends StatelessWidget {
   const HotelListBody({
     Key? key,
-    required this.hotelBloc,
+    required this.provider,
   }) : super(key: key);
 
-  final HotelBloc hotelBloc;
+  final HotelProvider provider;
 
   @override
   Widget build(BuildContext context) {
-    if (hotelBloc.failure != null) {
-      return Center(child: Text(hotelBloc.failure.toString()));
+    if (provider.failure != null) {
+      return Center(child: Text(provider.failure.toString()));
     }
-    if (hotelBloc.hotels == null) {
+    if (provider.hotels == null) {
       return Center(child: CircularProgressIndicator());
     }
     return Stack(
@@ -66,9 +75,9 @@ class HotelListBody extends StatelessWidget {
         Container(
           margin: const EdgeInsets.fromLTRB(0, 105, 0, 0),
           child: ListView.builder(
-            itemCount: hotelBloc.hotels!.length,
+            itemCount: provider.hotels!.length,
             itemBuilder: (_, index) => HotelItem(
-              hotel: hotelBloc.hotels![index],
+              hotel: provider.hotels![index],
               key: UniqueKey(),
             ),
           ),

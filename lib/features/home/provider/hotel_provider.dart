@@ -1,12 +1,12 @@
 import 'package:buscatelo/data/network/failure_error_handler.dart';
-import 'package:buscatelo/data/repository/hotel_repository.dart';
-import 'package:buscatelo/data/repository/remote_hotel_repository.dart';
-import 'package:buscatelo/dependencies.dart';
+import 'package:buscatelo/features/home/domain/get_hotel_use_case.dart';
 import 'package:buscatelo/model/hotel_model.dart';
 import 'package:flutter/material.dart';
 
-class HotelBloc extends ChangeNotifier {
-  HotelRepository repository = getIt<RemoteHotelRepository>();
+class HotelProvider extends ChangeNotifier {
+  final GetHotelsUseCase _hotelsUseCase;
+
+  HotelProvider(this._hotelsUseCase);
 
   /// Private list of [HotelModel]
   List<HotelModel>? _hotels;
@@ -20,7 +20,7 @@ class HotelBloc extends ChangeNotifier {
 
   Future<void> retrieveHotels() async {
     try {
-      _hotels = await repository.fetchHotels();
+      _hotels = await _hotelsUseCase.fetchHotels();
     } on Failure catch (e) {
       _failure = e;
     }

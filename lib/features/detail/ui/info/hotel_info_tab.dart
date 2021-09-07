@@ -1,9 +1,10 @@
 import 'package:buscatelo/commons/theme.dart';
 import 'package:buscatelo/model/hotel_model.dart';
-import 'package:buscatelo/ui/common/hotel_price_text.dart';
-import 'package:buscatelo/ui/common/ticket_rent.dart';
-import 'package:buscatelo/ui/pages/hotel_detail/info/amenitie_item.dart';
+import 'package:buscatelo/widgets/hotel_price_text.dart';
+import 'package:buscatelo/widgets/ticket_rent.dart';
 import 'package:flutter/material.dart';
+
+import 'amenitie_item.dart';
 
 class HotelInformationTab extends StatefulWidget {
   HotelInformationTab({
@@ -49,7 +50,8 @@ class _HotelInformationTabState extends State<HotelInformationTab> {
         AnimatedContainer(
           width: 200.0,
           height: selected ? 250.0 : 100.0,
-          alignment: selected ? Alignment.center : AlignmentDirectional.topCenter,
+          alignment:
+              selected ? Alignment.center : AlignmentDirectional.topCenter,
           duration: Duration(seconds: 2),
           curve: Curves.fastOutSlowIn,
           child: Text(widget.hotel.description),
@@ -72,7 +74,8 @@ class _HotelInformationTabState extends State<HotelInformationTab> {
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             itemCount: widget.hotel.amenities.length,
-            itemBuilder: (_, index) => AmenitieItem(amenitie: widget.hotel.amenities[index]),
+            itemBuilder: (_, index) =>
+                AmenitieItem(amenitie: widget.hotel.amenities[index]),
           ),
         ),
       ],

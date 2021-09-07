@@ -1,26 +1,36 @@
+import 'package:buscatelo/dependencies.dart';
+import 'package:buscatelo/features/detail/provider/hotel_detail_provider.dart';
 import 'package:buscatelo/model/hotel_model.dart';
-import 'package:buscatelo/ui/pages/hotel_detail/info/hotel_info_tab.dart';
-import 'package:buscatelo/ui/pages/hotel_detail/review/hotel_review_tab.dart';
-import 'package:buscatelo/ui/pages/hotel_detail/room/hotel_room_tab.dart';
+import 'package:buscatelo/widgets/error_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'info/hotel_info_tab.dart';
+import 'review/hotel_review_tab.dart';
+import 'room/hotel_room_tab.dart';
 
-class HotelDetailPage extends StatefulWidget {
-  HotelDetailPage(this.hotel);
-
-  final HotelModel hotel;
+class HotelDetailPage extends StatelessWidget {
+  static Widget init(String name) {
+    final provider = getIt<HotelDetailProvider>();
+    return ChangeNotifierProvider.value(
+      value: provider..fetchHotelDetail(name),
+      child: HotelDetailPage(),
+    );
+  }
 
   @override
-  _HotelDetailPageState createState() => _HotelDetailPageState();
-}
-
-class _HotelDetailPageState extends State<HotelDetailPage> {
-  @override
-  Widget build(BuildContext context) => Container(
+  Widget build(BuildContext context) {
+    final provider = Provider.of<HotelDetailProvider>(context);
+    if (provider.failure != null) return CustomErrorWidget();
+    if (provider.hotelModel == null) {
+      return Center(child: CircularProgressIndicator());
+    } else {
+      final hotel = provider.hotelModel!;
+      return Container(
         color: Theme.of(context).canvasColor,
         child: Stack(
           children: <Widget>[
-            HotelFeedBodyBackground(hotel: widget.hotel),
+            HotelFeedBodyBackground(hotel: hotel),
             Positioned(
               left: 0,
               top: 0,
@@ -36,12 +46,14 @@ class _HotelDetailPageState extends State<HotelDetailPage> {
                   elevation: 0,
                 ),
                 backgroundColor: Colors.transparent,
-                body: HotelFeedBody(hotel: widget.hotel),
+                body: HotelFeedBody(hotel: hotel),
               ),
             ),
           ],
         ),
       );
+    }
+  }
 }
 
 class HotelFeedBodyBackground extends StatelessWidget {
@@ -65,16 +77,20 @@ class HotelFeedBodyBackground extends StatelessWidget {
           height: MediaQuery.of(context).size.height * .25,
           width: double.infinity,
           decoration: BoxDecoration(
-            image: DecorationImage(image: NetworkImage(hotel.imageUrl), fit: BoxFit.cover),
+            image: DecorationImage(
+                image: NetworkImage(hotel.imageUrl), fit: BoxFit.cover),
           ),
           child: Container(
             width: double.infinity,
             height: MediaQuery.of(context).size.height * .25,
             decoration: BoxDecoration(
-                gradient: LinearGradient(begin: Alignment(0, .8), end: Alignment(0, 0), colors: [
-              Color(0xEE000000),
-              Color(0x33000000),
-            ])),
+                gradient: LinearGradient(
+                    begin: Alignment(0, .8),
+                    end: Alignment(0, 0),
+                    colors: [
+                  Color(0xEE000000),
+                  Color(0x33000000),
+                ])),
           ),
         ),
       ),
@@ -120,7 +136,8 @@ class HotelFeedBody extends StatelessWidget {
                       ),
                       TabBar(
                         indicator: UnderlineTabIndicator(
-                          borderSide: BorderSide(color: Color(0xDD613896), width: 4.0),
+                          borderSide:
+                              BorderSide(color: Color(0xDD613896), width: 4.0),
                           insets: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 40.0),
                         ),
                         tabs: [

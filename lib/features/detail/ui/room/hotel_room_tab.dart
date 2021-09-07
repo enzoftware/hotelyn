@@ -1,6 +1,7 @@
 import 'package:buscatelo/model/room_model.dart';
-import 'package:buscatelo/ui/pages/hotel_detail/room/room_item.dart';
 import 'package:flutter/material.dart';
+
+import 'room_item.dart';
 
 class HotelRoomTab extends StatelessWidget {
   final List<Room>? rooms;
