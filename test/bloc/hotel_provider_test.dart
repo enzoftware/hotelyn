@@ -1,13 +1,13 @@
 import 'package:buscatelo/features/home/provider/hotel_provider.dart';
-
-import 'package:buscatelo/dependencies.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../dependecies.dart';
 
 void main() {
   setupTestDependencies();
-  var hotelBloc = getIt<HotelProvider>();
-
   group('Hotel list page loads', () {
+    var hotelBloc = getIt<HotelProvider>();
+
     test('Loads hotels from repository', () async {
       await hotelBloc.retrieveHotels();
       expect(hotelBloc.hotels!.length, 4);
