@@ -7,8 +7,8 @@ class HotelPriceText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      '\$ ${price}',
-      style: TextStyle(
+      '\$ $price',
+      style: const TextStyle(
         color: Colors.black,
         fontSize: 24.0,
         fontWeight: FontWeight.bold,

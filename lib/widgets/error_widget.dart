@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CustomErrorWidget extends StatelessWidget {
+  const CustomErrorWidget({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -13,7 +15,7 @@ class CustomErrorWidget extends StatelessWidget {
           width: 200,
           height: 200,
         ),
-        Text(
+        const Text(
           'Something its wrong. Please open an issue :(',
           style: TextStyle(
             fontSize: 18,

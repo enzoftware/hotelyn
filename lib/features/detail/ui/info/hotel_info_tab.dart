@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'amenitie_item.dart';
 
 class HotelInformationTab extends StatefulWidget {
-  HotelInformationTab({
+  const HotelInformationTab({
     Key? key,
     required this.hotel,
   }) : super(key: key);
@@ -28,31 +28,31 @@ class _HotelInformationTabState extends State<HotelInformationTab> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TicketRent(
+            const TicketRent(
               title: 'FOR RENT',
               color: primaryColor,
             ),
             HotelPriceText(price: widget.hotel.price.toDouble())
           ],
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           widget.hotel.name,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 24,
             fontFamily: 'Avenir',
             fontWeight: FontWeight.w700,
           ),
         ),
-        Divider(height: 2, color: Colors.grey),
-        SizedBox(height: 14),
+        const Divider(height: 2, color: Colors.grey),
+        const SizedBox(height: 14),
         AnimatedContainer(
           width: 200.0,
           height: selected ? 250.0 : 100.0,
           alignment:
               selected ? Alignment.center : AlignmentDirectional.topCenter,
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
           curve: Curves.fastOutSlowIn,
           child: Text(widget.hotel.description),
         ),
@@ -64,12 +64,12 @@ class _HotelInformationTabState extends State<HotelInformationTab> {
           },
           child: Text(
             selected ? 'Less information' : 'More information',
-            style: TextStyle(color: primaryColor),
+            style: const TextStyle(color: primaryColor),
           ),
         ),
         Text('Amenities', style: Theme.of(context).textTheme.headline6),
         ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: 90),
+          constraints: const BoxConstraints(maxHeight: 90),
           child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,

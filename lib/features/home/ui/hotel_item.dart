@@ -19,74 +19,72 @@ class HotelItem extends StatelessWidget {
           builder: (_) => HotelDetailPage.init(hotel.name),
         ),
       ),
-      child: Container(
-        child: Stack(
-          children: <Widget>[
-            Hero(
-              tag: Key('key' + hotel.imageUrl),
-              child: Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    hotel.imageUrl,
-                    fit: BoxFit.fill,
-                    width: double.infinity,
-                    height: 240,
+      child: Stack(
+        children: <Widget>[
+          Hero(
+            tag: Key('key' + hotel.imageUrl),
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Image.network(
+                  hotel.imageUrl,
+                  fit: BoxFit.fill,
+                  width: double.infinity,
+                  height: 240,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(40.0),
+            child: Card(
+              elevation: 8,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              margin: const EdgeInsets.only(top: 200),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: TicketRent(
+                          color: primaryColor,
+                          title: 'FOR RENT',
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: HotelPriceText(price: hotel.price.toDouble()),
+                      ),
+                    ],
                   ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Card(
-                elevation: 8,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0)),
-                margin: const EdgeInsets.only(top: 200),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TicketRent(
-                            color: primaryColor,
-                            title: 'FOR RENT',
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: HotelPriceText(price: hotel.price.toDouble()),
-                        ),
-                      ],
+                  ListTile(
+                    title: Text(
+                      hotel.name,
+                      style: titleTextStyle,
                     ),
-                    ListTile(
-                      title: Text(
-                        hotel.name,
-                        style: titleTextStyle,
-                      ),
-                      subtitle: Text(hotel.address),
-                      trailing: Container(
-                        decoration: BoxDecoration(
-                            color: accentColor, shape: BoxShape.circle),
-                        child: Transform.rotate(
-                          angle: 25 * 3.1416 / 180,
-                          child: IconButton(
-                            icon: Icon(Icons.navigation),
-                            onPressed: () {},
-                            color: Colors.white,
-                          ),
+                    subtitle: Text(hotel.address),
+                    trailing: Container(
+                      decoration: const BoxDecoration(
+                          color: accentColor, shape: BoxShape.circle),
+                      child: Transform.rotate(
+                        angle: 25 * 3.1416 / 180,
+                        child: IconButton(
+                          icon: const Icon(Icons.navigation),
+                          onPressed: () {},
+                          color: Colors.white,
                         ),
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  )
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -6,11 +6,13 @@ import 'package:provider/provider.dart';
 import '../../../dependencies.dart';
 
 class HotelSearchPage extends StatelessWidget {
+  const HotelSearchPage({Key? key}) : super(key: key);
+
   static Widget init() {
     final provider = getIt<HotelProvider>();
     return ChangeNotifierProvider.value(
       value: provider..retrieveHotels(),
-      child: HotelSearchPage(),
+      child: const HotelSearchPage(),
     );
   }
 
@@ -36,7 +38,7 @@ class HotelListBody extends StatelessWidget {
       return Center(child: Text(provider.failure.toString()));
     }
     if (provider.hotels == null) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
     return Stack(
       children: [
@@ -45,7 +47,7 @@ class HotelListBody extends StatelessWidget {
           child: Container(
             height: 280,
             width: 320,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.blue,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(40),
@@ -59,7 +61,7 @@ class HotelListBody extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 64.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+            children: const [
               Text(
                 'Discover\nSuitable Hotel',
                 style: TextStyle(
