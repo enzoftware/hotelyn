@@ -2,7 +2,7 @@ import 'package:buscatelo/features/home/provider/hotel_provider.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../dependecies.dart';
-import 'mock_hotel_repository.dart';
+import '../repository/mock_hotel_repository.dart';
 
 void main() {
   setupTestDependencies();

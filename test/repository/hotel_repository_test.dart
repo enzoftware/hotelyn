@@ -7,7 +7,7 @@ import 'package:buscatelo/model/hotel_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../bloc/mock_hotel_repository.dart';
+import 'mock_hotel_repository.dart';
 import '../dependecies.dart';
 
 class MockApi extends Mock implements HotelApi {}
@@ -19,7 +19,7 @@ void main() {
 
     setupTestDependencies();
 
-    setUpAll(() {
+    setUp(() {
       _api = MockApi();
       _hotelRepository = RemoteHotelRepository(_api);
     });
