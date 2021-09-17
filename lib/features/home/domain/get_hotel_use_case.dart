@@ -1,5 +1,5 @@
-import 'package:buscatelo/data/repository/hotel_repository.dart';
-import 'package:buscatelo/model/hotel_model.dart';
+import 'package:hotel_booking_app/data/repository/hotel_repository.dart';
+import 'package:hotel_booking_app/model/hotel_model.dart';
 
 class GetHotelsUseCase {
   final HotelRepository _hotelRepository;

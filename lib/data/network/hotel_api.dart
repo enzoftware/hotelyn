@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:buscatelo/model/hotel_model.dart';
+
+import 'package:hotel_booking_app/data/network/failure_error_handler.dart';
+import 'package:hotel_booking_app/model/hotel_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-
-import 'failure_error_handler.dart';
 
 class HotelApi {
   final String _baseUrl = 'https://raw.githubusercontent.com';

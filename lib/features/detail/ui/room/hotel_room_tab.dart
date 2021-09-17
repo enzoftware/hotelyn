@@ -1,5 +1,5 @@
-import 'package:buscatelo/model/room_model.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking_app/model/room_model.dart';
 
 import 'room_item.dart';
 

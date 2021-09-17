@@ -1,9 +1,9 @@
-import 'package:buscatelo/commons/theme.dart';
-import 'package:buscatelo/model/hotel_model.dart';
-import 'package:buscatelo/features/detail/ui/hotel_detail_page.dart';
-import 'package:buscatelo/widgets/hotel_price_text.dart';
-import 'package:buscatelo/widgets/ticket_rent.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking_app/commons/theme.dart';
+import 'package:hotel_booking_app/features/detail/ui/hotel_detail_page.dart';
+import 'package:hotel_booking_app/model/hotel_model.dart';
+import 'package:hotel_booking_app/widgets/hotel_price_text.dart';
+import 'package:hotel_booking_app/widgets/ticket_rent.dart';
 
 class HotelItem extends StatelessWidget {
   final HotelModel hotel;

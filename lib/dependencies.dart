@@ -1,11 +1,11 @@
-import 'package:buscatelo/data/network/hotel_api.dart';
-import 'package:buscatelo/data/repository/hotel_repository.dart';
-import 'package:buscatelo/data/repository/remote_hotel_repository.dart';
-import 'package:buscatelo/features/detail/domain/get_hotel_detail_use_case.dart';
-import 'package:buscatelo/features/detail/provider/hotel_detail_provider.dart';
-import 'package:buscatelo/features/home/domain/get_hotel_use_case.dart';
-import 'package:buscatelo/features/home/provider/hotel_provider.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hotel_booking_app/data/network/hotel_api.dart';
+import 'package:hotel_booking_app/data/repository/hotel_repository.dart';
+import 'package:hotel_booking_app/data/repository/remote_hotel_repository.dart';
+import 'package:hotel_booking_app/features/detail/domain/get_hotel_detail_use_case.dart';
+import 'package:hotel_booking_app/features/detail/provider/hotel_detail_provider.dart';
+import 'package:hotel_booking_app/features/home/domain/get_hotel_use_case.dart';
+import 'package:hotel_booking_app/features/home/provider/hotel_provider.dart';
 
 GetIt getIt = GetIt.instance;
 

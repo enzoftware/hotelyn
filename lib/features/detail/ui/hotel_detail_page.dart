@@ -1,13 +1,13 @@
-import 'package:buscatelo/dependencies.dart';
-import 'package:buscatelo/features/detail/provider/hotel_detail_provider.dart';
-import 'package:buscatelo/model/hotel_model.dart';
-import 'package:buscatelo/widgets/error_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking_app/dependencies.dart';
+import 'package:hotel_booking_app/features/detail/provider/hotel_detail_provider.dart';
+import 'package:hotel_booking_app/features/detail/ui/info/hotel_info_tab.dart';
+import 'package:hotel_booking_app/features/detail/ui/review/hotel_review_tab.dart';
+import 'package:hotel_booking_app/features/detail/ui/room/hotel_room_tab.dart';
+import 'package:hotel_booking_app/model/hotel_model.dart';
+import 'package:hotel_booking_app/widgets/error_widget.dart';
 import 'package:provider/provider.dart';
-import 'info/hotel_info_tab.dart';
-import 'review/hotel_review_tab.dart';
-import 'room/hotel_room_tab.dart';
 
 class HotelDetailPage extends StatelessWidget {
   const HotelDetailPage({Key? key}) : super(key: key);
@@ -79,20 +79,16 @@ class HotelFeedBodyBackground extends StatelessWidget {
           height: MediaQuery.of(context).size.height * .25,
           width: double.infinity,
           decoration: BoxDecoration(
-            image: DecorationImage(
-                image: NetworkImage(hotel.imageUrl), fit: BoxFit.cover),
+            image: DecorationImage(image: NetworkImage(hotel.imageUrl), fit: BoxFit.cover),
           ),
           child: Container(
             width: double.infinity,
             height: MediaQuery.of(context).size.height * .25,
             decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment(0, .8),
-                    end: Alignment(0, 0),
-                    colors: [
-                  Color(0xEE000000),
-                  Color(0x33000000),
-                ])),
+                gradient: LinearGradient(begin: Alignment(0, .8), end: Alignment(0, 0), colors: [
+              Color(0xEE000000),
+              Color(0x33000000),
+            ])),
           ),
         ),
       ),
@@ -101,9 +97,9 @@ class HotelFeedBodyBackground extends StatelessWidget {
 }
 
 class HotelFeedBody extends StatelessWidget {
+  const HotelFeedBody({Key? key, required this.hotel}) : super(key: key);
   final HotelModel hotel;
 
-  const HotelFeedBody({Key? key, required this.hotel}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -137,9 +133,8 @@ class HotelFeedBody extends StatelessWidget {
                     ),
                     const TabBar(
                       indicator: UnderlineTabIndicator(
-                        borderSide:
-                            BorderSide(color: Color(0xDD613896), width: 4.0),
-                        insets: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 40.0),
+                        borderSide: BorderSide(color: Color(0xDD613896), width: 4),
+                        insets: EdgeInsets.fromLTRB(20, 0, 20, 40),
                       ),
                       tabs: [
                         Tab(

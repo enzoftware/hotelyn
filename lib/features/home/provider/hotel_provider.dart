@@ -1,7 +1,7 @@
-import 'package:buscatelo/data/network/failure_error_handler.dart';
-import 'package:buscatelo/features/home/domain/get_hotel_use_case.dart';
-import 'package:buscatelo/model/hotel_model.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking_app/data/network/failure_error_handler.dart';
+import 'package:hotel_booking_app/features/home/domain/get_hotel_use_case.dart';
+import 'package:hotel_booking_app/model/hotel_model.dart';
 
 class HotelProvider extends ChangeNotifier {
   final GetHotelsUseCase _hotelsUseCase;

@@ -1,6 +1,6 @@
-import 'package:buscatelo/model/amenitie_model.dart';
-import 'package:buscatelo/model/review_model.dart';
-import 'package:buscatelo/model/room_model.dart';
+import 'package:hotel_booking_app/model/amenitie_model.dart';
+import 'package:hotel_booking_app/model/review_model.dart';
+import 'package:hotel_booking_app/model/room_model.dart';
 
 class HotelModel {
   late String name;

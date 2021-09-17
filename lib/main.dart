@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:buscatelo/commons/theme.dart';
-import 'package:buscatelo/dependencies.dart';
-import 'package:buscatelo/features/home/ui/home_page.dart';
+import 'package:hotel_booking_app/commons/theme.dart';
+import 'package:hotel_booking_app/dependencies.dart';
+import 'package:hotel_booking_app/features/home/ui/home_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'widgets/error_widget.dart';

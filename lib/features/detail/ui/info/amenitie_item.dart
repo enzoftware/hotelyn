@@ -1,4 +1,4 @@
-import 'package:buscatelo/model/amenitie_model.dart';
+import 'package:hotel_booking_app/model/amenitie_model.dart';
 import 'package:flutter/material.dart';
 
 class AmenitieItem extends StatelessWidget {

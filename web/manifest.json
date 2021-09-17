@@ -1,11 +1,11 @@
 {
-    "name": "hotel_booking_app",
-    "short_name": "hotel_booking_app",
+    "name": "Hotel Booking App",
+    "short_name": "Hotel Booking App",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "A Very Good Project created by Very Good CLI.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

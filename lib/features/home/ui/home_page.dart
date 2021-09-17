@@ -1,5 +1,5 @@
-import 'package:buscatelo/features/home/provider/hotel_provider.dart';
-import 'package:buscatelo/features/home/ui/hotel_item.dart';
+import 'package:hotel_booking_app/features/home/provider/hotel_provider.dart';
+import 'package:hotel_booking_app/features/home/ui/hotel_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
