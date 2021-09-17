@@ -11,12 +11,15 @@ void main() {
     FlutterError.dumpErrorToConsole(details);
     if (kReleaseMode) exit(1);
   };
-  ErrorWidget.builder = (FlutterErrorDetails details) => CustomErrorWidget();
+  ErrorWidget.builder =
+      (FlutterErrorDetails details) => const CustomErrorWidget();
   setupDependencies();
-  runApp(HotelBookingApp());
+  runApp(const HotelBookingApp());
 }
 
 class HotelBookingApp extends StatelessWidget {
+  const HotelBookingApp({Key? key}) : super(key: key);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -26,7 +29,6 @@ class HotelBookingApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: primarySwatch,
         primaryColor: primaryColor,
-        accentColor: accentColor,
         fontFamily: 'avenir',
         cardColor: Colors.white,
       ),
