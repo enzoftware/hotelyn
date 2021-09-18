@@ -1,45 +1,70 @@
-import 'package:hotel_booking_app/features/home/provider/hotel_provider.dart';
-import 'package:hotel_booking_app/features/home/ui/hotel_item.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../../../dependencies.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hotel_booking_app/data/repository/hotel_repository.dart';
+import 'package:hotel_booking_app/dependencies.dart';
+import 'package:hotel_booking_app/features/base/result_state.dart';
+import 'package:hotel_booking_app/features/home/cubit/hotel_cubit.dart';
+import 'package:hotel_booking_app/features/home/ui/hotel_item.dart';
+import 'package:hotel_booking_app/model/hotel_model.dart';
 
 class HotelSearchPage extends StatelessWidget {
   const HotelSearchPage({Key? key}) : super(key: key);
 
   static Widget init() {
-    final provider = getIt<HotelProvider>();
-    return ChangeNotifierProvider.value(
-      value: provider..retrieveHotels(),
+    return BlocProvider(
+      create: (_) => HotelCubit(getIt.get<HotelRepository>()),
       child: const HotelSearchPage(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: HotelListBody(provider: Provider.of<HotelProvider>(context)),
+    return const Scaffold(
+      body: HotelListBody(),
     );
   }
 }
 
-class HotelListBody extends StatelessWidget {
-  const HotelListBody({
-    Key? key,
-    required this.provider,
-  }) : super(key: key);
+class HotelListBody extends StatefulWidget {
+  const HotelListBody({Key? key}) : super(key: key);
 
-  final HotelProvider provider;
+  @override
+  State<HotelListBody> createState() => _HotelListBodyState();
+}
+
+class _HotelListBodyState extends State<HotelListBody> {
+  @override
+  void initState() {
+    context.read<HotelCubit>().loadHotels();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (provider.failure != null) {
-      return Center(child: Text(provider.failure.toString()));
-    }
-    if (provider.hotels == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    return BlocConsumer<HotelCubit, ResultState<List<Hotel>>>(
+      builder: (context, state) {
+        return state.when(
+          initial: () => Container(),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          data: (data) => HotelBodyData(data: data),
+          error: (e) => Center(child: Text(e.toString())),
+        );
+      },
+      listener: (context, state) {},
+    );
+  }
+}
+
+class HotelBodyData extends StatelessWidget {
+  const HotelBodyData({
+    Key? key,
+    required this.data,
+  }) : super(key: key);
+
+  final List<Hotel> data;
+
+  @override
+  Widget build(BuildContext context) {
     return Stack(
       children: [
         Align(
@@ -58,7 +83,7 @@ class HotelListBody extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 64.0),
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 64),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [
@@ -77,9 +102,9 @@ class HotelListBody extends StatelessWidget {
         Container(
           margin: const EdgeInsets.fromLTRB(0, 105, 0, 0),
           child: ListView.builder(
-            itemCount: provider.hotels!.length,
+            itemCount: data.length,
             itemBuilder: (_, index) => HotelItem(
-              hotel: provider.hotels![index],
+              hotel: data[index],
               key: UniqueKey(),
             ),
           ),

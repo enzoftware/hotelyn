@@ -1,29 +1,26 @@
-class Review {
-  String? message;
-  String? user;
-  String? userImage;
-  int? rate;
+import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-  Review({
+part 'review_model.g.dart';
+
+@JsonSerializable()
+class Review extends Equatable {
+  const Review({
     this.message,
     this.user,
     this.userImage,
     this.rate,
   });
 
-  Review.fromJson(Map<String, dynamic> json) {
-    message = json['message'];
-    user = json['user'];
-    userImage = json['userImage'];
-    rate = json['rate'];
-  }
+  factory Review.fromJson(Map<String, dynamic> json) => _$ReviewFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['message'] = message;
-    data['user'] = user;
-    data['userImage'] = userImage;
-    data['rate'] = rate;
-    return data;
-  }
+  final String? message;
+  final String? user;
+  final String? userImage;
+  final int? rate;
+
+  Map<String, dynamic> toJson() => _$ReviewToJson(this);
+
+  @override
+  List<Object?> get props => [message, user, userImage, rate];
 }

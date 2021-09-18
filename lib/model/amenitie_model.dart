@@ -1,18 +1,21 @@
-class Amenitie {
-  String? name;
-  String? imageUrl;
+// ignore_for_file: sort_constructors_first
 
-  Amenitie({this.name, this.imageUrl});
+import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-  Amenitie.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    imageUrl = json['imageUrl'];
-  }
+part 'amenitie_model.g.dart';
 
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['name'] = name;
-    data['imageUrl'] = imageUrl;
-    return data;
-  }
+@JsonSerializable()
+class Amenitie extends Equatable {
+  const Amenitie({this.name, this.imageUrl});
+
+  final String? name;
+  final String? imageUrl;
+
+  factory Amenitie.fromJson(Map<String, dynamic> json) =>
+      _$AmenitieFromJson(json);
+  Map<String, dynamic> toJson() => _$AmenitieToJson(this);
+
+  @override
+  List<Object?> get props => [name, imageUrl];
 }

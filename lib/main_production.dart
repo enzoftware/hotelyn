@@ -21,7 +21,7 @@ void main() {
   };
 
   runZonedGuarded(
-    () => runApp(const App()),
+    () => runApp(const HotelBookingApp()),
     (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
   );
 }

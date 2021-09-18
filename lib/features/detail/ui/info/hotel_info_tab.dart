@@ -1,10 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:hotel_booking_app/commons/theme.dart';
+import 'package:hotel_booking_app/features/detail/ui/info/amenitie_item.dart';
 import 'package:hotel_booking_app/model/hotel_model.dart';
 import 'package:hotel_booking_app/widgets/hotel_price_text.dart';
 import 'package:hotel_booking_app/widgets/ticket_rent.dart';
-import 'package:flutter/material.dart';
-
-import 'amenitie_item.dart';
 
 class HotelInformationTab extends StatefulWidget {
   const HotelInformationTab({
@@ -12,14 +11,14 @@ class HotelInformationTab extends StatefulWidget {
     required this.hotel,
   }) : super(key: key);
 
-  final HotelModel hotel;
+  final Hotel hotel;
 
   @override
   _HotelInformationTabState createState() => _HotelInformationTabState();
 }
 
 class _HotelInformationTabState extends State<HotelInformationTab> {
-  var selected = false;
+  bool selected = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +47,7 @@ class _HotelInformationTabState extends State<HotelInformationTab> {
         const Divider(height: 2, color: Colors.grey),
         const SizedBox(height: 14),
         AnimatedContainer(
-          width: 200.0,
+          width: 200,
           height: selected ? 250.0 : 100.0,
           alignment:
               selected ? Alignment.center : AlignmentDirectional.topCenter,

@@ -1,60 +1,77 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hotel_booking_app/data/repository/hotel_repository.dart';
 import 'package:hotel_booking_app/dependencies.dart';
-import 'package:hotel_booking_app/features/detail/provider/hotel_detail_provider.dart';
+import 'package:hotel_booking_app/features/base/result_state.dart';
+import 'package:hotel_booking_app/features/detail/cubit/hotel_detail_cubit.dart';
 import 'package:hotel_booking_app/features/detail/ui/info/hotel_info_tab.dart';
 import 'package:hotel_booking_app/features/detail/ui/review/hotel_review_tab.dart';
 import 'package:hotel_booking_app/features/detail/ui/room/hotel_room_tab.dart';
 import 'package:hotel_booking_app/model/hotel_model.dart';
 import 'package:hotel_booking_app/widgets/error_widget.dart';
-import 'package:provider/provider.dart';
 
-class HotelDetailPage extends StatelessWidget {
-  const HotelDetailPage({Key? key}) : super(key: key);
+class HotelDetailPage extends StatefulWidget {
+  const HotelDetailPage({Key? key, required this.name}) : super(key: key);
+
+  final String name;
 
   static Widget init(String name) {
-    final provider = getIt<HotelDetailProvider>();
-    return ChangeNotifierProvider.value(
-      value: provider..fetchHotelDetail(name),
-      child: const HotelDetailPage(),
+    return BlocProvider(
+      create: (_) => HotelDetailCubit(getIt.get<HotelRepository>()),
+      child: Scaffold(body: HotelDetailPage(name: name)),
     );
   }
 
   @override
+  State<HotelDetailPage> createState() => _HotelDetailPageState();
+}
+
+class _HotelDetailPageState extends State<HotelDetailPage> {
+  @override
+  void initState() {
+    context.read<HotelDetailCubit>().loadHotelDetail(widget.name);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<HotelDetailProvider>(context);
-    if (provider.failure != null) return const CustomErrorWidget();
-    if (provider.hotelModel == null) {
-      return const Center(child: CircularProgressIndicator());
-    } else {
-      final hotel = provider.hotelModel!;
-      return Container(
-        color: Theme.of(context).canvasColor,
-        child: Stack(
-          children: <Widget>[
-            HotelFeedBodyBackground(hotel: hotel),
-            Positioned(
-              left: 0,
-              top: 0,
-              bottom: 0,
-              right: 0,
-              child: Scaffold(
-                appBar: AppBar(
-                  iconTheme: const IconThemeData(
-                    color: Colors.white,
-                    size: 32,
+    return BlocConsumer<HotelDetailCubit, ResultState<Hotel>>(
+      builder: (context, state) {
+        return state.when(
+          initial: () => Container(),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          data: (data) => Container(
+            color: Theme.of(context).canvasColor,
+            child: Stack(
+              children: <Widget>[
+                HotelFeedBodyBackground(hotel: data),
+                Positioned(
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  right: 0,
+                  child: Scaffold(
+                    appBar: AppBar(
+                      iconTheme: const IconThemeData(
+                        color: Colors.white,
+                        size: 32,
+                      ),
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                    ),
+                    backgroundColor: Colors.transparent,
+                    body: HotelFeedBody(hotel: data),
                   ),
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
                 ),
-                backgroundColor: Colors.transparent,
-                body: HotelFeedBody(hotel: hotel),
-              ),
+              ],
             ),
-          ],
-        ),
-      );
-    }
+          ),
+          error: (e) => const CustomErrorWidget(),
+        );
+      },
+      listener: (context, state) {},
+    );
   }
 }
 
@@ -64,7 +81,7 @@ class HotelFeedBodyBackground extends StatelessWidget {
     required this.hotel,
   }) : super(key: key);
 
-  final HotelModel hotel;
+  final Hotel hotel;
 
   @override
   Widget build(BuildContext context) {
@@ -74,21 +91,27 @@ class HotelFeedBodyBackground extends StatelessWidget {
       right: 0,
       bottom: MediaQuery.of(context).size.height * .60,
       child: Hero(
-        tag: Key('key' + hotel.imageUrl),
+        tag: Key('key${hotel.imageUrl}'),
         child: Container(
           height: MediaQuery.of(context).size.height * .25,
           width: double.infinity,
           decoration: BoxDecoration(
-            image: DecorationImage(image: NetworkImage(hotel.imageUrl), fit: BoxFit.cover),
+            image: DecorationImage(
+                image: NetworkImage(hotel.imageUrl), fit: BoxFit.cover),
           ),
           child: Container(
             width: double.infinity,
             height: MediaQuery.of(context).size.height * .25,
             decoration: const BoxDecoration(
-                gradient: LinearGradient(begin: Alignment(0, .8), end: Alignment(0, 0), colors: [
-              Color(0xEE000000),
-              Color(0x33000000),
-            ])),
+              gradient: LinearGradient(
+                begin: Alignment(0, .8),
+                end: Alignment.center,
+                colors: [
+                  Color(0xEE000000),
+                  Color(0x33000000),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -98,7 +121,7 @@ class HotelFeedBodyBackground extends StatelessWidget {
 
 class HotelFeedBody extends StatelessWidget {
   const HotelFeedBody({Key? key, required this.hotel}) : super(key: key);
-  final HotelModel hotel;
+  final Hotel hotel;
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +130,6 @@ class HotelFeedBody extends StatelessWidget {
       padding: const EdgeInsets.only(left: 32, right: 32, bottom: 60, top: 220),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           const SizedBox(height: 8),
           Expanded(
@@ -133,7 +155,8 @@ class HotelFeedBody extends StatelessWidget {
                     ),
                     const TabBar(
                       indicator: UnderlineTabIndicator(
-                        borderSide: BorderSide(color: Color(0xDD613896), width: 4),
+                        borderSide:
+                            BorderSide(color: Color(0xDD613896), width: 4),
                         insets: EdgeInsets.fromLTRB(20, 0, 20, 40),
                       ),
                       tabs: [

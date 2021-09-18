@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_booking_app/features/detail/ui/room/room_item.dart';
 import 'package:hotel_booking_app/model/room_model.dart';
 
-import 'room_item.dart';
-
 class HotelRoomTab extends StatelessWidget {
-  final List<Room>? rooms;
   const HotelRoomTab({
     Key? key,
     this.rooms,
   }) : super(key: key);
+
+  final List<Room>? rooms;
 
   @override
   Widget build(BuildContext context) {

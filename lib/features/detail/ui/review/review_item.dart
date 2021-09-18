@@ -1,12 +1,13 @@
-import 'package:hotel_booking_app/model/review_model.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking_app/model/review_model.dart';
 
 class ReviewItem extends StatelessWidget {
-  final Review? review;
   const ReviewItem({
     Key? key,
     this.review,
   }) : super(key: key);
+
+  final Review? review;
 
   @override
   Widget build(BuildContext context) {

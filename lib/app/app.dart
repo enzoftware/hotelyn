@@ -7,27 +7,30 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:hotel_booking_app/counter/counter.dart';
+import 'package:hotel_booking_app/commons/theme.dart';
+import 'package:hotel_booking_app/features/home/ui/home_page.dart';
 import 'package:hotel_booking_app/l10n/l10n.dart';
 
-class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+class HotelBookingApp extends StatelessWidget {
+  const HotelBookingApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Hotel Booking App',
       theme: ThemeData(
-        appBarTheme: const AppBarTheme(color: Color(0xFF13B9FF)),
-        colorScheme: ColorScheme.fromSwatch(
-          accentColor: const Color(0xFF13B9FF),
-        ),
+        primarySwatch: primarySwatch,
+        primaryColor: primaryColor,
+        fontFamily: 'avenir',
+        cardColor: Colors.white,
       ),
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const CounterPage(),
+      home: HotelSearchPage.init(),
     );
   }
 }
