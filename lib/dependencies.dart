@@ -37,8 +37,6 @@ void setupDependencies() {
     ..registerSingleton(RestClient(getIt.get<Dio>()))
     ..registerSingleton<HotelRepository>(
         RemoteHotelRepository(getIt.get<RestClient>()))
-    ..registerSingleton<GetHotelsUseCase>(
-        GetHotelsUseCase(getIt.get<HotelRepository>()))
-    ..registerSingleton<GetHotelDetailUseCase>(
-        GetHotelDetailUseCase(getIt.get<HotelRepository>()));
+    ..registerSingleton<GetHotelsUseCase>(GetHotelsUseCase())
+    ..registerSingleton<GetHotelDetailUseCase>(GetHotelDetailUseCase());
 }
