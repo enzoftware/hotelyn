@@ -7,13 +7,13 @@ environment:
   sdk: ">=2.13.0 <3.0.0"
 
 dependencies:
-  bloc: ^7.1.0
+  bloc: ^7.2.0
   bordered_text: 2.0.0
   dio: ^4.0.0
   equatable: ^2.0.3
   flutter:
     sdk: flutter
-  flutter_bloc: ^7.2.0
+  flutter_bloc: ^7.3.0
   flutter_localizations:
     sdk: flutter
   freezed: ^0.14.5
@@ -28,7 +28,7 @@ dependencies:
   
 
 dev_dependencies:
-  bloc_test: ^8.1.0
+  bloc_test: ^8.2.0
   build_runner: ^2.0.0
   flutter_test:
     sdk: flutter
