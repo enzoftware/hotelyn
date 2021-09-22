@@ -10,7 +10,7 @@ import 'package:hotel_booking_app/app/app.dart';
 
 void main() {
   group('App', () {
-    testWidgets('renders CounterPage', (tester) async {
+    testWidgets('renders HotelBookingApp', (tester) async {
       await tester.pumpWidget(const HotelBookingApp());
       expect(find.byType(HotelBookingApp), findsOneWidget);
     });

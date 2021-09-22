@@ -44,6 +44,15 @@ void main() {
     );
 
     test(
+      'When fetchHotels is a failure, then throw an Exception',
+      () async {
+        when(() => api.getHotels()).thenThrow(Exception());
+        expect(await repository.fetchHotels().then((value) => value.whenOrNull(failure: (e) => e)), isA<Exception>());
+        verify(() => api.getHotels());
+      },
+    );
+
+    test(
       'When fetchHotelDetail is successful, then return a Hotel',
       () async {
         final response = <Hotel>[_hotel];
@@ -58,7 +67,7 @@ void main() {
     );
 
     test(
-      'When fetchHotelDetail is successful but doesnt found an hotel, then return an empty Hotel',
+      'When fetchHotelDetail is successful but does not found an hotel, then return an empty Hotel',
       () async {
         const name = 'empty';
         final response = <Hotel>[_hotel];
@@ -69,6 +78,15 @@ void main() {
 
         verify(() => api.getHotels());
         expect(hotel?.name, name);
+      },
+    );
+
+    test(
+      'When fetchHotelDetail is a failure, then throw an Exception',
+          () async {
+        when(() => api.getHotels()).thenThrow(Exception());
+        expect(await repository.fetchHotelDetail('any').then((value) => value.whenOrNull(failure: (e) => e)), isA<Exception>());
+        verify(() => api.getHotels());
       },
     );
   });
