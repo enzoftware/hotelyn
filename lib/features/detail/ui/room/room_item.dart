@@ -44,18 +44,3 @@ class RoomItem extends StatelessWidget {
     );
   }
 }
-
-// Card(
-//         semanticContainer: true,
-//         clipBehavior: Clip.antiAliasWithSaveLayer,
-//         child: Stack(
-//           
-//           children: <Widget>[
-            
-            
-//           ],
-//         ),
-//         
-//         
-//       ),
-//     );

@@ -47,7 +47,11 @@ void main() {
       'When fetchHotels is a failure, then throw an Exception',
       () async {
         when(() => api.getHotels()).thenThrow(Exception());
-        expect(await repository.fetchHotels().then((value) => value.whenOrNull(failure: (e) => e)), isA<Exception>());
+        expect(
+            await repository
+                .fetchHotels()
+                .then((value) => value.whenOrNull(failure: (e) => e)),
+            isA<Exception>());
         verify(() => api.getHotels());
       },
     );
@@ -83,9 +87,13 @@ void main() {
 
     test(
       'When fetchHotelDetail is a failure, then throw an Exception',
-          () async {
+      () async {
         when(() => api.getHotels()).thenThrow(Exception());
-        expect(await repository.fetchHotelDetail('any').then((value) => value.whenOrNull(failure: (e) => e)), isA<Exception>());
+        expect(
+            await repository
+                .fetchHotelDetail('any')
+                .then((value) => value.whenOrNull(failure: (e) => e)),
+            isA<Exception>());
         verify(() => api.getHotels());
       },
     );
