@@ -1,14 +1,14 @@
-import 'package:buscatelo/model/review_model.dart';
 import 'package:flutter/material.dart';
-
-import 'review_item.dart';
+import 'package:hotel_booking_app/features/detail/ui/review/review_item.dart';
+import 'package:hotel_booking_app/model/review_model.dart';
 
 class HotelReviewTab extends StatelessWidget {
-  final List<Review>? reviews;
   const HotelReviewTab({
     Key? key,
     this.reviews,
   }) : super(key: key);
+
+  final List<Review>? reviews;
 
   @override
   Widget build(BuildContext context) {

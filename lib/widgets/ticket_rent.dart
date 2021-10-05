@@ -1,10 +1,12 @@
+// ignore_for_file: prefer_int_literals
+
 import 'package:flutter/material.dart';
 
 class TicketRent extends StatelessWidget {
+  const TicketRent({Key? key, this.title = '', this.color}) : super(key: key);
+
   final String title;
   final Color? color;
-
-  const TicketRent({Key? key, this.title = '', this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

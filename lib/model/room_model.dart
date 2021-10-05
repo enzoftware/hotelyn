@@ -1,18 +1,19 @@
-class Room {
-  String? imageUrl;
-  String? name;
+import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-  Room({this.imageUrl, this.name});
+part 'room_model.g.dart';
 
-  Room.fromJson(Map<String, dynamic> json) {
-    imageUrl = json['imageUrl'];
-    name = json['name'];
-  }
+@JsonSerializable()
+class Room extends Equatable {
+  const Room({this.imageUrl, this.name});
 
-  Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
-    data['imageUrl'] = imageUrl;
-    data['name'] = name;
-    return data;
-  }
+  factory Room.fromJson(Map<String, dynamic> json) => _$RoomFromJson(json);
+
+  final String? imageUrl;
+  final String? name;
+
+  Map<String, dynamic> toJson() => _$RoomToJson(this);
+
+  @override
+  List<Object?> get props => [imageUrl, name];
 }

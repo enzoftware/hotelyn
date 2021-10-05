@@ -1,11 +1,11 @@
 import 'package:bordered_text/bordered_text.dart';
-import 'package:buscatelo/model/room_model.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking_app/model/room_model.dart';
 
 class RoomItem extends StatelessWidget {
-  final Room room;
-
   const RoomItem({Key? key, required this.room}) : super(key: key);
+
+  final Room room;
 
   @override
   Widget build(BuildContext context) {
@@ -13,29 +13,28 @@ class RoomItem extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         Card(
-          semanticContainer: true,
           clipBehavior: Clip.antiAliasWithSaveLayer,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          elevation: 5,
+          margin: const EdgeInsets.all(8),
           child: Image.network(
             room.imageUrl!,
             fit: BoxFit.fitWidth,
             height: 160,
             width: 400,
           ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          elevation: 5,
-          margin: const EdgeInsets.all(8),
         ),
         Center(
           child: BorderedText(
-            strokeWidth: 2.0,
+            strokeWidth: 2,
             strokeColor: Colors.black,
             child: Text(
               room.name!,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 21.0,
+                fontSize: 21,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -45,18 +44,3 @@ class RoomItem extends StatelessWidget {
     );
   }
 }
-
-// Card(
-//         semanticContainer: true,
-//         clipBehavior: Clip.antiAliasWithSaveLayer,
-//         child: Stack(
-//           
-//           children: <Widget>[
-            
-            
-//           ],
-//         ),
-//         
-//         
-//       ),
-//     );

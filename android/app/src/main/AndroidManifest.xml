@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.hotel_booking_app">
+    package="com.example.verygoodcore">
    <application
-        android:label="hotel_booking_app"
+        android:label="Hotel Booking App"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

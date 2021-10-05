@@ -12,7 +12,7 @@ class _Colors {
 }
 
 class _Dimens {
-  final double radiusBorderValue = 20.0;
-  final double activeTabIconSize = 30.0;
-  final double activeTabTextSize = 18.0;
+  final int radiusBorderValue = 20;
+  final int activeTabIconSize = 30;
+  final int activeTabTextSize = 18;
 }

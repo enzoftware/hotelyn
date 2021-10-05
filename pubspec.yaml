@@ -1,36 +1,41 @@
-name: buscatelo
-description: Hotel finding. An awesome Flutter challenge.
+name: hotel_booking_app
+description: A Very Good Project created by Very Good CLI.
 version: 1.0.0+1
+publish_to: none
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.13.0 <3.0.0"
 
 dependencies:
+  bloc: ^7.2.0
+  bordered_text: 2.0.0
+  dio: ^4.0.0
+  equatable: ^2.0.3
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.3
-  http: 0.13.3
-  provider: 5.0.0
-  bordered_text: 2.0.0
+  flutter_bloc: ^7.3.0
+  flutter_localizations:
+    sdk: flutter
+  freezed: ^0.14.5
+  freezed_annotation: ^0.14.3
   get_it: 7.2.0
+  http: 0.13.3
+  intl: ^0.17.0
+  json_annotation: ^4.1.0
+  json_serializable: ^5.0.1
+  provider: ^6.0.0
+  retrofit: ^2.0.1
+  
 
 dev_dependencies:
+  bloc_test: ^8.2.0
+  build_runner: ^2.0.0
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: 0.9.1
-  pedantic: 1.11.1
-  flutter_lints: 1.0.4
-  mocktail: 0.1.4
-
-flutter_icons:
-  ios: true
-  android: true
-  image_path_ios: "assets/img/logo.png"
-  image_path_android: "assets/img/logo.png"
+  mocktail: ^0.1.0
+  retrofit_generator: ^2.0.1+1
+  very_good_analysis: ^2.3.0
 
 flutter:
   uses-material-design: true
-
-  assets:
-    - assets/img/logo.png
-    - assets/img/error_image.jpeg
+  generate: true
