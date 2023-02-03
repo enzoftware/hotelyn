@@ -1,3 +1,8 @@
+
+:warning: This repository it's going to be into intensive development, if you wanna see the process check the feature branches :warning:
+
+
+---
 # Hotel Booking App
 
 ![coverage][coverage_badge]
