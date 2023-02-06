@@ -1,9 +1,4 @@
-
-:warning: This repository it's going to be into intensive development, if you wanna see the process check the feature branches :warning:
-
-
----
-# Hotel Booking App
+# Hotelyn
 
 ![coverage][coverage_badge]
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
@@ -36,7 +31,7 @@ $ flutter run --flavor staging --target lib/main_staging.dart
 $ flutter run --flavor production --target lib/main_production.dart
 ```
 
-_\*Hotel Booking App works on iOS, Android, and Web._
+_\*Hotelyn works on iOS, Android, Web, and Windows._
 
 ---
 
@@ -97,7 +92,7 @@ This project relies on [flutter_localizations][flutter_localizations_link] and f
 3. Use the new string
 
 ```dart
-import 'package:hotel_booking_app/l10n/l10n.dart';
+import 'package:hotelyn/l10n/l10n.dart';
 
 @override
 Widget build(BuildContext context) {

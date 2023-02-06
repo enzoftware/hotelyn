@@ -1,6 +1,6 @@
 {
-    "name": "Hotel Booking App",
-    "short_name": "Hotel Booking App",
+    "name": "Hotelyn",
+    "short_name": "Hotelyn",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

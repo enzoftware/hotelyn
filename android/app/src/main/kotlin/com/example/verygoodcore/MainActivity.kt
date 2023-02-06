@@ -1,4 +1,4 @@
-package com.example.verygoodcore
+package com.example.verygoodcore.hotelyn
 
 import io.flutter.embedding.android.FlutterActivity
 
