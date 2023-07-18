@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hotelyn/l10n/l10n.dart';
 
-class App extends StatelessWidget {
-  const App({super.key});
+class HotelynApp extends StatelessWidget {
+  const HotelynApp({super.key});
 
   @override
   Widget build(BuildContext context) {
