@@ -25,6 +25,16 @@ dev_dependencies:
   mocktail: ^0.3.0
   very_good_analysis: ^3.1.0
 
+fonts:
+  - family: DMSans
+    fonts:
+      - asset: assets/fonts/DMSans_18pt-Regular.ttf
+        style: regular
+      - asset: assets/fonts/DMSans_18pt-Medium.ttf
+        style: medium
+      - asset: assets/fonts/DMSans_18pt-Bold.ttf
+        style: bold
+
 flutter:
   uses-material-design: true
   generate: true
