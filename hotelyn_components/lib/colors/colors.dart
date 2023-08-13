@@ -1,7 +1,9 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 
-class HColorsPrimary {
-  const HColorsPrimary._();
+abstract class HColors {}
+
+class HColorsPrimary extends HColors {
+  HColorsPrimary._();
 
   static const blue = Color(0XFF3D5BF6);
   static const blue2 = Color(0XFF7F9EF9);
@@ -16,8 +18,8 @@ class HColorsPrimary {
   static const white3 = Color(0XFFAAAAAA);
 }
 
-class HColorsOther {
-  const HColorsOther._();
+class HColorsOther extends HColors {
+  HColorsOther._();
 
   static const grey = Color(0XFFA7AEC1);
   static const grey2 = Color(0XFFC4C9D6);
@@ -40,8 +42,8 @@ class HColorsOther {
   static const lightGrey3 = Color(0XFFCFCFCF);
 }
 
-class HColorMode {
-  const HColorMode._();
+class HColorMode extends HColors {
+  HColorMode._();
 
   static const black = Color(0XFF111315);
   static const black2 = Color(0XFF202427);
