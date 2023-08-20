@@ -26,7 +26,7 @@ class HotelynApp extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              HButton.large(
+              HButton.ghost(
                 onTap: () {},
                 text: 'Press me',
               ),
