@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=/Users/enzolizama/Development/flutter"
-export "FLUTTER_APPLICATION_PATH=/Users/enzolizama/Projects/hotelyn/hotelyn_components"
+export "FLUTTER_APPLICATION_PATH=/Users/enzolizama/Projects/hotelyn/packages/hotelyn_components"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=0.0.1"

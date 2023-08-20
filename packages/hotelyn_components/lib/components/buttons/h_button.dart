@@ -7,31 +7,28 @@ class HButton extends StatelessWidget {
     required this.text,
     this.onTap,
     this.width = 176,
+    this.textColor = HColorsPrimary.white,
+    this.backgroundColor = HColorsPrimary.blue,
   });
 
-  factory HButton.large({
+  factory HButton.ghost({
     required String text,
+    double width = 176,
     VoidCallback? onTap,
   }) =>
       HButton(
         text: text,
         onTap: onTap,
-        width: 256,
-      );
-
-  factory HButton.xlarge({
-    required String text,
-    VoidCallback? onTap,
-  }) =>
-      HButton(
-        text: text,
-        onTap: onTap,
-        width: 328,
+        width: width,
+        textColor: HColorsPrimary.blue,
+        backgroundColor: HColorsPrimary.white,
       );
 
   final String text;
   final VoidCallback? onTap;
   final double width;
+  final Color textColor;
+  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +37,8 @@ class HButton extends StatelessWidget {
       child: MaterialButton(
         onPressed: onTap,
         padding: const EdgeInsets.symmetric(vertical: 16.0),
-        color: HColorsPrimary.blue,
+        color: backgroundColor,
+        disabledColor: HColorsOther.grey2,
         textColor: HColorsPrimary.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(48.0),
