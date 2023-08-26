@@ -1,7 +1,8 @@
-name: testing
+name: Continous Integration - Hotelyn App
 on: [pull_request]
 jobs:
   test:
+    name: Run all tests on the project
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -22,6 +23,5 @@ jobs:
         uses: zgosalvez/github-actions-report-lcov@v3
         with:
           coverage-files: coverage/lcov.*.info
-          artifact-name: code-coverage-report
           github-token: ${{ secrets.GITHUB_TOKEN }}
           update-comment: true
