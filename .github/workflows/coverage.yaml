@@ -1,7 +1,5 @@
 on: pull_request
-
 name: Continuous Integration
-
 jobs:
   coverage_report:
     name: Generate coverage report
