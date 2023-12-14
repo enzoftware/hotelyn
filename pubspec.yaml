@@ -19,6 +19,19 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  melos: ^3.1.1
+  mocktail: ^1.0.1
+  very_good_analysis: ^5.0.0+1
+
+fonts:
+  - family: DMSans
+    fonts:
+      - asset: assets/fonts/DMSans_18pt-Regular.ttf
+        style: regular
+      - asset: assets/fonts/DMSans_18pt-Medium.ttf
+        style: medium
+      - asset: assets/fonts/DMSans_18pt-Bold.ttf
+        style: bold
 
 flutter:
   uses-material-design: true
