@@ -1,9 +1,0 @@
-name: hotelyn
-repository: https://github.com/enzoftware/hotelyn
-
-packages:
-  - packages/**
-
-scripts:
-  analyze:
-    exec: dart analyze .

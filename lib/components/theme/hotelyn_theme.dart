@@ -1,0 +1,3 @@
+class HotelynLightTheme {}
+
+class HotelynDarkTheme {}

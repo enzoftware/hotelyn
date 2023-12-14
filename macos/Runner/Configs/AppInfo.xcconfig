@@ -8,7 +8,7 @@
 PRODUCT_NAME = hotelyn
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.verygoodcore.hotelyn
+PRODUCT_BUNDLE_IDENTIFIER = com.enzoftware.hotelyn
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 com.example.verygoodcore. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2023 com.enzoftware. All rights reserved.

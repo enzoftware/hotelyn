@@ -1,0 +1,26 @@
+import 'package:flutter/material.dart';
+import 'package:hotelyn/components/theme/hotelyn_colors.dart';
+import 'package:hotelyn/features/home/home_page.dart';
+import 'package:hotelyn/features/onboarding/on_boarding_page.dart';
+import 'package:hotelyn/features/onboarding/on_boarding_welcome_page.dart';
+
+class HotelynApp extends StatelessWidget {
+  const HotelynApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Hotelyn',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: HotelynAppColors.blue),
+        useMaterial3: true,
+      ),
+      initialRoute: OnBoardingPage.route,
+      routes: {
+        OnBoardingPage.route: (_) => const OnBoardingPage(),
+        OnBoardingWelcomePage.route: (_) => const OnBoardingWelcomePage(),
+        HomePage.route: (_) => const HomePage(),
+      },
+    );
+  }
+}
