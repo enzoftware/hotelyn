@@ -12,10 +12,16 @@ class HotelynApp extends StatelessWidget {
     return MaterialApp(
       title: 'Hotelyn',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: HotelynAppColors.blue),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: HotelynAppColors.blue,
+          background: HotelynAppColors.white,
+        ),
+        navigationBarTheme: const NavigationBarThemeData(
+          backgroundColor: Colors.transparent,
+        ),
         useMaterial3: true,
       ),
-      initialRoute: OnBoardingPage.route,
+      initialRoute: HomePage.route,
       routes: {
         OnBoardingPage.route: (_) => const OnBoardingPage(),
         OnBoardingWelcomePage.route: (_) => const OnBoardingWelcomePage(),
