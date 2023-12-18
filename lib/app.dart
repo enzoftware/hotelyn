@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hotelyn/components/theme/hotelyn_colors.dart';
-import 'package:hotelyn/features/home/home_page.dart';
+import 'package:hotelyn/features/home/home_tab.dart';
 import 'package:hotelyn/features/onboarding/on_boarding_page.dart';
 import 'package:hotelyn/features/onboarding/on_boarding_welcome_page.dart';
 
@@ -12,6 +12,13 @@ class HotelynApp extends StatelessWidget {
     return MaterialApp(
       title: 'Hotelyn',
       theme: ThemeData(
+        appBarTheme: const AppBarTheme(),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: HotelynAppColors.white,
+        ),
+        cardTheme: const CardTheme(
+          surfaceTintColor: HotelynAppColors.white,
+        ),
         colorScheme: ColorScheme.fromSeed(
           seedColor: HotelynAppColors.blue,
           background: HotelynAppColors.white,
