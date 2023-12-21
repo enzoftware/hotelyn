@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'navigation_bar_cubit.dart';
 
-const _navigationBarHeight = 96.0;
-
 class HotelynNavigationBar extends StatelessWidget {
   const HotelynNavigationBar({super.key});
 
