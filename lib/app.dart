@@ -12,6 +12,7 @@ class HotelynApp extends StatelessWidget {
     return MaterialApp(
       title: 'Hotelyn',
       theme: ThemeData(
+        fontFamily: 'DMSans',
         appBarTheme: const AppBarTheme(),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: HotelynAppColors.white,
@@ -28,7 +29,7 @@ class HotelynApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      initialRoute: HomePage.route,
+      initialRoute: OnBoardingPage.route,
       routes: {
         OnBoardingPage.route: (_) => const OnBoardingPage(),
         OnBoardingWelcomePage.route: (_) => const OnBoardingWelcomePage(),

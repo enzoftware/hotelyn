@@ -27,7 +27,7 @@ class OnBoardingPage extends StatelessWidget {
             return Column(
               children: [
                 Expanded(
-                  flex: 7,
+                  flex: 8,
                   child: PageView.builder(
                     controller: controller,
                     onPageChanged: (value) =>
@@ -43,15 +43,17 @@ class OnBoardingPage extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 20,
+                      vertical: 10,
                     ),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 1),
                         HotelynButton(
                           onPressed: () {
                             controller.nextPage(
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.linear,
+                              duration: const Duration(milliseconds: 250),
+                              curve: Curves.easeInCubic,
                             );
                           },
                           message: cubit.state.primaryButtonMessage,
@@ -93,30 +95,28 @@ class OnBoardingItem extends StatelessWidget {
       children: [
         Image.asset(
           data.imagePath,
-          height: 430,
+          height: MediaQuery.of(context).size.height * 0.55,
           width: double.infinity,
           fit: BoxFit.cover,
         ),
-        const SizedBox(height: 40),
+        const SizedBox(height: 32),
         Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 20,
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 data.title,
                 style: HotelynTextStyle.h1,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               Text(
                 data.description,
                 style: HotelynTextStyle.description,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 40),
             ],
           ),
         ),
