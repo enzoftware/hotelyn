@@ -7,7 +7,6 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   void load() async {
-    await Future.delayed(const Duration(seconds: 1));
     emit(ProfileLoadSuccess());
   }
 }

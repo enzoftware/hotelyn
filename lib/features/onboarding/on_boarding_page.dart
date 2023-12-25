@@ -48,7 +48,6 @@ class OnBoardingPage extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 1),
                         HotelynButton(
                           onPressed: () {
                             controller.nextPage(
