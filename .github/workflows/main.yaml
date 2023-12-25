@@ -1,9 +1,9 @@
 name: Flutter Tests
 on: [pull_request, workflow_dispatch]
 jobs:
-  drive:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: subosito/flutter-action@v1
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
       - run: flutter test
