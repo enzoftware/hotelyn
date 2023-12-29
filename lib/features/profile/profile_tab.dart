@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hotelyn/components/app_bar.dart';
 import 'package:hotelyn/components/avatar/hotelyn_avatar.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/features/profile/profile_cubit.dart';
@@ -16,7 +17,11 @@ class ProfileTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: HotelynHomeAppBar(
+        title: 'Profile',
+        iconData: Icons.settings,
+        onIconPressed: () {},
+      ),
       body: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
           return switch (state) {
@@ -54,7 +59,6 @@ class ProfileDataScreen extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            ProfileTabAppBar(),
             SizedBox(height: 32),
             ProfileUserInformationSection(),
             SizedBox(height: 24),
@@ -81,21 +85,6 @@ class ProfileUserInformationSection extends StatelessWidget {
         Text('Enzo Lizama', style: HotelynTextStyle.h2),
         SizedBox(height: 8),
         Text('Lima, Peru', style: HotelynTextStyle.description),
-      ],
-    );
-  }
-}
-
-class ProfileTabAppBar extends StatelessWidget {
-  const ProfileTabAppBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text('Profile', style: HotelynTextStyle.h1),
-        Icon(Icons.settings_outlined),
       ],
     );
   }

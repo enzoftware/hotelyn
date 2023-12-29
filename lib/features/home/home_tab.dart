@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotelyn/components/navigation_bar/navigation_bar.dart';
 import 'package:hotelyn/components/navigation_bar/navigation_bar_cubit.dart';
 import 'package:hotelyn/components/navigation_bar/navigation_bar_state.dart';
+import 'package:hotelyn/features/messages/messages_cubit.dart';
 import 'package:hotelyn/features/messages/messages_tab.dart';
 import 'package:hotelyn/features/profile/profile_cubit.dart';
 import 'package:hotelyn/features/profile/profile_tab.dart';
@@ -25,6 +26,9 @@ class HomePage extends StatelessWidget {
         BlocProvider<ProfileCubit>(
           create: (_) => ProfileCubit(),
         ),
+        BlocProvider<MessagesCubit>(
+          create: (_) => MessagesCubit(),
+        ),
       ],
       child: BlocBuilder<NavigationBarCubit, NavigationBarState>(
         builder: (context, state) {
@@ -34,7 +38,7 @@ class HomePage extends StatelessWidget {
             body: <Widget>[
               const HomeTab(),
               const SearchTab(),
-              const MesssagesTab(),
+              const MessagesTab(),
               const ProfileTab()
             ].elementAt(index),
           );
