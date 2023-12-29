@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hotelyn/components/text_input/hotelyn_search_input.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/components/theme/hotelyn_colors.dart';
 
@@ -44,19 +45,7 @@ class HotelynHeader extends SliverPersistentHeaderDelegate {
             ),
             SizedBox(height: 32),
             // TODO: Split in different widget and pass controller
-            TextField(
-              autofocus: false,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: HotelynAppColors.lightGrey,
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                  borderSide: BorderSide.none,
-                ),
-                hintText: 'Search hotel',
-              ),
-            ),
+            HotelynSearchInput(hintText: 'Search hotel'),
           ],
         ),
       ),

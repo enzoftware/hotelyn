@@ -41,6 +41,7 @@ flutter:
     - assets/images/
     - assets/images/hotelyn/
     - assets/images/onboarding/
+    - assets/images/messages/
     - assets/icons/
 
   fonts:
