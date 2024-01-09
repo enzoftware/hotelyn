@@ -7,6 +7,7 @@ import 'package:hotelyn/features/messages/messages_cubit.dart';
 import 'package:hotelyn/features/messages/messages_tab.dart';
 import 'package:hotelyn/features/profile/profile_cubit.dart';
 import 'package:hotelyn/features/profile/profile_tab.dart';
+import 'package:hotelyn/features/search/search_cubit.dart';
 import 'package:hotelyn/features/search/search_tab.dart';
 
 import 'widgets/home_header.dart';
@@ -28,6 +29,9 @@ class HomePage extends StatelessWidget {
         ),
         BlocProvider<MessagesCubit>(
           create: (_) => MessagesCubit(),
+        ),
+        BlocProvider<SearchCubit>(
+          create: (_) => SearchCubit(),
         ),
       ],
       child: BlocBuilder<NavigationBarCubit, NavigationBarState>(
