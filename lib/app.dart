@@ -3,6 +3,7 @@ import 'package:hotelyn/components/theme/hotelyn_colors.dart';
 import 'package:hotelyn/features/home/home_tab.dart';
 import 'package:hotelyn/features/onboarding/on_boarding_page.dart';
 import 'package:hotelyn/features/onboarding/on_boarding_welcome_page.dart';
+import 'package:hotelyn/features/splash/splash_screen.dart';
 
 class HotelynApp extends StatelessWidget {
   const HotelynApp({super.key});
@@ -29,8 +30,9 @@ class HotelynApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      initialRoute: OnBoardingPage.route,
+      initialRoute: SplashScreen.route,
       routes: {
+        SplashScreen.route: (_) => const SplashScreen(),
         OnBoardingPage.route: (_) => const OnBoardingPage(),
         OnBoardingWelcomePage.route: (_) => const OnBoardingWelcomePage(),
         HomePage.route: (_) => const HomePage(),

@@ -5,9 +5,11 @@ class HotelynSearchInput extends StatelessWidget {
   const HotelynSearchInput({
     super.key,
     required this.hintText,
+    this.controller,
   });
 
   final String hintText;
+  final TextEditingController? controller;
 
   final _radius = 30.0;
 
@@ -15,6 +17,7 @@ class HotelynSearchInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       autofocus: false,
+      controller: controller,
       decoration: InputDecoration(
         filled: true,
         fillColor: HotelynAppColors.lightGrey,

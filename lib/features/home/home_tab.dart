@@ -7,7 +7,8 @@ import 'package:hotelyn/features/messages/messages_cubit.dart';
 import 'package:hotelyn/features/messages/messages_tab.dart';
 import 'package:hotelyn/features/profile/profile_cubit.dart';
 import 'package:hotelyn/features/profile/profile_tab.dart';
-import 'package:hotelyn/features/search/search_tab.dart';
+import 'package:hotelyn/features/search/recent_search/cubit/search_cubit.dart';
+import 'package:hotelyn/features/search/recent_search/recent_search_tab.dart';
 
 import 'widgets/home_header.dart';
 
@@ -29,18 +30,23 @@ class HomePage extends StatelessWidget {
         BlocProvider<MessagesCubit>(
           create: (_) => MessagesCubit(),
         ),
+        BlocProvider<SearchCubit>(
+          create: (_) => SearchCubit(),
+        ),
       ],
       child: BlocBuilder<NavigationBarCubit, NavigationBarState>(
         builder: (context, state) {
           final index = state.selectedTabIndex;
           return Scaffold(
             bottomNavigationBar: const HotelynNavigationBar(),
-            body: <Widget>[
-              const HomeTab(),
-              const SearchTab(),
-              const MessagesTab(),
-              const ProfileTab()
-            ].elementAt(index),
+            body: SafeArea(
+              child: <Widget>[
+                const HomeTab(),
+                const RecentSearchTab(),
+                const MessagesTab(),
+                const ProfileTab()
+              ].elementAt(index),
+            ),
           );
         },
       ),

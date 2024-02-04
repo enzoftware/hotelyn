@@ -5,6 +5,8 @@ import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/features/messages/messages_cubit.dart';
 import 'package:hotelyn/features/messages/messages_state.dart';
 
+// TODO: Implement Stream SDK to generate a real world chat in an ease.
+
 class MessagesTab extends StatelessWidget {
   const MessagesTab({super.key});
 

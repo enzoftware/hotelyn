@@ -19,7 +19,6 @@ class HotelynHeader extends SliverPersistentHeaderDelegate {
       color: Colors.white,
       child: const Padding(
         padding: EdgeInsets.only(
-          top: 70.0,
           left: 24.0,
           right: 24.0,
         ),
