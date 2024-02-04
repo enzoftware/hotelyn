@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotelyn/components/buttons/hotelyn_button.dart';
+import 'package:hotelyn/components/dot_indicator/dot_indicator.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/features/onboarding/data/on_boarding_data.dart';
 import 'package:hotelyn/features/onboarding/on_boarding_cubit.dart';
@@ -22,7 +23,7 @@ class OnBoardingPage extends StatelessWidget {
         create: (context) => onBoardingCubit ?? OnBoardingCubit(),
         child: BlocBuilder<OnBoardingCubit, OnBoardingState>(
           builder: (context, state) {
-            final cubit = context.read<OnBoardingCubit>();
+            final cubit = context.watch<OnBoardingCubit>();
             final controller = PageController();
             return Column(
               children: [
@@ -37,6 +38,10 @@ class OnBoardingPage extends StatelessWidget {
                       data: state.data[index],
                     ),
                   ),
+                ),
+                GroupDotIndicator(
+                  length: state.data.length,
+                  selectedIndex: state.currentPosition,
                 ),
                 Expanded(
                   flex: 3,

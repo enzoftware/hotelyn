@@ -59,7 +59,6 @@ class ProfileDataScreen extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 32),
             ProfileUserInformationSection(),
             SizedBox(height: 24),
             ProfileStatsCard(),
