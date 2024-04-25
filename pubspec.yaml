@@ -20,7 +20,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ">=2.0.0 <4.0.0"
-  melos: ">=3.1.1 <5.0.0"
+  melos: ">=3.1.1 <7.0.0"
   mocktail: ^1.0.1
   very_good_analysis: ^5.0.0+1
 
