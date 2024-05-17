@@ -9,7 +9,7 @@ environment:
 dependencies:
   bloc: ^8.1.2
   equatable: ^2.0.5
-  intl: ^0.18.0
+  intl: ">=0.18.0 <0.20.0"
   json_annotation: ^4.8.1
   flutter:
     sdk: flutter
