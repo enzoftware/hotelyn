@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class PreferenceLocalDataSource {
-  PreferenceLocalDataSource({required this.sharedPreferences});
+class SharedStorage {
+  SharedStorage({required this.sharedPreferences});
 
   final SharedPreferences sharedPreferences;
 

@@ -1,4 +1,9 @@
-sealed class SplashState {}
+part of 'splash_bloc.dart';
+
+sealed class SplashState extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
 
 class SplashInitial extends SplashState {}
 
