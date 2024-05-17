@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hotelyn/app.dart';
 import 'package:hotelyn/core/domain/repository/onboarding_repository.dart';
+import 'package:mocktail/mocktail.dart';
 
 import 'helpers/helpers.dart';
 
@@ -11,6 +12,8 @@ void main() {
 
     setUp(() {
       preferenceRepository = MockPreferenceRepository();
+      when(() => preferenceRepository.isOnBoardingPassed())
+          .thenAnswer((_) async => true);
     });
 
     testWidgets('App launches successfully', (WidgetTester tester) async {
