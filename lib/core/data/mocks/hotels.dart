@@ -1,4 +1,4 @@
-import 'package:hotelyn/core/domain/hotel/hotel.dart';
+import 'package:hotelyn/core/domain/models/hotel/hotel.dart';
 
 final mockHotels = <Hotel>[
   Hotel(

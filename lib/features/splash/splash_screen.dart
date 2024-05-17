@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hotelyn/core/data/preferences/repository/preference_repository.dart';
 import 'package:hotelyn/features/home/home_tab.dart';
 import 'package:hotelyn/features/onboarding/on_boarding_page.dart';
 import 'package:hotelyn/features/splash/splash_cubit.dart';
@@ -14,7 +15,9 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
-        create: (context) => SplashCubit(),
+        create: (context) => SplashCubit(
+          preferenceRepository: context.read<PreferenceRepository>(),
+        ),
         child: BlocConsumer<SplashCubit, SplashState>(
           listener: (context, state) {
             if (state is SplashToHome) {
