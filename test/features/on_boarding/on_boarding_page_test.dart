@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hotelyn/components/buttons/hotelyn_button.dart';
-import 'package:hotelyn/features/onboarding/on_boarding_cubit.dart';
-import 'package:hotelyn/features/onboarding/on_boarding_page.dart';
+import 'package:hotelyn/features/on_boarding/on_boarding_cubit.dart';
+import 'package:hotelyn/features/on_boarding/view/on_boarding_page.dart';
 
 void main() {
   group('OnBoardingPage', () {

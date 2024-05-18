@@ -1,9 +1,9 @@
 class NavigationBarState {
-  final int selectedTabIndex;
-
   NavigationBarState({
     required this.selectedTabIndex,
   });
+
+  final int selectedTabIndex;
 
   NavigationBarState copyWith({int? selectedTabIndex}) {
     return NavigationBarState(

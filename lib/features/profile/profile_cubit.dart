@@ -6,7 +6,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     load();
   }
 
-  void load() async {
+  Future<void> load() async {
     emit(ProfileLoadSuccess());
   }
 }

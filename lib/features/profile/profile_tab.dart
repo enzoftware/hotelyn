@@ -6,13 +6,14 @@ import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/features/profile/profile_cubit.dart';
 import 'package:hotelyn/features/profile/profile_state.dart';
 
-import 'widgets/profile_options_section.dart';
-import 'widgets/profile_stats_card.dart';
+import 'package:hotelyn/features/profile/widgets/profile_options_section.dart';
+import 'package:hotelyn/features/profile/widgets/profile_stats_card.dart';
 
 class ProfileTab extends StatelessWidget {
   const ProfileTab({super.key});
 
-  // TODO: When authentication is ready add a validation to redirect to login page to unauthenticated users.
+  // TODO: When authentication is ready add a validation to redirect to login
+  // page to unauthenticated users.
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class ProfileTab extends StatelessWidget {
           return switch (state) {
             ProfileLoading() => const ProfileLoadingScreen(),
             ProfileLoadSuccess() => const ProfileDataScreen(),
-            // TODO: Create a custom error screen with a custom message per screen
+            // TODO: Create a custom error screen with a custom message screen
             ProfileFailure() => const Placeholder(),
           };
         },
@@ -55,7 +56,7 @@ class ProfileDataScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.0),
+      padding: EdgeInsets.symmetric(horizontal: 24),
       child: SingleChildScrollView(
         child: Column(
           children: [

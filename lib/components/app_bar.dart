@@ -3,9 +3,9 @@ import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 
 class HotelynHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HotelynHomeAppBar({
-    super.key,
     required this.title,
     required this.iconData,
+    super.key,
     this.onIconPressed,
   });
 

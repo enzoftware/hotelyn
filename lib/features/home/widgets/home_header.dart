@@ -15,12 +15,12 @@ class HotelynHeader extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return Container(
+    return const ColoredBox(
       color: Colors.white,
-      child: const Padding(
+      child: Padding(
         padding: EdgeInsets.only(
-          left: 24.0,
-          right: 24.0,
+          left: 24,
+          right: 24,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +75,7 @@ class LocationCard extends StatelessWidget {
       elevation: _cardElevation,
       shape: StadiumBorder(),
       child: Padding(
-        padding: EdgeInsets.all(12.0),
+        padding: EdgeInsets.all(12),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -83,7 +83,7 @@ class LocationCard extends StatelessWidget {
             SizedBox(width: 8),
             Text('Lima, PE'),
             SizedBox(width: 16),
-            Icon(Icons.arrow_circle_down)
+            Icon(Icons.arrow_circle_down),
           ],
         ),
       ),
@@ -103,7 +103,7 @@ class NotificationCard extends StatelessWidget {
       color: HotelynAppColors.white,
       shape: CircleBorder(),
       child: Padding(
-        padding: EdgeInsets.all(11.0),
+        padding: EdgeInsets.all(11),
         child: Badge(
           child: Icon(Icons.notifications),
         ),

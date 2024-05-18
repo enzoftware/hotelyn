@@ -11,6 +11,6 @@ class SharedStorage {
     return sharedPreferences.getBool(onBoardingItemKey) ?? false;
   }
 
-  void setOnBoaardingPassed() async =>
+  void setOnBoaardingPassed() =>
       sharedPreferences.setBool(onBoardingItemKey, true);
 }

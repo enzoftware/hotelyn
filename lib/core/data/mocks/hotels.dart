@@ -8,7 +8,7 @@ final mockHotels = <Hotel>[
     perks: [
       HotelPerk(name: 'Pool', iconData: 'pool.png'),
       HotelPerk(name: 'Breakfast', iconData: 'breakfast.png'),
-      HotelPerk(name: 'Spa', iconData: 'spa.png')
+      HotelPerk(name: 'Spa', iconData: 'spa.png'),
     ],
   ),
 ];

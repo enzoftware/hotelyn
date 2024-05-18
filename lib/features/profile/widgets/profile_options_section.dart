@@ -38,7 +38,7 @@ class ProfileOptionsSection extends StatelessWidget {
             title: 'Log Out',
             iconData: Icons.logout_outlined,
           ),
-        )
+        ),
       ],
     );
   }
@@ -46,15 +46,11 @@ class ProfileOptionsSection extends StatelessWidget {
 
 class OptionItemCard extends StatelessWidget {
   const OptionItemCard({
-    super.key,
     required this.optionItem,
+    super.key,
     this.itemColor = Colors.black,
     this.hasTrailing = true,
   });
-
-  final OptionItem optionItem;
-  final Color? itemColor;
-  final bool hasTrailing;
 
   factory OptionItemCard.delete({required OptionItem optionItem}) {
     return OptionItemCard(
@@ -64,13 +60,17 @@ class OptionItemCard extends StatelessWidget {
     );
   }
 
+  final OptionItem optionItem;
+  final Color? itemColor;
+  final bool hasTrailing;
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
       shape: const StadiumBorder(),
       contentPadding: const EdgeInsets.symmetric(
-        vertical: 12.0,
-        horizontal: 14.0,
+        vertical: 12,
+        horizontal: 14,
       ),
       titleTextStyle: const TextStyle(fontSize: 14),
       title: Text(optionItem.title),
