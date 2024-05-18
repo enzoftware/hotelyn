@@ -10,7 +10,7 @@ import 'package:hotelyn/features/profile/profile_tab.dart';
 import 'package:hotelyn/features/search/recent_search/cubit/search_cubit.dart';
 import 'package:hotelyn/features/search/recent_search/recent_search_tab.dart';
 
-import 'widgets/home_header.dart';
+import 'package:hotelyn/features/home/widgets/home_header.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -21,16 +21,16 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<NavigationBarCubit>(
+        BlocProvider(
           create: (_) => NavigationBarCubit(),
         ),
-        BlocProvider<ProfileCubit>(
+        BlocProvider(
           create: (_) => ProfileCubit(),
         ),
-        BlocProvider<MessagesCubit>(
+        BlocProvider(
           create: (_) => MessagesCubit(),
         ),
-        BlocProvider<SearchCubit>(
+        BlocProvider(
           create: (_) => SearchCubit(),
         ),
       ],
@@ -44,7 +44,7 @@ class HomePage extends StatelessWidget {
                 const HomeTab(),
                 const RecentSearchTab(),
                 const MessagesTab(),
-                const ProfileTab()
+                const ProfileTab(),
               ].elementAt(index),
             ),
           );

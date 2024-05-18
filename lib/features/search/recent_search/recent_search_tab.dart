@@ -44,8 +44,9 @@ class SearchLoadSuccessScreen extends StatelessWidget {
     return const Column(
       children: [
         Hero(
-            tag: SearchCubit.searchTag,
-            child: HotelynSearchInput(hintText: 'Search hotel')),
+          tag: SearchCubit.searchTag,
+          child: HotelynSearchInput(hintText: 'Search hotel'),
+        ),
       ],
     );
   }

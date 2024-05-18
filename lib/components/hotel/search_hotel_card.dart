@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hotelyn/core/domain/models/hotel.dart';
 
 class SearchHotelCard extends StatelessWidget {
-  const SearchHotelCard({super.key, required this.hotel});
+  const SearchHotelCard({required this.hotel, super.key});
 
   final Hotel hotel;
 

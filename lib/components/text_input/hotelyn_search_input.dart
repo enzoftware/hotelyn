@@ -3,8 +3,8 @@ import 'package:hotelyn/components/theme/hotelyn_colors.dart';
 
 class HotelynSearchInput extends StatelessWidget {
   const HotelynSearchInput({
-    super.key,
     required this.hintText,
+    super.key,
     this.controller,
   });
 
@@ -16,7 +16,6 @@ class HotelynSearchInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      autofocus: false,
       controller: controller,
       decoration: InputDecoration(
         filled: true,

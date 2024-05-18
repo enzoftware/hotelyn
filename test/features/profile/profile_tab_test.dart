@@ -6,7 +6,7 @@ import 'package:hotelyn/features/profile/profile_tab.dart';
 
 void main() {
   testWidgets('pump widget', (tester) async {
-    tester.pumpWidget(
+    await tester.pumpWidget(
       MaterialApp(
         home: BlocProvider(
           create: (context) => ProfileCubit(),

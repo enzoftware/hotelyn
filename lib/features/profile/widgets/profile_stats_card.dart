@@ -9,7 +9,7 @@ class ProfileStatsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -24,7 +24,7 @@ class ProfileStatsCard extends StatelessWidget {
 }
 
 class StatsItem extends StatelessWidget {
-  const StatsItem({super.key, required this.data});
+  const StatsItem({required this.data, super.key});
 
   final StatItemData data;
 
@@ -48,11 +48,10 @@ class StatsItem extends StatelessWidget {
 }
 
 class StatItemData {
-  final int value;
-  final String title;
-
   StatItemData({
     required this.value,
     required this.title,
   });
+  final int value;
+  final String title;
 }

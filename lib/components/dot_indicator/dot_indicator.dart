@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class GroupDotIndicator extends StatelessWidget {
   const GroupDotIndicator({
-    super.key,
     required this.length,
     required this.selectedIndex,
+    super.key,
   });
 
   final int length;
@@ -24,8 +24,8 @@ class GroupDotIndicator extends StatelessWidget {
 
 class DotIndicator extends StatelessWidget {
   const DotIndicator({
-    super.key,
     required this.isActive,
+    super.key,
     this.activeColor,
     this.inactiveColor,
   });
@@ -46,7 +46,7 @@ class DotIndicator extends StatelessWidget {
       width: isActive ? 20 : 6,
       decoration: BoxDecoration(
         color: isActive ? color : const Color(0XFF868686).withOpacity(0.25),
-        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+        borderRadius: const BorderRadius.all(Radius.circular(8)),
       ),
     );
   }

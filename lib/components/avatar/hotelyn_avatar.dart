@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class HotelynAvatar extends StatelessWidget {
   const HotelynAvatar({
-    super.key,
     required this.path,
     required this.size,
+    super.key,
   });
 
   final String path;

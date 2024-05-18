@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:hotelyn/core/domain/repository/onboarding_repository.dart';
+import 'package:hotelyn/core/domain/repository/on_boarding_repository.dart';
 
 part 'splash_event.dart';
 part 'splash_state.dart';

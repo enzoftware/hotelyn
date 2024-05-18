@@ -3,8 +3,8 @@ import 'package:hotelyn/components/theme/hotelyn_colors.dart';
 
 class HotelynButton extends StatelessWidget {
   const HotelynButton({
-    super.key,
     required this.message,
+    super.key,
     this.onPressed,
     this.height = 56,
     this.width = double.infinity,
@@ -25,8 +25,8 @@ class HotelynButton extends StatelessWidget {
       onPressed: onPressed,
       height: height ?? 56,
       width: width ?? double.infinity,
-      color: HotelynAppColors.white,
-      textColor: HotelynAppColors.blue,
+      color: color ?? HotelynAppColors.white,
+      textColor: textColor ?? HotelynAppColors.blue,
     );
   }
 

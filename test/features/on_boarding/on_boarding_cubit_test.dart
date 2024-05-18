@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hotelyn/features/onboarding/data/on_boarding_data.dart';
-import 'package:hotelyn/features/onboarding/on_boarding_cubit.dart';
-import 'package:hotelyn/features/onboarding/on_boarding_state.dart';
+import 'package:hotelyn/features/on_boarding/data/on_boarding_data.dart';
+import 'package:hotelyn/features/on_boarding/on_boarding_cubit.dart';
+import 'package:hotelyn/features/on_boarding/on_boarding_state.dart';
 
 void main() {
   group('OnBoardingCubit', () {
