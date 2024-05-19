@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hotelyn/components/buttons/hotelyn_button.dart';
+import 'package:hotelyn/components/hotelyn_button.dart';
 import 'package:hotelyn/components/icons/hotelyn_icon.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
-import 'package:hotelyn/features/home/home_tab.dart';
+import 'package:hotelyn/features/home/home.dart';
 
 class OnBoardingWelcomePage extends StatelessWidget {
   const OnBoardingWelcomePage({super.key});

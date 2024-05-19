@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotelyn/components/app_bar.dart';
-import 'package:hotelyn/components/avatar/hotelyn_avatar.dart';
+import 'package:hotelyn/components/hotelyn_avatar.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/features/profile/profile_cubit.dart';
 import 'package:hotelyn/features/profile/profile_state.dart';
