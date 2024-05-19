@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hotelyn/components/components.dart';
 import 'package:hotelyn/components/hotelyn_button.dart';
-import 'package:hotelyn/components/dot_indicator.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/features/on_boarding/on_boarding.dart';
-import 'package:hotelyn/features/on_boarding/view/on_boarding_welcome_page.dart';
 
 class OnBoardingPage extends StatelessWidget {
   const OnBoardingPage({super.key});
