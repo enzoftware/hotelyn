@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hotelyn/core/domain/repository/on_boarding_repository.dart';
-import 'package:hotelyn/features/home/home_tab.dart';
-import 'package:hotelyn/features/on_boarding/view/on_boarding_page.dart';
-import 'package:hotelyn/features/splash/bloc/splash_bloc.dart';
+import 'package:hotelyn/core/domain/repository/repository.dart';
+import 'package:hotelyn/features/home/home.dart';
+import 'package:hotelyn/features/on_boarding/on_boarding.dart';
+import 'package:hotelyn/features/splash/splash.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
