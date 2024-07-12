@@ -31,7 +31,7 @@ dev_dependencies:
   melos: ">=3.1.1 <7.0.0"
   mocktail: ^1.0.3
   test: ^1.25.2
-  very_good_analysis: ^5.1.0
+  very_good_analysis: ">=5.1.0 <7.0.0"
 
 fonts:
   - family: DMSans
