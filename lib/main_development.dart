@@ -1,4 +1,4 @@
-import 'package:hotelyn/app.dart';
+import 'package:hotelyn/app/view/app.dart';
 import 'package:hotelyn/bootstrap.dart';
 import 'package:hotelyn/core/data/storage/storage.dart';
 import 'package:hotelyn/core/domain/repository/repository.dart';

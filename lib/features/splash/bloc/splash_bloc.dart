@@ -8,8 +8,9 @@ part 'splash_event.dart';
 part 'splash_state.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
-  SplashBloc({required OnBoardingRepository onBoardingRepository})
-      : _onBoardingRepository = onBoardingRepository,
+  SplashBloc({
+    required OnBoardingRepository onBoardingRepository,
+  })  : _onBoardingRepository = onBoardingRepository,
         super(SplashInitial()) {
     on<SplashStarted>(_onStartSplash);
   }

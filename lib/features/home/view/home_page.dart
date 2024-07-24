@@ -3,14 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotelyn/components/navigation_bar/navigation_bar.dart';
 import 'package:hotelyn/components/navigation_bar/navigation_bar_cubit.dart';
 import 'package:hotelyn/components/navigation_bar/navigation_bar_state.dart';
+import 'package:hotelyn/features/home/widgets/home_header.dart';
 import 'package:hotelyn/features/messages/messages_cubit.dart';
 import 'package:hotelyn/features/messages/messages_tab.dart';
 import 'package:hotelyn/features/profile/profile_cubit.dart';
 import 'package:hotelyn/features/profile/profile_tab.dart';
 import 'package:hotelyn/features/search/recent_search/cubit/search_cubit.dart';
 import 'package:hotelyn/features/search/recent_search/recent_search_tab.dart';
-
-import 'package:hotelyn/features/home/widgets/home_header.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

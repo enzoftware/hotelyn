@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hotelyn/app.dart';
+import 'package:hotelyn/app/view/app.dart';
 import 'package:hotelyn/core/domain/repository/on_boarding_repository.dart';
 import 'package:mocktail/mocktail.dart';
 

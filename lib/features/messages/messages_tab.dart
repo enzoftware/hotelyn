@@ -5,7 +5,7 @@ import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/features/messages/messages_cubit.dart';
 import 'package:hotelyn/features/messages/messages_state.dart';
 
-// TODO: Implement Stream SDK to generate a real world chat in an ease.
+// TODO(enzoftware): Implement Stream SDK to generate a real world chat in an ease.
 
 class MessagesTab extends StatelessWidget {
   const MessagesTab({super.key});
@@ -13,9 +13,7 @@ class MessagesTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MessagesCubit, MessagesState>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
           appBar: HotelynHomeAppBar(

@@ -43,7 +43,7 @@ class HotelynHeader extends SliverPersistentHeaderDelegate {
               style: HotelynTextStyle.h1,
             ),
             SizedBox(height: 32),
-            // TODO: Split in different widget and pass controller
+            // TODO(enzoftware): Split in different widget and pass controller
             HotelynSearchInput(hintText: 'Search hotel'),
           ],
         ),

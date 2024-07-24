@@ -11,7 +11,7 @@ class HotelynSearchInput extends StatelessWidget {
   final String hintText;
   final TextEditingController? controller;
 
-  final _radius = 30.0;
+  double get _radius => 30;
 
   @override
   Widget build(BuildContext context) {
