@@ -1,14 +1,14 @@
 import 'package:hotelyn/core/domain/models/models.dart';
 
 final mockHotels = <Hotel>[
-  Hotel(
+  const Hotel(
     name: 'Hotel 1',
     price: '230.1',
     location: 'Av. Peru 123, Lima.',
     perks: [
-      HotelPerk(name: 'Pool', iconData: 'pool.png'),
-      HotelPerk(name: 'Breakfast', iconData: 'breakfast.png'),
-      HotelPerk(name: 'Spa', iconData: 'spa.png'),
+      Perk(name: 'Pool', iconData: 'pool.png'),
+      Perk(name: 'Breakfast', iconData: 'breakfast.png'),
+      Perk(name: 'Spa', iconData: 'spa.png'),
     ],
   ),
 ];
