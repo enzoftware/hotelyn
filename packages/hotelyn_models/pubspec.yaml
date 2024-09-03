@@ -1,0 +1,16 @@
+name: hotelyn_models
+description: Models for Hotelyn app
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  equatable: ^2.0.5
+  json_annotation: ^4.8.1
+
+dev_dependencies:
+  test: ^1.25.2
+  mocktail: ^1.0.4
+  very_good_analysis: ^6.0.0
