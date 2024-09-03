@@ -18,6 +18,10 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   go_router: ^14.1.1
+
+  hotelyn_models:
+    path: packages/hotelyn_models
+
   intl: 0.19.0
   json_annotation: ^4.8.1
   logger: ^2.3.0
