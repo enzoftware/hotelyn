@@ -10,7 +10,7 @@ on:
       - "packages/hotelyn_models/**"
       - ".github/workflows/hotelyn_models.yaml"
     branches:
-      - master
+      - main
 
 jobs:
   build:
