@@ -1,4 +1,4 @@
-import 'package:hotelyn/core/domain/models/models.dart';
+import 'package:hotelyn_models/hotelyn_models.dart';
 
 final mockHotels = <Hotel>[
   const Hotel(

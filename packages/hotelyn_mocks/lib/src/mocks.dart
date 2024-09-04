@@ -1,0 +1,1 @@
+export 'hotels.dart';

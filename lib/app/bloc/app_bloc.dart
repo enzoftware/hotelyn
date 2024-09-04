@@ -10,8 +10,9 @@ part 'app_event.dart';
 part 'app_state.dart';
 
 class AppBloc extends Bloc<AppEvent, AppState> {
-  AppBloc({required UserRepository userRepository})
-      : _userRepository = userRepository,
+  AppBloc({
+    required UserRepository userRepository,
+  })  : _userRepository = userRepository,
         super(LoadingAuthStatus()) {
     on<FetchAuthenticationStatus>(_onFetchAuthenticationStatus);
   }
