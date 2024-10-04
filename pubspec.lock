@@ -401,10 +401,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "2ddb88e9ad56ae15ee144ed10e33886777eb5ca2509a914850a5faa7b52ff459"
+      sha256: b4c1cce7eda99ff729bb69d10cd7555017a0665f66ca46ee574e6a03785b389d
       url: "https://pub.dev"
     source: hosted
-    version: "14.2.7"
+    version: "14.2.9"
   graphs:
     dependency: transitive
     description:
