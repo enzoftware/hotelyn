@@ -10,8 +10,6 @@ dependencies:
   bloc: ^8.1.2
   cupertino_icons: ^1.0.2
   equatable: ^2.0.5
-  firebase_auth: ^4.19.5
-  firebase_core: ^2.31.0
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.3
