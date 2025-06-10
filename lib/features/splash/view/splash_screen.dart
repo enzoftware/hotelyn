@@ -40,7 +40,7 @@ class SplashView extends StatelessWidget {
           Navigator.pushNamed(context, OnBoardingPage.route);
         }
       },
-      builder: (context, state) {
+      builder: (_, __) {
         return const SplashScreenBody();
       },
     );

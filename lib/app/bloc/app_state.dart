@@ -19,3 +19,24 @@ final class AppStateAuthenticated extends AppState {
 }
 
 final class AppStateUnauthenticated extends AppState {}
+
+class User {
+  User({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.phone,
+    required this.address,
+    required this.city,
+    required this.state,
+    required this.zip,
+  });
+  final String id;
+  final String name;
+  final String email;
+  final String phone;
+  final String address;
+  final String city;
+  final String state;
+  final String zip;
+}
