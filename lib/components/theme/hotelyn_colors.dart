@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-/// [HotelynAppColors] -
+/// [HotelynColors] -
 /// Our colour palette is built with our core principles and guidelines as
 /// its foundation.
-class HotelynAppColors {
-  HotelynAppColors._();
+class HotelynColors {
+  HotelynColors._();
 
   // Primary Colors
 
@@ -13,14 +13,14 @@ class HotelynAppColors {
   static const blue3 = Color(0XFF9FB6FA);
 
   static const black = Color(0XFF151B33);
-  static const black2 = Color(0XFF636667);
+  static const black2 = Color(0XFF636777);
   static const black3 = Color(0XFF8A8D99);
 
   static const white = Color(0XFFFFFFFF);
   static const white2 = Color(0XFFD4D4D4);
   static const white3 = Color(0XFFAAAAAA);
 
-  // Other Color
+  // Other Colors
 
   static const grey = Color(0XFFA7AEC1);
   static const grey2 = Color(0XFFC4C9D6);
@@ -42,9 +42,15 @@ class HotelynAppColors {
   static const lightGrey2 = Color(0XFFE7E7E7);
   static const lightGrey3 = Color(0XFFCFCFCF);
 
-  // Dark Mode Color
+  // Blue 2 Colors (Additional Blue Shades)
 
-  static const darkMode = Color(0XFF111315);
-  static const darkMode2 = Color(0XFF202427);
-  static const darkMode3 = Color(0XFF292E32);
+  static const blue2_1 = Color(0XFF3F6DF6);
+  static const blue2_2 = Color(0XFF7F9EF9);
+  static const blue2_3 = Color(0XFFBFCEFC);
+
+  // Dark Mode Colors
+
+  static const darkModeBlack1 = Color(0XFF111315);
+  static const darkModeBlack2 = Color(0XFF202427);
+  static const darkModeBlack3 = Color(0XFF292E32);
 }

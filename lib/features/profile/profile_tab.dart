@@ -12,8 +12,8 @@ import 'package:hotelyn/features/profile/widgets/profile_stats_card.dart';
 class ProfileTab extends StatelessWidget {
   const ProfileTab({super.key});
 
-  // TODO: When authentication is ready add a validation to redirect to login
-  // page to unauthenticated users.
+  // TODO(enzoftware): When authentication is ready add a validation to
+  // redirect to login page to unauthenticated users.
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,8 @@ class ProfileTab extends StatelessWidget {
           return switch (state) {
             ProfileLoading() => const ProfileLoadingScreen(),
             ProfileLoadSuccess() => const ProfileDataScreen(),
-            // TODO: Create a custom error screen with a custom message screen
+            // TODO(enzoftware): Create a custom error screen with a custom
+            // message screen
             ProfileFailure() => const Placeholder(),
           };
         },

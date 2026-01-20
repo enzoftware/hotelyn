@@ -53,13 +53,14 @@ class OnBoardingIntroPage extends StatelessWidget {
       OnBoardingItemData(
         title: 'Make a Destination Plan',
         description:
-            'Choose the location and we have many hotel recommendations wherever you are',
+            'Choose the location and we have many hotel recommendations '
+            'wherever you are',
         imagePath: '$rootPath/ob2.png',
       ),
       OnBoardingItemData(
         title: 'Let’s Discover the World',
-        description:
-            'Book your hotel right now for the next level travel.\nEnjoy your trip!',
+        description: 'Book your hotel right now for the next level travel.'
+            '\nEnjoy your trip!',
         imagePath: '$rootPath/ob3.png',
       ),
     ];

@@ -28,14 +28,14 @@ class HotelynApp extends StatelessWidget {
             fontFamily: 'DMSans',
             appBarTheme: const AppBarTheme(),
             bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-              backgroundColor: HotelynAppColors.white,
+              backgroundColor: HotelynColors.white,
             ),
-            cardTheme: const CardTheme(
-              surfaceTintColor: HotelynAppColors.white,
+            cardTheme: const CardThemeData(
+              surfaceTintColor: HotelynColors.white,
             ),
             colorScheme: ColorScheme.fromSeed(
-              seedColor: HotelynAppColors.blue,
-              surface: HotelynAppColors.white,
+              seedColor: HotelynColors.blue,
+              surface: HotelynColors.white,
             ),
             navigationBarTheme: const NavigationBarThemeData(
               backgroundColor: Colors.transparent,

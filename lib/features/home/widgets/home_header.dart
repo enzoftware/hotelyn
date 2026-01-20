@@ -71,7 +71,7 @@ class LocationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Card(
-      color: HotelynAppColors.white,
+      color: HotelynColors.white,
       elevation: _cardElevation,
       shape: StadiumBorder(),
       child: Padding(
@@ -100,7 +100,7 @@ class NotificationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Card(
       elevation: _cardElevation,
-      color: HotelynAppColors.white,
+      color: HotelynColors.white,
       shape: CircleBorder(),
       child: Padding(
         padding: EdgeInsets.all(11),

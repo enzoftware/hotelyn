@@ -25,7 +25,8 @@ class OnBoardingWelcomePage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const Text(
-              'If you are new here please create your account first before book the hotel.',
+              'If you are new here please create your account first before '
+              'book the hotel.',
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 120),
