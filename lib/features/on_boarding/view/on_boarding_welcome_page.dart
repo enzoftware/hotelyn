@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hotelyn/components/hotelyn_button.dart';
 import 'package:hotelyn/components/icons/hotelyn_icon.dart';
@@ -38,7 +40,9 @@ class OnBoardingWelcomePage extends StatelessWidget {
             HotelynButton.secondary(
               message: 'Go To Homepage',
               onPressed: () {
-                Navigator.pushReplacementNamed(context, HomePage.route);
+                unawaited(
+                  Navigator.pushReplacementNamed(context, HomePage.route),
+                );
               },
             ),
           ],

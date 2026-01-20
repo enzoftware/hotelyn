@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotelyn/components/components.dart';
@@ -149,9 +151,11 @@ class OnBoardingPrimaryButton extends StatelessWidget {
         if (state.isLastItem) {
           context.read<OnBoardingBloc>().add(const OnBoardingGoToWelcome());
         } else {
-          controller.nextPage(
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeInCubic,
+          unawaited(
+            controller.nextPage(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeInCubic,
+            ),
           );
         }
       },

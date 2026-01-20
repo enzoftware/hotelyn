@@ -55,7 +55,7 @@ class OptionItemCard extends StatelessWidget {
   factory OptionItemCard.delete({required OptionItem optionItem}) {
     return OptionItemCard(
       optionItem: optionItem,
-      itemColor: HotelynColors.red,
+      itemColor: RedColors.red,
       hasTrailing: false,
     );
   }
@@ -80,7 +80,7 @@ class OptionItemCard extends StatelessWidget {
       trailing: hasTrailing
           ? const Icon(
               Icons.navigate_next_outlined,
-              color: HotelynColors.lightGrey3,
+              color: LightGreyColors.lightGrey3,
             )
           : null,
       style: ListTileStyle.drawer,

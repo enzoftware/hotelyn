@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotelyn/core/domain/repository/repository.dart';
@@ -33,11 +35,11 @@ class SplashView extends StatelessWidget {
     return BlocConsumer<SplashBloc, SplashState>(
       listener: (context, state) {
         if (state is SplashToHome) {
-          Navigator.pushNamed(context, HomePage.route);
+          unawaited(Navigator.pushNamed(context, HomePage.route));
         }
 
         if (state is SplashToOnBoarding) {
-          Navigator.pushNamed(context, OnBoardingPage.route);
+          unawaited(Navigator.pushNamed(context, OnBoardingPage.route));
         }
       },
       builder: (_, __) {

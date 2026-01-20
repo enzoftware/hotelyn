@@ -19,7 +19,7 @@ class HotelynSearchInput extends StatelessWidget {
       controller: controller,
       decoration: InputDecoration(
         filled: true,
-        fillColor: HotelynColors.lightGrey,
+        fillColor: LightGreyColors.lightGrey,
         prefixIcon: const Icon(Icons.search),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(_radius)),

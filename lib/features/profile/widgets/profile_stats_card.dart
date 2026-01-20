@@ -36,7 +36,7 @@ class StatsItem extends StatelessWidget {
           data.value.toString(),
           style: const TextStyle(
             fontSize: 24,
-            color: HotelynColors.blue,
+            color: PrimaryColors.blue,
             fontWeight: FontWeight.w700,
           ),
         ),
