@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotelyn/components/components.dart';
@@ -53,13 +55,14 @@ class OnBoardingIntroPage extends StatelessWidget {
       OnBoardingItemData(
         title: 'Make a Destination Plan',
         description:
-            'Choose the location and we have many hotel recommendations wherever you are',
+            'Choose the location and we have many hotel recommendations '
+            'wherever you are',
         imagePath: '$rootPath/ob2.png',
       ),
       OnBoardingItemData(
         title: 'Let’s Discover the World',
-        description:
-            'Book your hotel right now for the next level travel.\nEnjoy your trip!',
+        description: 'Book your hotel right now for the next level travel.'
+            '\nEnjoy your trip!',
         imagePath: '$rootPath/ob3.png',
       ),
     ];
@@ -148,9 +151,11 @@ class OnBoardingPrimaryButton extends StatelessWidget {
         if (state.isLastItem) {
           context.read<OnBoardingBloc>().add(const OnBoardingGoToWelcome());
         } else {
-          controller.nextPage(
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeInCubic,
+          unawaited(
+            controller.nextPage(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeInCubic,
+            ),
           );
         }
       },

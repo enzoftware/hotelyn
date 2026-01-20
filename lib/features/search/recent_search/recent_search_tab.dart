@@ -17,7 +17,7 @@ class RecentSearchTab extends StatelessWidget {
       ),
       body: BlocConsumer<SearchCubit, SearchState>(
         listener: (context, state) {
-          // TODO: implement listener
+          // TODO(enzoftware): implement listener
         },
         builder: (context, state) {
           return Builder(

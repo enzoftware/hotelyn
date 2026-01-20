@@ -5,23 +5,23 @@ abstract class HotelynTextStyle {
   static const h1 = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.w700,
-    color: HotelynAppColors.black,
+    color: PrimaryColors.black,
   );
 
   static const h2 = TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.w700,
-    color: HotelynAppColors.black,
+    color: PrimaryColors.black,
   );
 
   static const h3 = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w700,
-    color: HotelynAppColors.black,
+    color: PrimaryColors.black,
   );
 
   static const description = TextStyle(
-    color: HotelynAppColors.grey,
+    color: GreyColors.grey,
     fontSize: 14,
     fontWeight: FontWeight.w400,
   );

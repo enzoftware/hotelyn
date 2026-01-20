@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hotelyn/components/hotelyn_button.dart';
 import 'package:hotelyn/components/icons/hotelyn_icon.dart';
@@ -25,7 +27,8 @@ class OnBoardingWelcomePage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const Text(
-              'If you are new here please create your account first before book the hotel.',
+              'If you are new here please create your account first before '
+              'book the hotel.',
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 120),
@@ -37,7 +40,9 @@ class OnBoardingWelcomePage extends StatelessWidget {
             HotelynButton.secondary(
               message: 'Go To Homepage',
               onPressed: () {
-                Navigator.pushReplacementNamed(context, HomePage.route);
+                unawaited(
+                  Navigator.pushReplacementNamed(context, HomePage.route),
+                );
               },
             ),
           ],

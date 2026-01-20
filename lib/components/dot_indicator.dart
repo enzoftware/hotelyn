@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hotelyn/components/theme/hotelyn_colors.dart';
 
 class GroupDotIndicator extends StatelessWidget {
   const GroupDotIndicator({
@@ -45,7 +46,7 @@ class DotIndicator extends StatelessWidget {
       height: 5,
       width: isActive ? 20 : 6,
       decoration: BoxDecoration(
-        color: isActive ? color : const Color(0XFF868686).withOpacity(0.25),
+        color: isActive ? color : GreyColors.grey.withValues(alpha: 0.25),
         borderRadius: const BorderRadius.all(Radius.circular(8)),
       ),
     );

@@ -8,8 +8,8 @@ class HotelynButton extends StatelessWidget {
     this.onPressed,
     this.height = 56,
     this.width = double.infinity,
-    this.color = HotelynAppColors.blue,
-    this.textColor = HotelynAppColors.white,
+    this.color = PrimaryColors.blue,
+    this.textColor = PrimaryColors.white,
   });
 
   factory HotelynButton.secondary({
@@ -25,8 +25,8 @@ class HotelynButton extends StatelessWidget {
       onPressed: onPressed,
       height: height ?? 56,
       width: width ?? double.infinity,
-      color: color ?? HotelynAppColors.white,
-      textColor: textColor ?? HotelynAppColors.blue,
+      color: color ?? PrimaryColors.white,
+      textColor: textColor ?? PrimaryColors.blue,
     );
   }
 
