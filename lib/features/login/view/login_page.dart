@@ -131,15 +131,12 @@ class _LoginForm extends StatelessWidget {
         const SizedBox(height: 24),
         BlocBuilder<LoginCubit, LoginState>(
           builder: (context, state) {
-            return state.status.isInProgress
-                ? const CircularProgressIndicator()
-                : HotelynButton(
-                    message: 'Login',
-                    onPressed: state.isValid
-                        ? () =>
-                            context.read<LoginCubit>().logInWithCredentials()
-                        : null,
-                  );
+            return HotelynButton(
+              message: 'Login',
+              isLoading: state.status.isInProgress,
+              onPressed: () =>
+                  context.read<LoginCubit>().logInWithCredentials(),
+            );
           },
         ),
       ],

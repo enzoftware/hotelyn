@@ -30,10 +30,20 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   Future<void> logInWithCredentials() async {
+    final email = Email.dirty(state.email.value);
+    final password = Password.dirty(state.password.value);
+    emit(
+      state.copyWith(
+        email: email,
+        password: password,
+        isValid: Formz.validate([email, password]),
+      ),
+    );
     if (!state.isValid) return;
     emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     try {
       // TODO: Implement actual authentication logic here
+      await Future.delayed(const Duration(milliseconds: 1000));
       emit(state.copyWith(status: FormzSubmissionStatus.success));
     } catch (_) {
       emit(state.copyWith(status: FormzSubmissionStatus.failure));

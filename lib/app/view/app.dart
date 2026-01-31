@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hotelyn/app/router/app_router.dart';
 import 'package:hotelyn/components/theme/hotelyn_colors.dart';
 import 'package:hotelyn/core/domain/repository/repository.dart';
-import 'package:hotelyn/features/home/home.dart';
-import 'package:hotelyn/features/on_boarding/on_boarding.dart';
-import 'package:hotelyn/features/splash/splash.dart';
 
 class HotelynApp extends StatelessWidget {
   const HotelynApp({
@@ -22,7 +20,8 @@ class HotelynApp extends StatelessWidget {
         providers: [
           RepositoryProvider.value(value: _preferenceRepository),
         ],
-        child: MaterialApp(
+        child: MaterialApp.router(
+          routerConfig: AppRouter.router,
           title: 'Hotelyn',
           theme: ThemeData(
             fontFamily: 'DMSans',
@@ -42,12 +41,6 @@ class HotelynApp extends StatelessWidget {
             ),
             useMaterial3: true,
           ),
-          initialRoute: SplashScreen.route,
-          routes: {
-            SplashScreen.route: (_) => const SplashScreen(),
-            OnBoardingPage.route: (_) => const OnBoardingPage(),
-            HomePage.route: (_) => const HomePage(),
-          },
         ),
       ),
     );
