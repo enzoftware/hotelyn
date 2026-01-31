@@ -1,2 +1,2 @@
-export 'bloc/login_bloc.dart';
+export 'bloc/login_cubit.dart';
 export 'view/login_page.dart';
