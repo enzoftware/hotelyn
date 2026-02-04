@@ -6,8 +6,8 @@ import 'package:hotelyn/components/theme/hotelyn_colors.dart';
 const _cardElevation = 2.0;
 
 class HotelynHeader extends SliverPersistentHeaderDelegate {
-  final _maxExtent = 350.0;
-  final _minExtent = 320.0;
+  final _maxExtent = 240.0;
+  final _minExtent = 190.0;
 
   @override
   Widget build(
@@ -15,36 +15,37 @@ class HotelynHeader extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return const ColoredBox(
+    return ColoredBox(
       color: Colors.white,
       child: Padding(
-        padding: EdgeInsets.only(
+        padding: const EdgeInsets.only(
           left: 24,
           right: 24,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 LocationCard(),
                 NotificationCard(),
               ],
             ),
-            SizedBox(height: 32),
-            Text(
+            const SizedBox(height: 32),
+            const Text(
               'Hello, Katherine! 👋',
               style: HotelynTextStyle.description,
             ),
-            SizedBox(height: 8),
-            Text(
+            const SizedBox(height: 8),
+            const Text(
               "Let's find best hotel",
               style: HotelynTextStyle.h1,
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             // TODO(enzoftware): Split in different widget and pass controller
-            HotelynSearchInput(hintText: 'Search hotel'),
+            if (!overlapsContent)
+              const HotelynSearchInput(hintText: 'Search hotel'),
           ],
         ),
       ),

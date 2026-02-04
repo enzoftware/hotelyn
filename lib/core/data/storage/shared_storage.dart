@@ -5,12 +5,11 @@ class SharedStorage {
 
   final SharedPreferences sharedPreferences;
 
-  static const onBoardingItemKey = 'on_boarding_passed';
+  static const introItemKey = 'intro_passed';
 
-  Future<bool> isOnBoardingPassed() async {
-    return sharedPreferences.getBool(onBoardingItemKey) ?? false;
+  Future<bool> isIntroPassed() async {
+    return sharedPreferences.getBool(introItemKey) ?? false;
   }
 
-  void setOnBoaardingPassed() =>
-      sharedPreferences.setBool(onBoardingItemKey, true);
+  void setIntroPassed() => sharedPreferences.setBool(introItemKey, true);
 }

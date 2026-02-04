@@ -42,10 +42,10 @@ class LoginCubit extends Cubit<LoginState> {
     if (!state.isValid) return;
     emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     try {
-      // TODO: Implement actual authentication logic here
-      await Future.delayed(const Duration(milliseconds: 1000));
+      // TODO(enzoftware): Implement actual authentication logic here
+      await Future<void>.delayed(const Duration(milliseconds: 1000));
       emit(state.copyWith(status: FormzSubmissionStatus.success));
-    } catch (_) {
+    } on Exception catch (_) {
       emit(state.copyWith(status: FormzSubmissionStatus.failure));
     }
   }

@@ -6,10 +6,10 @@ import 'package:hotelyn/components/icons/hotelyn_icon.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/features/home/home.dart';
 
-class OnBoardingWelcomePage extends StatelessWidget {
-  const OnBoardingWelcomePage({super.key});
+class IntroWelcomePage extends StatelessWidget {
+  const IntroWelcomePage({super.key});
 
-  static const route = '/on_boarding/welcome';
+  static const route = '/intro/welcome';
 
   @override
   Widget build(BuildContext context) {

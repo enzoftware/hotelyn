@@ -5,61 +5,61 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotelyn/components/components.dart';
 import 'package:hotelyn/components/hotelyn_button.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
-import 'package:hotelyn/features/on_boarding/on_boarding.dart';
+import 'package:hotelyn/features/intro/intro.dart';
 
-class OnBoardingPage extends StatelessWidget {
-  const OnBoardingPage({super.key});
+class IntroPage extends StatelessWidget {
+  const IntroPage({super.key});
 
-  static const route = '/on_boarding';
+  static const route = '/intro';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
-        create: (context) => OnBoardingBloc(),
-        child: const OnBoardingView(),
+        create: (context) => IntroBloc(),
+        child: const IntroView(),
       ),
     );
   }
 }
 
-class OnBoardingView extends StatelessWidget {
-  const OnBoardingView({
+class IntroView extends StatelessWidget {
+  const IntroView({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final state = context.select((OnBoardingBloc bloc) => bloc.state);
+    final state = context.select((IntroBloc bloc) => bloc.state);
 
     return switch (state) {
-      OnBoardingIntro() => const OnBoardingIntroPage(),
-      OnBoardingWelcome() => const OnBoardingWelcomePage(),
+      IntroCarousel() => const IntroCarouselPage(),
+      IntroWelcome() => const IntroWelcomePage(),
     };
   }
 }
 
-class OnBoardingIntroPage extends StatelessWidget {
-  const OnBoardingIntroPage({super.key});
+class IntroCarouselPage extends StatelessWidget {
+  const IntroCarouselPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final controller = PageController();
     final introPagers = [
-      OnBoardingItemData(
+      IntroItemData(
         title: 'Find Hundreds of Hotels',
         description:
             'Discover hundreds of hotels that spread across the world for you',
         imagePath: '$rootPath/ob1.png',
       ),
-      OnBoardingItemData(
+      IntroItemData(
         title: 'Make a Destination Plan',
         description:
             'Choose the location and we have many hotel recommendations '
             'wherever you are',
         imagePath: '$rootPath/ob2.png',
       ),
-      OnBoardingItemData(
+      IntroItemData(
         title: 'Let’s Discover the World',
         description: 'Book your hotel right now for the next level travel.'
             '\nEnjoy your trip!',
@@ -68,7 +68,7 @@ class OnBoardingIntroPage extends StatelessWidget {
     ];
 
     final state =
-        context.select((OnBoardingBloc bloc) => bloc.state) as OnBoardingIntro;
+        context.select((IntroBloc bloc) => bloc.state) as IntroCarousel;
 
     return Column(
       children: [
@@ -77,8 +77,8 @@ class OnBoardingIntroPage extends StatelessWidget {
           child: PageView.builder(
             controller: controller,
             onPageChanged: (position) {
-              context.read<OnBoardingBloc>().add(
-                    OnBoardingPageChanged(
+              context.read<IntroBloc>().add(
+                    IntroPageChanged(
                       position: position,
                       isLastItem: position == introPagers.length - 1,
                     ),
@@ -87,7 +87,7 @@ class OnBoardingIntroPage extends StatelessWidget {
             itemCount: introPagers.length,
             itemBuilder: (context, index) {
               final item = introPagers[index];
-              return OnBoardingItem(data: item);
+              return IntroItem(data: item);
             },
           ),
         ),
@@ -105,9 +105,9 @@ class OnBoardingIntroPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                OnBoardingPrimaryButton(controller: controller),
+                IntroPrimaryButton(controller: controller),
                 const SizedBox(height: 16),
-                const OnBoardingSecondaryButton(),
+                const IntroSecondaryButton(),
               ],
             ),
           ),
@@ -117,8 +117,8 @@ class OnBoardingIntroPage extends StatelessWidget {
   }
 }
 
-class OnBoardingSecondaryButton extends StatelessWidget {
-  const OnBoardingSecondaryButton({
+class IntroSecondaryButton extends StatelessWidget {
+  const IntroSecondaryButton({
     super.key,
   });
 
@@ -126,15 +126,15 @@ class OnBoardingSecondaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return HotelynButton.secondary(
       onPressed: () {
-        context.read<OnBoardingBloc>().add(const OnBoardingGoToWelcome());
+        context.read<IntroBloc>().add(const IntroGoToWelcome());
       },
       message: 'Skip',
     );
   }
 }
 
-class OnBoardingPrimaryButton extends StatelessWidget {
-  const OnBoardingPrimaryButton({
+class IntroPrimaryButton extends StatelessWidget {
+  const IntroPrimaryButton({
     required this.controller,
     super.key,
   });
@@ -144,12 +144,12 @@ class OnBoardingPrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state =
-        context.select((OnBoardingBloc bloc) => bloc.state) as OnBoardingIntro;
+        context.select((IntroBloc bloc) => bloc.state) as IntroCarousel;
     final message = state.isLastItem ? 'Get Started' : 'Continue';
     return HotelynButton(
       onPressed: () {
         if (state.isLastItem) {
-          context.read<OnBoardingBloc>().add(const OnBoardingGoToWelcome());
+          context.read<IntroBloc>().add(const IntroGoToWelcome());
         } else {
           unawaited(
             controller.nextPage(
@@ -164,13 +164,13 @@ class OnBoardingPrimaryButton extends StatelessWidget {
   }
 }
 
-class OnBoardingItem extends StatelessWidget {
-  const OnBoardingItem({
+class IntroItem extends StatelessWidget {
+  const IntroItem({
     required this.data,
     super.key,
   });
 
-  final OnBoardingItemData data;
+  final IntroItemData data;
 
   @override
   Widget build(BuildContext context) {
@@ -207,8 +207,8 @@ class OnBoardingItem extends StatelessWidget {
   }
 }
 
-class OnBoardingItemData {
-  OnBoardingItemData({
+class IntroItemData {
+  IntroItemData({
     required this.title,
     required this.description,
     required this.imagePath,
@@ -219,4 +219,4 @@ class OnBoardingItemData {
   final String imagePath;
 }
 
-const rootPath = 'assets/images/onboarding';
+const rootPath = 'assets/images/intro';

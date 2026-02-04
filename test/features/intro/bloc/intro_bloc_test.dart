@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('on boarding bloc ...', (tester) async {
+  testWidgets('intro bloc ...', (tester) async {
     // TODO(enzoftware): Implement test
   });
 }

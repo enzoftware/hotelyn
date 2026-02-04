@@ -1,8 +1,10 @@
+import 'package:clarity_flutter/clarity_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotelyn/components/navigation_bar/navigation_bar.dart';
 import 'package:hotelyn/components/navigation_bar/navigation_bar_cubit.dart';
 import 'package:hotelyn/components/navigation_bar/navigation_bar_state.dart';
+import 'package:hotelyn/features/home/widgets/featured_hotels_section.dart';
 import 'package:hotelyn/features/home/widgets/home_header.dart';
 import 'package:hotelyn/features/messages/messages_cubit.dart';
 import 'package:hotelyn/features/messages/messages_tab.dart';
@@ -33,7 +35,11 @@ class HomePage extends StatelessWidget {
           create: (_) => SearchCubit(),
         ),
       ],
-      child: BlocBuilder<NavigationBarCubit, NavigationBarState>(
+      child: BlocConsumer<NavigationBarCubit, NavigationBarState>(
+        listener: (context, state) {
+          const screenNames = ['home', 'search', 'messages', 'profile'];
+          Clarity.setCurrentScreenName(screenNames[state.selectedTabIndex]);
+        },
         builder: (context, state) {
           final index = state.selectedTabIndex;
           return Scaffold(
@@ -66,7 +72,7 @@ class HomeTab extends StatelessWidget {
           pinned: true,
           delegate: HotelynHeader(),
         ),
-        const SliverToBoxAdapter(),
+        const FeaturedHotelsSection(),
       ],
     );
   }

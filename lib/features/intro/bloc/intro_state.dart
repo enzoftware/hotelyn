@@ -1,12 +1,12 @@
-part of 'on_boarding_bloc.dart';
+part of 'intro_bloc.dart';
 
-sealed class OnBoardingState extends Equatable {
+sealed class IntroState extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-class OnBoardingIntro extends OnBoardingState {
-  OnBoardingIntro({
+class IntroCarousel extends IntroState {
+  IntroCarousel({
     this.isLastItem = false,
     this.currentPosition = 0,
   });
@@ -18,4 +18,4 @@ class OnBoardingIntro extends OnBoardingState {
   List<Object> get props => [currentPosition, isLastItem];
 }
 
-class OnBoardingWelcome extends OnBoardingState {}
+class IntroWelcome extends IntroState {}

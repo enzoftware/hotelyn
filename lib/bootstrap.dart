@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:clarity_flutter/clarity_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
@@ -30,7 +31,12 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
 
   Bloc.observer = const AppBlocObserver();
 
-  // Add cross-flavor configuration here
+  final config = ClarityConfig(projectId: 'vaoffuzfn7');
 
-  runApp(await builder());
+  runApp(
+    ClarityWidget(
+      app: await builder(),
+      clarityConfig: config,
+    ),
+  );
 }

@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   bloc: ^9.2.0
+  clarity_flutter: ^1.0.0
   cupertino_icons: ^1.0.2
   equatable: ^2.0.8
   flutter:
@@ -56,7 +57,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/hotelyn/
-    - assets/images/onboarding/
+    - assets/images/intro/
     - assets/images/messages/
     - assets/icons/
 

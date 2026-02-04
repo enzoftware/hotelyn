@@ -7,11 +7,11 @@ import 'package:hotelyn/core/domain/repository/repository.dart';
 
 class HotelynApp extends StatelessWidget {
   const HotelynApp({
-    required OnBoardingRepository preferenceRepository,
+    required IntroRepository preferenceRepository,
     super.key,
   }) : _preferenceRepository = preferenceRepository;
 
-  final OnBoardingRepository _preferenceRepository;
+  final IntroRepository _preferenceRepository;
 
   @override
   Widget build(BuildContext context) {

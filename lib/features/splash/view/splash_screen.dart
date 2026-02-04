@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotelyn/core/domain/repository/repository.dart';
 import 'package:hotelyn/features/home/home.dart';
-import 'package:hotelyn/features/on_boarding/on_boarding.dart';
+import 'package:hotelyn/features/intro/intro.dart';
 import 'package:hotelyn/features/splash/splash.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -17,7 +17,7 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       body: BlocProvider(
         create: (context) => SplashBloc(
-          onBoardingRepository: context.read<OnBoardingRepository>(),
+          introRepository: context.read<IntroRepository>(),
         )..add(const SplashStarted()),
         child: const SplashView(),
       ),
@@ -38,8 +38,8 @@ class SplashView extends StatelessWidget {
           unawaited(Navigator.pushNamed(context, HomePage.route));
         }
 
-        if (state is SplashToOnBoarding) {
-          unawaited(Navigator.pushNamed(context, OnBoardingPage.route));
+        if (state is SplashToIntro) {
+          unawaited(Navigator.pushNamed(context, IntroPage.route));
         }
       },
       builder: (_, __) {

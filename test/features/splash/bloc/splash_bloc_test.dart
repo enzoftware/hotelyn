@@ -1,6 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hotelyn/core/domain/repository/on_boarding_repository.dart';
+import 'package:hotelyn/core/domain/repository/intro_repository.dart';
 import 'package:hotelyn/features/splash/bloc/splash_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -8,32 +8,32 @@ import '../../../helpers/helpers.dart';
 
 void main() {
   group('SplashBloc', () {
-    late OnBoardingRepository onBoardingRepository;
+    late IntroRepository introRepository;
     late SplashBloc bloc;
 
     setUp(() {
-      onBoardingRepository = MockPreferenceRepository();
+      introRepository = MockPreferenceRepository();
 
-      bloc = SplashBloc(onBoardingRepository: onBoardingRepository);
+      bloc = SplashBloc(introRepository: introRepository);
     });
 
     blocTest<SplashBloc, SplashState>(
-      'emits [SplashToOnBoarding] when StartSplash is added and is first time',
+      'emits [SplashToIntro] when StartSplash is added and is first time',
       build: () => bloc,
       setUp: () {
-        when(() => onBoardingRepository.isOnBoardingPassed())
+        when(() => introRepository.isIntroPassed())
             .thenAnswer((_) async => false);
       },
       act: (bloc) => bloc.add(const SplashStarted()),
       expect: () => <SplashState>[
-        SplashToOnBoarding(),
+        SplashToIntro(),
       ],
     );
     blocTest<SplashBloc, SplashState>(
       'emits [SplashToHome] when StartSplash is added and is not first time',
       build: () => bloc,
       setUp: () {
-        when(() => onBoardingRepository.isOnBoardingPassed())
+        when(() => introRepository.isIntroPassed())
             .thenAnswer((_) async => true);
       },
       act: (bloc) => bloc.add(const SplashStarted()),

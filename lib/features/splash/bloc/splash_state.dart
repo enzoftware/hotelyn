@@ -7,6 +7,6 @@ sealed class SplashState extends Equatable {
 
 class SplashInitial extends SplashState {}
 
-class SplashToOnBoarding extends SplashState {}
+class SplashToIntro extends SplashState {}
 
 class SplashToHome extends SplashState {}

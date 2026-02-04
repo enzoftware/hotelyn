@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('on boarding page ...', (tester) async {
+  testWidgets('intro welcome page ...', (tester) async {
     // TODO(enzoftware): Implement test
   });
 }

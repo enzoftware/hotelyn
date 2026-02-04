@@ -12,7 +12,7 @@ void main() {
       final localDataSource = SharedStorage(
         sharedPreferences: await SharedPreferences.getInstance(),
       );
-      final preferenceRepository = OnBoardingRepository(
+      final preferenceRepository = IntroRepository(
         sharedStorage: localDataSource,
       );
 
