@@ -8,7 +8,7 @@ environment:
 
 dependencies:
   bloc: ^9.2.0
-  clarity_flutter: ^1.0.0
+  clarity_flutter: ^1.7.1
   cupertino_icons: ^1.0.2
   equatable: ^2.0.8
   flutter:

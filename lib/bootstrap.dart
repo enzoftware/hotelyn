@@ -31,7 +31,10 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
 
   Bloc.observer = const AppBlocObserver();
 
-  final config = ClarityConfig(projectId: 'vaoffuzfn7');
+  final config = ClarityConfig(
+    projectId: 'vaoffuzfn7',
+    logLevel: LogLevel.Verbose,
+  );
 
   runApp(
     ClarityWidget(

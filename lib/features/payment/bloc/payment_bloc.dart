@@ -10,7 +10,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     required ClarityService clarityService,
   })  : _clarityService = clarityService,
         super(PaymentInitial()) {
-    _clarityService.setCurrentScreenName('Payment');
+    _clarityService.setCurrentScreenName('payment');
     on<PaymentStarted>((event, emit) {});
   }
 

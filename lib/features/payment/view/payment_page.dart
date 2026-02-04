@@ -25,7 +25,7 @@ class PaymentPage extends StatelessWidget {
       body: SafeArea(
         child: BlocProvider(
           create: (context) => PaymentBloc(
-            clarityService: ClarityService(),
+            clarityService: context.read<ClarityService>(),
           ),
           child: const _PaymentBody(),
         ),
@@ -51,7 +51,7 @@ class _PaymentBody extends StatelessWidget {
             totalPrice: r'$690.30',
           ),
           const SizedBox(height: 16),
-          const PaymentFormCard(),
+          const ClarityMask(child: PaymentFormCard()),
           const SizedBox(height: 32),
           HotelynButton(
             message: 'Pay Now',

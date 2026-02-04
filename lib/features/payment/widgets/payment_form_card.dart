@@ -9,34 +9,32 @@ class PaymentFormCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClarityMask(
-      child: Card(
-        elevation: 0,
-        color: LightGreyColors.lightGrey,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: const Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Payment Details', style: HotelynTextStyle.h3),
-              SizedBox(height: 16),
-              HotelynTextInput(
-                hintText: 'Card Number',
-                prefixIcon: Icons.credit_card,
-                keyboardType: TextInputType.number,
-              ),
-              SizedBox(height: 12),
-              _ExpiryAndCvvRow(),
-              SizedBox(height: 12),
-              HotelynTextInput(
-                hintText: 'Cardholder Name',
-                prefixIcon: Icons.person_outline,
-              ),
-            ],
-          ),
+    return Card(
+      elevation: 0,
+      color: LightGreyColors.lightGrey,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: const Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Payment Details', style: HotelynTextStyle.h3),
+            SizedBox(height: 16),
+            HotelynTextInput(
+              hintText: 'Card Number',
+              prefixIcon: Icons.credit_card,
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 12),
+            _ExpiryAndCvvRow(),
+            SizedBox(height: 12),
+            HotelynTextInput(
+              hintText: 'Cardholder Name',
+              prefixIcon: Icons.person_outline,
+            ),
+          ],
         ),
       ),
     );
