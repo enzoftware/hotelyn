@@ -234,40 +234,19 @@ Any screen or widget that displays sensitive user information should be masked. 
 Here's how to mask a login screen:
 
 ```dart
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+// lib/features/login/view/login_page.dart
+
+class _LoginForm extends StatelessWidget {
+  const _LoginForm();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
-      body: ClarityMask(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                ),
-                obscureText: true,
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text('Sign In'),
-              ),
-            ],
-          ),
-        ),
+    return ClarityMask(
+      child: Column(
+        children: [
+          // Login form widgets
+          ...
+        ],
       ),
     );
   }
@@ -276,7 +255,6 @@ class LoginScreen extends StatelessWidget {
 
 In this example, the entire login form is wrapped with `ClarityMask`. When users enter their credentials, the session replay will show a masked area instead of the actual input fields.
 
-[SPACE FOR CODE: Example from Hotelyn login screen]
 
 ### Selective Unmasking
 
@@ -285,73 +263,42 @@ Sometimes you want to mask a large section but keep certain non-sensitive elemen
 Here's an example of a payment screen where you mask the credit card details but keep the booking summary visible:
 
 ```dart
-class PaymentScreen extends StatelessWidget {
-  const PaymentScreen({super.key});
+class _PaymentBody extends StatelessWidget {
+  const _PaymentBody();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Payment'),
-      ),
-      body: Column(
-        children: [
-          // Booking summary is visible
-          ClarityUnmask(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Booking Summary'),
-                    const SizedBox(height: 8),
-                    Text('Hotel: Grand Plaza'),
-                    Text('Check-in: Dec 15, 2024'),
-                    Text('Check-out: Dec 18, 2024'),
-                  ],
-                ),
+    // Payment screen is masked
+    return ClarityMask(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          children: [
+            const SizedBox(height: 16),
+            // Booking summary is visible
+            const ClarityUnmask(
+              child: BookingSummaryCard(
+                hotelName: 'Grand Plaza Hotel',
+                checkIn: 'Dec 15, 2024',
+                checkOut: 'Dec 18, 2024',
+                totalPrice: r'$690.30',
               ),
             ),
-          ),
-          
-          // Payment details are masked
-          ClarityMask(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    TextField(
-                      decoration: const InputDecoration(
-                        labelText: 'Card Number',
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            decoration: const InputDecoration(
-                              labelText: 'Expiry Date',
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: TextField(
-                            decoration: const InputDecoration(
-                              labelText: 'CVV',
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+            const SizedBox(height: 16),
+            const PaymentFormCard(),
+            const SizedBox(height: 32),
+            // Pay now button is visible
+            ClarityUnmask(
+              child: HotelynButton(
+                message: 'Pay Now',
+                onPressed: () {
+                  ...
+                },
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 24),
+          ],
+        ),
       ),
     );
   }
@@ -359,8 +306,6 @@ class PaymentScreen extends StatelessWidget {
 ```
 
 This approach gives you granular control over what appears in session recordings. You can see the user's journey through the payment process without exposing their payment credentials.
-
-[SPACE FOR CODE: Example from Hotelyn payment screen]
 
 ### App-Wide Masking Modes
 
@@ -372,49 +317,7 @@ Beyond individual widgets, Clarity supports app-wide masking modes that automati
 
 You can learn more about these modes in the [Clarity masking documentation](https://learn.microsoft.com/en-us/clarity/mobile-sdk/flutter-sdk).
 
-## Monitoring Clarity Activity
-
-After integrating Clarity, you need to verify that it's working correctly and capturing sessions as expected. The SDK provides several methods to monitor its state and activity.
-
-### Checking Clarity Status
-
-You can query Clarity's current state using several utility methods:
-
-```dart
-// Check if Clarity is currently paused
-bool isPaused = await Clarity.isPaused();
-
-// Get the current session ID
-String? sessionId = await Clarity.getCurrentSessionId();
-
-// Get the current user ID
-String? userId = await Clarity.getCurrentUserId();
-```
-
-These methods are useful for debugging and correlating Clarity sessions with other analytics tools you might be using.
-
-### Pausing and Resuming Tracking
-
-There might be scenarios where you want to temporarily stop tracking user activity. For example, when displaying sensitive content that shouldn't be recorded even with masking:
-
-```dart
-// Pause Clarity tracking
-await Clarity.pause();
-
-// Display sensitive content
-showDialog(
-  context: context,
-  builder: (context) => AlertDialog(
-    title: const Text('Sensitive Information'),
-    content: const Text('Medical records would go here...'),
-  ),
-);
-
-// Resume tracking after dialog closes
-await Clarity.resume();
-```
-
-When Clarity is paused, it stops capturing any user interactions, screen changes, or analytics data. This provides an additional layer of privacy control beyond masking.
+[SPACE FOR IMAGE: Clarity dashboard showing session recordings]
 
 ### Debugging Integration Issues
 

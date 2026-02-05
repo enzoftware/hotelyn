@@ -46,11 +46,13 @@ class _PaymentBody extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 16),
-            const BookingSummaryCard(
-              hotelName: 'Grand Plaza Hotel',
-              checkIn: 'Dec 15, 2024',
-              checkOut: 'Dec 18, 2024',
-              totalPrice: r'$690.30',
+            const ClarityUnmask(
+              child: BookingSummaryCard(
+                hotelName: 'Grand Plaza Hotel',
+                checkIn: 'Dec 15, 2024',
+                checkOut: 'Dec 18, 2024',
+                totalPrice: r'$690.30',
+              ),
             ),
             const SizedBox(height: 16),
             const PaymentFormCard(),

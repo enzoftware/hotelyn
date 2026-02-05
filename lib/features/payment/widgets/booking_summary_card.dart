@@ -1,4 +1,3 @@
-import 'package:clarity_flutter/clarity_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/components/theme/hotelyn_colors.dart';
@@ -19,33 +18,31 @@ class BookingSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClarityUnmask(
-      child: Card(
-        elevation: 0,
-        color: LightGreyColors.lightGrey,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Booking Summary', style: HotelynTextStyle.h3),
-              const SizedBox(height: 12),
-              _SummaryRow(label: 'Hotel', value: hotelName),
-              const SizedBox(height: 8),
-              _SummaryRow(label: 'Check-in', value: checkIn),
-              const SizedBox(height: 8),
-              _SummaryRow(label: 'Check-out', value: checkOut),
-              const Divider(height: 24),
-              _SummaryRow(
-                label: 'Total',
-                value: totalPrice,
-                isBold: true,
-              ),
-            ],
-          ),
+    return Card(
+      elevation: 0,
+      color: LightGreyColors.lightGrey,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Booking Summary', style: HotelynTextStyle.h3),
+            const SizedBox(height: 12),
+            _SummaryRow(label: 'Hotel', value: hotelName),
+            const SizedBox(height: 8),
+            _SummaryRow(label: 'Check-in', value: checkIn),
+            const SizedBox(height: 8),
+            _SummaryRow(label: 'Check-out', value: checkOut),
+            const Divider(height: 24),
+            _SummaryRow(
+              label: 'Total',
+              value: totalPrice,
+              isBold: true,
+            ),
+          ],
         ),
       ),
     );

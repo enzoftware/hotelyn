@@ -17,6 +17,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Clarity.setCurrentScreenName('login');
     return BlocProvider(
       create: (_) => LoginCubit(
         authRepository: context.read<AuthRepository>(),
