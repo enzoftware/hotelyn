@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:clarity_flutter/clarity_flutter.dart';
+import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
@@ -33,7 +34,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
 
   final config = ClarityConfig(
     projectId: 'vaoffuzfn7',
-    logLevel: LogLevel.Verbose,
+    logLevel: kReleaseMode ? LogLevel.None : LogLevel.Verbose,
   );
 
   runApp(

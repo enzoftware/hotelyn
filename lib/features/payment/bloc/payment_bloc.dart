@@ -8,11 +8,8 @@ part 'payment_state.dart';
 class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   PaymentBloc({
     required ClarityService clarityService,
-  })  : _clarityService = clarityService,
-        super(PaymentInitial()) {
-    _clarityService.setCurrentScreenName('payment');
+  }) : super(PaymentInitial()) {
+    clarityService.setCurrentScreenName('Payment');
     on<PaymentStarted>((event, emit) {});
   }
-
-  final ClarityService _clarityService;
 }

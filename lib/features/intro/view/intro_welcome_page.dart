@@ -1,10 +1,12 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hotelyn/components/hotelyn_button.dart';
 import 'package:hotelyn/components/icons/hotelyn_icon.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
+import 'package:hotelyn/core/domain/repository/repository.dart';
 import 'package:hotelyn/features/home/home.dart';
+import 'package:hotelyn/features/login/view/login_page.dart';
 
 class IntroWelcomePage extends StatelessWidget {
   const IntroWelcomePage({super.key});
@@ -34,15 +36,17 @@ class IntroWelcomePage extends StatelessWidget {
             const SizedBox(height: 120),
             HotelynButton(
               message: 'Create Account / Login',
-              onPressed: () {},
+              onPressed: () {
+                context.read<IntroRepository>().setIntroPassed();
+                context.go(LoginPage.route);
+              },
             ),
             const SizedBox(height: 16),
             HotelynButton.secondary(
               message: 'Go To Homepage',
               onPressed: () {
-                unawaited(
-                  Navigator.pushReplacementNamed(context, HomePage.route),
-                );
+                context.read<IntroRepository>().setIntroPassed();
+                context.go(HomePage.route);
               },
             ),
           ],

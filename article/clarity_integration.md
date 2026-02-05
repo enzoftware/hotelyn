@@ -1,286 +1,333 @@
-# Microsoft Clarity Flutter SDK: Getting Started
+# Building Effective Heatmaps in Flutter with Microsoft Clarity
 
-Learn how to integrate Microsoft Clarity analytics into your Flutter application to gain powerful insights into user behavior through session replays, heatmaps, and interaction analytics.
+<!-- Learn how to implement Microsoft Clarity in your Flutter application to capture production-quality heatmaps and session recordings for data-driven UX optimization. -->
 
-By Enzo Lizama.
+Understanding where users tap, scroll, and interact within your mobile app is critical for UX optimization. Heatmaps aggregate thousands of user interactions into visual patterns that reveal usability issues no amount of manual testing can uncover.
 
-Session replay and user analytics have become essential tools for modern app development. Understanding how users interact with your app helps you identify pain points, optimize user flows, and make data-driven decisions to improve the overall user experience.
-
-Microsoft Clarity is a free, privacy-conscious analytics tool that captures user sessions, generates heatmaps, and provides detailed interaction metrics. While Clarity has been widely used for web applications, Microsoft recently released an official Flutter SDK, bringing these powerful analytics capabilities to mobile developers.
+Microsoft Clarity stands alone as the **only completely free heatmap SDK for Flutter apps with unlimited sessions**. No usage caps, no credit card required, no premium tier restrictions. This makes it the go-to choice for teams who need production-grade analytics without budget constraints.
 
 In this tutorial, you'll learn how to:
 
-- Set up the Clarity Flutter SDK in your application
-- Configure Clarity to capture user sessions and interactions
-- Implement privacy controls using masking widgets
-- Handle sensitive data appropriately
-- Monitor and debug Clarity integration
-- Access session replays and analytics on the Clarity dashboard
+- Configure Clarity to generate actionable heatmaps from real user sessions
+- Implement strategic privacy masking to protect sensitive data while preserving heatmap accuracy
+- Use the mask/unmask widget hierarchy to control exactly what appears in recordings
+- Track authenticated users across sessions for cohort analysis
+- Interpret heatmap data to identify UX friction points
 
-You'll work through these concepts by integrating Clarity into Hotelyn, a hotel booking application. By the end of this tutorial, you'll be able to track user journeys, identify UX issues, and gain actionable insights from real user behavior.
+You'll work through these concepts by integrating Clarity into Hotelyn, a hotel booking application. By the end of this tutorial, you'll have a production-ready heatmap implementation that balances user privacy with analytical depth.
 
-*Note:* This tutorial assumes you know the basics of Flutter development. If you're new to Flutter, check out [Flutter Tutorial for Beginners](https://docs.flutter.dev/get-started/codelab) on the official Flutter documentation.
+*Note:* This tutorial assumes familiarity with Flutter state management patterns (BLoC) and dependency injection. The implementation follows clean architecture principles with repository-based data access.
 
-## Getting Started
+## Why Clarity for Flutter Heatmaps
 
-Before diving into the code, you need to set up a Microsoft Clarity account and obtain a project ID. This ID uniquely identifies your application within the Clarity platform.
+Before diving into implementation, it's worth understanding what sets Clarity apart for mobile heatmap generation.
+
+### The Free Tier Reality
+
+Most analytics SDKs impose session limits, feature gates, or require paid plans for heatmap access. Clarity's offering is genuinely different:
+
+- **100% free forever** with no session caps
+- Full heatmap generation across all screens
+- Complete session replay functionality
+- Rage tap and dead tap detection
+- No credit card or enterprise contract required
+
+For teams shipping Flutter apps to production, this eliminates the common trade-off between analytics depth and budget constraints.
+
+### Heatmap-Specific Capabilities
+
+Clarity generates three types of heatmaps from captured sessions:
+
+**Tap Heatmaps**: Aggregate tap locations across all sessions, revealing which UI elements receive the most interaction. Hot zones (red) indicate high-frequency taps; cold zones (blue) show ignored areas.
+
+**Scroll Heatmaps**: Visualize how far users scroll on each screen. The gradient shows attention drop-off, helping you identify content that users never reach.
+
+**Attention Heatmaps**: Combine tap and scroll data to show where users spend the most time. Useful for validating that key CTAs receive appropriate attention.
+
+## Setting Up Clarity
 
 ### Creating a Clarity Project
 
-Visit [clarity.microsoft.com](https://clarity.microsoft.com) and sign in with your Microsoft account. If you don't have one, you can create it for free.
+Visit [clarity.microsoft.com](https://clarity.microsoft.com) and sign in with your Microsoft account. Create a new project and select **Mobile App** as the platform. The dashboard will display your **Project ID**—a string like `vaoffuzfn7` that uniquely identifies your app.
 
-Once signed in, follow these steps:
+### Installing the SDK
 
-1. Click on **Add new project** in the Clarity dashboard
-2. Enter your project name (e.g., "Hotelyn Mobile App")
-3. Select **Mobile App** as the platform
-4. Click **Create**
-
-After creating the project, you'll see your **Project ID** on the Settings page. Keep this ID handy as you'll need it for initialization.
-
-[SPACE FOR SCREENSHOT: Clarity Dashboard showing Project ID]
-
-### Understanding the Clarity Flutter SDK
-
-The Clarity Flutter SDK is Microsoft's official package for integrating Clarity analytics into Flutter applications. It supports both Android and iOS platforms and provides several key features:
-
-- **Session Replay**: Record and replay user sessions to see exactly how users interact with your app
-- **Heatmaps**: Visualize where users tap, scroll, and interact most frequently
-- **User Interactions**: Track rage taps, dead taps, and other user frustration signals
-- **Automatic Screen Capture**: Capture screen transitions and user flows without manual instrumentation
-- **Privacy Controls**: Built-in widgets for masking sensitive information
-
-The SDK captures data automatically once initialized and uploads sessions periodically when the device has internet connectivity. This means you'll start seeing data on your Clarity dashboard shortly after users begin interacting with your app.
-
-*Note:* The SDK only uploads data when the device is connected to the internet. Offline session capture is not currently supported.
-Note: Smart Events, Funnels, and Components are not supported in the Clarity Flutter SDK at the moment.
-
-## Adding Clarity to Your Project
-
-Now that you understand what Clarity offers, it's time to integrate it into your Flutter application. You'll start by adding the dependency and then configure the SDK for your specific needs.
-
-### Installing the Package
-
-Open your `pubspec.yaml` file and add the `clarity_flutter` dependency under the `dependencies` section:
+Add the Clarity Flutter SDK to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter:
-    sdk: flutter
-  clarity_flutter: ^1.0.0
+  clarity_flutter: ^1.7.1
 ```
 
-After adding the dependency, run the following command in your terminal to fetch the package:
+Run `flutter pub get` to fetch the package.
 
-```bash
-flutter pub get
-```
+### Initialization with ClarityWidget
 
-This command downloads the Clarity SDK and all its required dependencies, including packages for device information, network connectivity, and image processing.
+The recommended initialization approach wraps your entire app with `ClarityWidget`. This ensures Clarity captures all screen transitions and interactions from the first frame.
 
-### Importing Clarity
-
-With the package installed, you need to import it into your main application file. Open `lib/main.dart` and add the import statement at the top:
+Here's the bootstrap configuration from the Hotelyn app:
 
 ```dart
-import 'package:flutter/material.dart';
+// lib/bootstrap.dart
+import 'dart:async';
+import 'dart:developer';
+
+import 'package:bloc/bloc.dart';
 import 'package:clarity_flutter/clarity_flutter.dart';
-```
+import 'package:flutter/foundation.dart' show kReleaseMode;
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
-This import gives you access to all the Clarity classes and widgets you'll use throughout your application.
+class AppBlocObserver extends BlocObserver {
+  const AppBlocObserver();
 
-## Initializing Clarity
+  @override
+  void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
+    super.onChange(bloc, change);
+    log('onChange(${bloc.runtimeType}, $change)');
+  }
 
-Clarity offers two different initialization approaches: using the `ClarityWidget` wrapper or calling `Clarity.initialize()` directly. Each approach has its own use case and benefits.
+  @override
+  void onError(BlocBase<dynamic> bloc, Object error, StackTrace stackTrace) {
+    log('onError(${bloc.runtimeType}, $error, $stackTrace)');
+    super.onError(bloc, error, stackTrace);
+  }
+}
 
-### Using ClarityWidget (Recommended)
-
-The `ClarityWidget` approach is the recommended method for most applications. It wraps your entire app and ensures Clarity is initialized before any widgets are rendered.
-
-Here's how to set it up in your `main.dart` file:
-
-```dart
-void main() {
+Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  FlutterError.onError = (details) {
+    log(details.exceptionAsString(), stackTrace: details.stack);
+  };
+
+  Bloc.observer = const AppBlocObserver();
+
   final config = ClarityConfig(
-    projectId: "YOUR_PROJECT_ID_HERE",
-    logLevel: LogLevel.Info,
+    projectId: 'vaoffuzfn7',
+    logLevel: kReleaseMode ? LogLevel.None : LogLevel.Verbose,
   );
-  
+
   runApp(
     ClarityWidget(
-      app: const HotelyenApp(),
+      app: await builder(),
       clarityConfig: config,
     ),
   );
 }
 ```
 
-Let's break down what's happening in this code:
+The `ClarityConfig` accepts two parameters:
 
-1. `WidgetsFlutterBinding.ensureInitialized()` ensures Flutter is ready before any initialization code runs
-2. `ClarityConfig` creates a configuration object with your project ID and logging preferences
-3. `ClarityWidget` wraps your application and handles initialization automatically
+- **projectId**: Your Clarity project identifier from the dashboard
+- **logLevel**: Controls SDK debug output. Use `LogLevel.Verbose` during development to verify integration, then `LogLevel.None` in production to eliminate overhead
 
-[SPACE FOR CODE: Example from actual Hotelyn main.dart implementation]
+The conditional `kReleaseMode` check automatically switches log levels based on build type.
 
-### Using Clarity.initialize()
+## Privacy Masking Architecture
 
-Alternatively, you can initialize Clarity manually using `Clarity.initialize()`. This approach gives you more control over when initialization happens but requires a valid `BuildContext`.
+Heatmap accuracy depends on capturing real user interactions. However, screens containing sensitive data—login forms, payment details, personal information—must be masked to protect user privacy. The challenge is masking the right content without losing valuable interaction data.
 
-Here's an example of manual initialization inside a StatefulWidget:
+### Understanding the Masking Hierarchy
 
-```dart
-class HotelyenApp extends StatefulWidget {
-  const HotelyenApp({super.key});
+Clarity provides two widgets that work together hierarchically:
 
-  @override
-  State<HotelyenApp> createState() => _HotelyenAppState();
-}
+- **`ClarityMask`**: Hides all descendant widgets from session recordings. Masked areas appear as solid blocks in replays and contribute no visual data to recordings, but tap locations are still registered for heatmaps.
 
-class _HotelyenAppState extends State<HotelyenApp> {
-  @override
-  void initState() {
-    super.initState();
-    _initializeClarity();
-  }
+- **`ClarityUnmask`**: Selectively reveals widgets within a masked parent. This creates a "window" of visibility inside a masked container, allowing you to show non-sensitive content while keeping surrounding sensitive data hidden.
 
-  void _initializeClarity() {
-    final config = ClarityConfig(
-      projectId: "YOUR_PROJECT_ID_HERE",
-      logLevel: LogLevel.Info,
-    );
-    
-    Clarity.initialize(context, config);
-  }
+The key insight is that these widgets compose hierarchically. A `ClarityUnmask` inside a `ClarityMask` creates a visibility exception. This pattern enables fine-grained control over what appears in recordings without restructuring your widget tree.
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Hotelyn',
-      home: const HomeScreen(),
-    );
-  }
-}
-```
+### How Masking Affects Heatmaps
 
-The key difference here is that you're responsible for calling initialization at the right time, typically in the `initState()` method of your root widget.
+Understanding the technical behavior of masking is critical for accurate heatmap data:
 
-*Important:* Always call `Clarity.initialize()` on the UI Isolate with a valid BuildContext. Calling it before the widget is built will result in an error.
+| Aspect | ClarityMask Behavior | ClarityUnmask Behavior |
+|--------|---------------------|----------------------|
+| Visual in recordings | Solid block overlay | Fully visible |
+| Tap coordinates | Still captured | Still captured |
+| Text content | Hidden | Visible |
+| Heatmap contribution | Tap locations only | Full interaction data |
 
-## Configuring Clarity Settings
+This means masked areas still contribute to tap heatmaps—you'll see where users tap—but the actual content (text, images) is replaced with a solid mask in session replays. This is the optimal balance for sensitive forms: you get interaction pattern data without exposing user input.
 
-The `ClarityConfig` class provides several options to customize how Clarity behaves in your application. Understanding these options helps you balance data collection with performance and user privacy.
+### Masking Login Credentials
 
-### Essential Configuration Options
+Login screens are the canonical masking use case. You want to capture that users interact with the login flow (for conversion analysis) without recording actual credentials.
 
-Here's a detailed look at the available configuration parameters:
+Here's the implementation from Hotelyn's login page:
 
 ```dart
-final config = ClarityConfig(
-  projectId: "YOUR_PROJECT_ID_HERE",          // Required: Your Clarity project ID
-  logLevel: LogLevel.Info,                     // Optional: Controls SDK logging
-  allowMeteredNetworkUsage: false,             // Optional: Upload on cellular data
-  enableWebViewCapture: true,                  // Optional: Capture WebView content
-  allowedDomains: ["*"],                       // Optional: Domains for WebView capture
-);
-```
-
-Let's examine each parameter:
-
-**projectId**: This is your unique Clarity project identifier. You can find this on the Settings page of your Clarity dashboard. This parameter is required and the SDK won't initialize without it.
-
-**logLevel**: Controls the verbosity of Clarity's debug output. This is particularly useful during development for troubleshooting integration issues. The available log levels are:
-
-- `LogLevel.Verbose`: Extremely detailed debug information
-- `LogLevel.Debug`: Debug information for development
-- `LogLevel.Info`: Informational messages (recommended for development)
-- `LogLevel.Warn`: Warning messages only
-- `LogLevel.Error`: Error messages only
-- `LogLevel.None`: No logging (automatically used in production builds)
-
-**userId**: Allows you to set a custom identifier for tracking users across sessions. If not provided, Clarity generates a unique ID automatically. The user ID must be base36 and smaller than "1Z141Z4".
-
-**allowMeteredNetworkUsage**: By default, Clarity only uploads data over WiFi to avoid consuming users' cellular data. Set this to `true` if you want uploads on metered networks as well.
-
-**enableWebViewCapture**: Enables or disables capturing of WebView DOM content. This is useful if your app displays web content.
-
-**allowedDomains**: Specifies which domains should have their WebView content captured. Use `["*"]` to capture all domains or provide a specific list.
-
-### Development vs Production Configuration
-
-During development, you want verbose logging to catch any issues early. In production, you want minimal overhead. Here's a recommended pattern:
-
-```dart
-final config = ClarityConfig(
-  projectId: "YOUR_PROJECT_ID_HERE",
-  logLevel: kDebugMode ? LogLevel.Verbose : LogLevel.None,
-  allowMeteredNetworkUsage: false,
-);
-```
-
-This approach automatically adjusts the log level based on whether you're running a debug or release build.
-
-[SPACE FOR CODE: Example configuration from Hotelyn app]
-
-## Protecting User Privacy with Masking
-
-Privacy is paramount when collecting user analytics. Clarity provides masking widgets that let you hide sensitive information from session recordings while still capturing the overall user flow.
-
-### Understanding Masking Widgets
-
-The Clarity SDK includes two essential widgets for privacy control:
-
-- `ClarityMask`: Hides its child widget from recordings
-- `ClarityUnmask`: Makes its child visible within a masked parent
-
-These widgets work hierarchically. When you wrap a widget tree with `ClarityMask`, everything inside becomes hidden in recordings. You can then selectively unmask specific child widgets that are safe to record.
-
-### Masking Sensitive Data
-
-Any screen or widget that displays sensitive user information should be masked. Common examples include:
-
-- Login and registration forms
-- Payment information screens
-- Personal identification numbers
-- Credit card details
-- Passwords and security codes
-- Medical or health information
-
-Here's how to mask a login screen:
-
-```dart
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+// lib/features/login/view/login_page.dart
+class _LoginForm extends StatelessWidget {
+  const _LoginForm();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
-      body: ClarityMask(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                ),
+    return ClarityMask(
+      child: Column(
+        children: [
+          BlocBuilder<LoginCubit, LoginState>(
+            buildWhen: (previous, current) => previous.email != current.email,
+            builder: (context, state) {
+              return HotelynTextInput(
+                hintText: 'Email',
+                prefixIcon: Icons.email_outlined,
+                keyboardType: TextInputType.emailAddress,
+                onChanged: (value) =>
+                    context.read<LoginCubit>().emailChanged(value),
+                errorText:
+                    state.email.displayError != null ? 'Invalid email' : null,
+              );
+            },
+          ),
+          const SizedBox(height: 16),
+          BlocBuilder<LoginCubit, LoginState>(
+            buildWhen: (previous, current) =>
+                previous.password != current.password,
+            builder: (context, state) {
+              return HotelynTextInput(
+                hintText: 'Password',
+                prefixIcon: Icons.lock_outline,
                 obscureText: true,
+                onChanged: (value) =>
+                    context.read<LoginCubit>().passwordChanged(value),
+                errorText: state.password.displayError != null
+                    ? 'Password cannot be empty'
+                    : null,
+              );
+            },
+          ),
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () {},
+              child: const Text('Forgot Password?'),
+            ),
+          ),
+          const SizedBox(height: 24),
+          BlocBuilder<LoginCubit, LoginState>(
+            builder: (context, state) {
+              return HotelynButton(
+                message: 'Login',
+                isLoading: state.status.isInProgress,
+                onPressed: () =>
+                    context.read<LoginCubit>().logInWithCredentials(),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+The entire form column is wrapped in `ClarityMask`. Session replays will show users tapping in the masked region, but the actual text input is never captured. Heatmaps will still register tap locations, giving you conversion funnel data without exposing credentials.
+
+### Selective Unmasking for Payment Screens
+
+Payment flows require more nuanced masking. You want to hide credit card details while preserving visibility into the booking summary—users should see what they're paying for in replays, and you need heatmap data on how they interact with pricing information.
+
+Here's Hotelyn's payment screen implementation demonstrating the mask/unmask hierarchy:
+
+```dart
+// lib/features/payment/view/payment_page.dart
+class _PaymentBody extends StatelessWidget {
+  const _PaymentBody();
+
+  @override
+  Widget build(BuildContext context) {
+    return ClarityMask(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          children: [
+            const SizedBox(height: 16),
+            // BookingSummaryCard uses ClarityUnmask internally
+            const BookingSummaryCard(
+              hotelName: 'Grand Plaza Hotel',
+              checkIn: 'Dec 15, 2024',
+              checkOut: 'Dec 18, 2024',
+              totalPrice: r'$690.30',
+            ),
+            const SizedBox(height: 16),
+            // PaymentFormCard remains masked (no ClarityUnmask)
+            const PaymentFormCard(),
+            const SizedBox(height: 32),
+            // CTA button explicitly unmasked for heatmap accuracy
+            ClarityUnmask(
+              child: HotelynButton(
+                message: 'Pay Now',
+                onPressed: () {
+                  Clarity.setCustomTag(
+                    'booking_completed',
+                    'hotel_grand_plaza',
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Payment successful!'),
+                      backgroundColor: GreenColors.green,
+                    ),
+                  );
+                  Navigator.of(context).pop();
+                },
               ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text('Sign In'),
+            ),
+            const SizedBox(height: 24),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+The outer `ClarityMask` covers the entire scrollable area. Inside, specific widgets break out of masking using `ClarityUnmask`:
+
+```dart
+// lib/features/payment/widgets/booking_summary_card.dart
+class BookingSummaryCard extends StatelessWidget {
+  const BookingSummaryCard({
+    required this.hotelName,
+    required this.checkIn,
+    required this.checkOut,
+    required this.totalPrice,
+    super.key,
+  });
+
+  final String hotelName;
+  final String checkIn;
+  final String checkOut;
+  final String totalPrice;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClarityUnmask(
+      child: Card(
+        elevation: 0,
+        color: LightGreyColors.lightGrey,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Booking Summary', style: HotelynTextStyle.h3),
+              const SizedBox(height: 12),
+              _SummaryRow(label: 'Hotel', value: hotelName),
+              const SizedBox(height: 8),
+              _SummaryRow(label: 'Check-in', value: checkIn),
+              const SizedBox(height: 8),
+              _SummaryRow(label: 'Check-out', value: checkOut),
+              const Divider(height: 24),
+              _SummaryRow(
+                label: 'Total',
+                value: totalPrice,
+                isBold: true,
               ),
             ],
           ),
@@ -291,418 +338,388 @@ class LoginScreen extends StatelessWidget {
 }
 ```
 
-In this example, the entire login form is wrapped with `ClarityMask`. When users enter their credentials, the session replay will show a masked area instead of the actual input fields.
+The `ClarityUnmask` wrapper on `BookingSummaryCard` creates a visibility window within the masked payment body. Session replays show the booking details while payment inputs remain hidden.
 
-[SPACE FOR CODE: Example from Hotelyn login screen]
-
-### Selective Unmasking
-
-Sometimes you want to mask a large section but keep certain non-sensitive elements visible for analytics purposes. This is where `ClarityUnmask` becomes useful.
-
-Here's an example of a payment screen where you mask the credit card details but keep the booking summary visible:
+Meanwhile, the `PaymentFormCard` contains sensitive payment fields and remains within the masked parent without any `ClarityUnmask`:
 
 ```dart
-class PaymentScreen extends StatelessWidget {
-  const PaymentScreen({super.key});
+// lib/features/payment/widgets/payment_form_card.dart
+class PaymentFormCard extends StatelessWidget {
+  const PaymentFormCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Payment'),
+    return Card(
+      elevation: 0,
+      color: LightGreyColors.lightGrey,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
       ),
-      body: Column(
-        children: [
-          // Booking summary is visible
-          ClarityUnmask(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Booking Summary'),
-                    const SizedBox(height: 8),
-                    Text('Hotel: Grand Plaza'),
-                    Text('Check-in: Dec 15, 2024'),
-                    Text('Check-out: Dec 18, 2024'),
-                  ],
-                ),
-              ),
+      child: const Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Payment Details', style: HotelynTextStyle.h3),
+            SizedBox(height: 16),
+            HotelynTextInput(
+              hintText: 'Card Number',
+              prefixIcon: Icons.credit_card,
+              keyboardType: TextInputType.number,
             ),
-          ),
-          
-          // Payment details are masked
-          ClarityMask(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    TextField(
-                      decoration: const InputDecoration(
-                        labelText: 'Card Number',
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            decoration: const InputDecoration(
-                              labelText: 'Expiry Date',
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: TextField(
-                            decoration: const InputDecoration(
-                              labelText: 'CVV',
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+            SizedBox(height: 12),
+            _ExpiryAndCvvRow(),
+            SizedBox(height: 12),
+            HotelynTextInput(
+              hintText: 'Cardholder Name',
+              prefixIcon: Icons.person_outline,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 ```
 
-This approach gives you granular control over what appears in session recordings. You can see the user's journey through the payment process without exposing their payment credentials.
+This pattern—mask the container, unmask safe children—scales to any screen with mixed sensitivity levels.
 
-[SPACE FOR CODE: Example from Hotelyn payment screen]
+### Strategic Masking Guidelines
 
-### App-Wide Masking Modes
+| Scenario | Pattern | Rationale |
+|----------|---------|-----------|
+| Login/registration forms | `ClarityMask` on entire form | All inputs contain credentials |
+| Payment screens | `ClarityMask` container + `ClarityUnmask` on summary/CTAs | Mix of PCI-sensitive and safe content |
+| Profile screens | `ClarityMask` on PII fields only | Most content is safe to display |
+| Settings screens | No masking typically needed | Configuration data is not sensitive |
+| Search/browse screens | No masking needed | Maximize heatmap coverage |
+| Medical/health data | `ClarityMask` + consider `Clarity.pause()` | HIPAA compliance may require no capture |
 
-Beyond individual widgets, Clarity supports app-wide masking modes that automatically mask certain types of content:
+The goal is maximizing heatmap data collection while ensuring no sensitive information appears in recordings.
 
-- **Strict Mode**: Masks all text and sensitive elements by default
-- **Moderate Mode**: Masks passwords, credit cards, and similar sensitive data
-- **Permissive Mode**: Only masks explicitly marked elements
+## Tracking Authenticated Users
 
-You can learn more about these modes in the [Clarity masking documentation](https://learn.microsoft.com/en-us/clarity/mobile-sdk/flutter-sdk).
+Heatmaps become significantly more valuable when you can segment by user cohorts. Clarity supports custom user IDs that persist across sessions, enabling analysis like "how do power users interact differently than new users?"
 
-## Monitoring Clarity Activity
+### Setting Up User Identification
 
-After integrating Clarity, you need to verify that it's working correctly and capturing sessions as expected. The SDK provides several methods to monitor its state and activity.
-
-### Checking Clarity Status
-
-You can query Clarity's current state using several utility methods:
-
-```dart
-// Check if Clarity is currently paused
-bool isPaused = await Clarity.isPaused();
-
-// Get the current session ID
-String? sessionId = await Clarity.getCurrentSessionId();
-
-// Get the current user ID
-String? userId = await Clarity.getCurrentUserId();
-```
-
-These methods are useful for debugging and correlating Clarity sessions with other analytics tools you might be using.
-
-### Pausing and Resuming Tracking
-
-There might be scenarios where you want to temporarily stop tracking user activity. For example, when displaying sensitive content that shouldn't be recorded even with masking:
+The Hotelyn app implements user persistence through a dedicated `AuthRepository` that coordinates between local storage and Clarity:
 
 ```dart
-// Pause Clarity tracking
-await Clarity.pause();
+// lib/core/domain/repository/auth_repository.dart
+import 'package:clarity_flutter/clarity_flutter.dart';
+import 'package:hotelyn/core/data/storage/storage.dart';
 
-// Display sensitive content
-showDialog(
-  context: context,
-  builder: (context) => AlertDialog(
-    title: const Text('Sensitive Information'),
-    content: const Text('Medical records would go here...'),
-  ),
-);
+class AuthRepository {
+  AuthRepository({
+    required SharedStorage sharedStorage,
+  }) : _sharedStorage = sharedStorage;
 
-// Resume tracking after dialog closes
-await Clarity.resume();
-```
+  final SharedStorage _sharedStorage;
 
-When Clarity is paused, it stops capturing any user interactions, screen changes, or analytics data. This provides an additional layer of privacy control beyond masking.
+  bool get isAuthenticated => _sharedStorage.getUserId() != null;
 
-### Debugging Integration Issues
+  String? get currentUserId => _sharedStorage.getUserId();
 
-If you're not seeing data on the Clarity dashboard, follow these troubleshooting steps:
-
-First, enable verbose logging to see detailed SDK activity:
-
-```dart
-final config = ClarityConfig(
-  projectId: "YOUR_PROJECT_ID_HERE",
-  logLevel: LogLevel.Verbose,
-);
-```
-
-Then filter your device logs for Clarity-specific messages. In Android Studio, use the Logcat filter:
-
-```
-[Clarity]
-```
-
-[SPACE FOR SCREENSHOT: Android Studio Logcat showing Clarity logs]
-
-Common issues and solutions:
-
-**No data appearing on dashboard**: Verify your project ID is correct and that your device has internet connectivity. Data typically appears within 30 minutes to 2 hours.
-
-**Initialization errors**: Check that you're calling `Clarity.initialize()` with a valid BuildContext after the widget is built.
-
-**Session not uploading**: Ensure the device is connected to an unmetered network, or enable `allowMeteredNetworkUsage` in your configuration.
-
-**Excessive logging in production**: Verify that `logLevel` is set to `LogLevel.None` for release builds.
-
-## Setting Custom User Identifiers
-
-By default, Clarity generates anonymous user IDs automatically. However, if you have your own user authentication system, you can set custom user IDs to track users across sessions and devices.
-
-### Why Use Custom User IDs
-
-Custom user IDs provide several benefits:
-
-- Track the same user across multiple sessions and devices
-- Correlate Clarity data with your backend analytics
-- Filter sessions by specific users on the dashboard
-- Identify problematic user journeys for specific customer segments
-
-### Setting the User ID
-
-You can set a custom user ID at any time after initialization:
-
-```dart
-await Clarity.setCustomUserId("user_12345");
-```
-
-Here's a practical example of setting the user ID after successful authentication:
-
-```dart
-class AuthService {
-  Future<void> signIn(String email, String password) async {
-    // Perform authentication
-    final user = await _authenticateUser(email, password);
-    
-    // Set Clarity user ID after successful login
-    await Clarity.setCustomUserId(user.id);
+  Future<String> login() async {
+    final userId = await _sharedStorage.setUserId();
+    Clarity.setCustomUserId(userId);
+    Clarity.setCustomTag('login_success', 'credentials');
+    return userId;
   }
-  
-  Future<void> signOut() async {
-    // Clear user session
-    await _clearUserSession();
-    
-    // Optionally reset to anonymous tracking
-    await Clarity.setCustomUserId(null);
+
+  Future<void> logout() async {
+    await _sharedStorage.clearUserId();
   }
-}
-```
 
-[SPACE FOR CODE: Example from Hotelyn authentication flow]
-
-### User ID Requirements
-
-The custom user ID must meet these requirements:
-
-1. Cannot be an empty string
-2. Must be base36 encoded
-3. Should be smaller than "1Z141Z4"
-
-If you don't provide a user ID or pass `null`, Clarity will generate a unique anonymous ID automatically.
-
-## Sending Custom Events
-
-While Clarity automatically tracks screen transitions and user interactions, you might want to track specific business events that matter to your application. Custom events let you mark important moments in the user journey.
-
-### When to Use Custom Events
-
-Custom events are useful for tracking:
-
-- Key conversion points (booking completed, payment successful)
-- Feature usage (filter applied, search performed)
-- Error conditions (payment failed, network timeout)
-- User flows (onboarding completed, profile updated)
-
-### Implementing Custom Events
-
-The SDK provides a method for sending custom events with optional tags:
-
-```dart
-await Clarity.setCustomTag("checkout_initiated", "premium_room");
-```
-
-Here's a practical example tracking the hotel booking flow:
-
-```dart
-class BookingService {
-  Future<void> searchHotels(String location, DateTime checkIn) async {
-    // Track search event
-    await Clarity.setCustomTag("hotel_search", location);
-    
-    // Perform search
-    final results = await _performSearch(location, checkIn);
-    
-    return results;
-  }
-  
-  Future<void> completeBooking(Booking booking) async {
-    try {
-      // Process booking
-      await _processPayment(booking);
-      
-      // Track successful booking
-      await Clarity.setCustomTag(
-        "booking_completed", 
-        "hotel_${booking.hotelId}"
-      );
-    } catch (e) {
-      // Track booking failure
-      await Clarity.setCustomTag("booking_failed", e.toString());
-      rethrow;
+  void initializeClarityUser() {
+    final userId = currentUserId;
+    if (userId != null) {
+      Clarity.setCustomUserId(userId);
     }
   }
 }
 ```
 
-[SPACE FOR CODE: Example from Hotelyn booking flow]
+The repository handles three concerns:
 
-Custom tags appear in the Clarity dashboard alongside session replays, allowing you to filter and analyze sessions based on specific events.
+1. **Login**: Generates a UUID, persists it locally, and registers it with Clarity via `setCustomUserId()`
+2. **App startup**: Checks for existing user ID and re-registers with Clarity for returning users
+3. **Logout**: Clears persisted credentials (Clarity sessions continue with anonymous tracking)
 
-## Viewing Analytics on the Dashboard
+The storage layer uses SharedPreferences with UUID generation:
 
-After implementing Clarity and collecting session data, you'll want to analyze user behavior on the Clarity dashboard. This is where all the captured data transforms into actionable insights.
+```dart
+// lib/core/data/storage/shared_storage.dart
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
-### Accessing Your Dashboard
+class SharedStorage {
+  SharedStorage({required this.sharedPreferences});
 
-Navigate to [clarity.microsoft.com](https://clarity.microsoft.com) and sign in with your Microsoft account. Select your project from the projects list to view the dashboard.
+  final SharedPreferences sharedPreferences;
 
-The dashboard is organized into several key sections:
+  static const introItemKey = 'intro_passed';
+  static const userIdKey = 'user_id';
 
-**Dashboard Overview**: Displays high-level metrics including total sessions, pages per session, and average session duration.
+  Future<bool> isIntroPassed() async {
+    return sharedPreferences.getBool(introItemKey) ?? false;
+  }
 
-**Recordings**: Shows individual session replays where you can watch exactly how users interacted with your app.
+  void setIntroPassed() => sharedPreferences.setBool(introItemKey, true);
 
-**Heatmaps**: Visualizes aggregate user interactions showing where users tap, scroll, and engage most frequently.
+  String? getUserId() {
+    return sharedPreferences.getString(userIdKey);
+  }
 
-**Insights**: Automatically identifies user frustration signals like rage taps and dead taps.
+  Future<String> setUserId() async {
+    final userId = const Uuid().v4();
+    await sharedPreferences.setString(userIdKey, userId);
+    return userId;
+  }
 
-[SPACE FOR SCREENSHOT: Clarity dashboard overview]
+  Future<void> clearUserId() async {
+    await sharedPreferences.remove(userIdKey);
+  }
+}
+```
 
-### Analyzing Session Recordings
+### Initializing on App Startup
 
-Session recordings are one of Clarity's most powerful features. They let you see your app through your users' eyes.
+For returning users, you must set the Clarity user ID before any sessions are recorded. The Hotelyn splash screen handles this through the `SplashBloc`:
 
-To watch a recording:
+```dart
+// lib/features/splash/bloc/splash_bloc.dart
+import 'dart:async';
 
-1. Click on **Recordings** in the left navigation
-2. Select any session from the list
-3. Click the play button to watch the replay
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:hotelyn/core/domain/repository/repository.dart';
 
-The recording shows every screen transition, tap, scroll, and interaction the user performed. You can speed up playback, skip idle time, and focus on specific parts of the session.
+part 'splash_event.dart';
+part 'splash_state.dart';
 
-[SPACE FOR SCREENSHOT: Session recording playback]
+class SplashBloc extends Bloc<SplashEvent, SplashState> {
+  SplashBloc({
+    required IntroRepository introRepository,
+    required AuthRepository authRepository,
+  })  : _introRepository = introRepository,
+        _authRepository = authRepository,
+        super(SplashInitial()) {
+    on<SplashStarted>(_onStartSplash);
+  }
 
-### Understanding Heatmaps
+  final IntroRepository _introRepository;
+  final AuthRepository _authRepository;
 
-Heatmaps aggregate data from many sessions to show patterns in user behavior. They use color coding to indicate interaction frequency:
+  FutureOr<void> _onStartSplash(
+    SplashStarted event,
+    Emitter<SplashState> emit,
+  ) async {
+    final introPassed = await _introRepository.isIntroPassed();
 
-- **Red areas**: High interaction (users tap or focus here frequently)
-- **Yellow areas**: Moderate interaction
-- **Blue areas**: Low interaction
-- **Uncolored areas**: No interaction
+    if (!introPassed) {
+      emit(SplashToIntro());
+      return;
+    }
 
-Use heatmaps to:
+    // Check if user is authenticated
+    if (_authRepository.isAuthenticated) {
+      // Initialize Clarity with the stored user ID for returning users
+      _authRepository.initializeClarityUser();
+      emit(SplashToHome());
+    } else {
+      emit(SplashToLogin());
+    }
+  }
+}
+```
 
-- Identify which UI elements users engage with most
-- Discover buttons or links users ignore
-- Optimize screen layouts based on actual usage patterns
-- A/B test different designs and compare heatmaps
+The key line is `_authRepository.initializeClarityUser()`, which calls `Clarity.setCustomUserId()` before navigating to the home screen. This ensures all subsequent session data is attributed to the correct user.
 
-[SPACE FOR SCREENSHOT: Heatmap visualization]
+### Setting User ID on Login
 
-### Identifying User Frustration
+When a new user authenticates, the `LoginCubit` coordinates with `AuthRepository`:
 
-Clarity automatically detects frustration signals:
+```dart
+// lib/features/login/bloc/login_cubit.dart
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:formz/formz.dart';
+import 'package:hotelyn/core/domain/repository/repository.dart';
+import 'package:hotelyn/features/login/models/email.dart';
+import 'package:hotelyn/features/login/models/password.dart';
 
-**Rage Taps**: When users repeatedly tap the same area quickly, indicating frustration with an unresponsive element.
+part 'login_state.dart';
 
-**Dead Taps**: Taps on elements that don't respond or provide feedback.
+class LoginCubit extends Cubit<LoginState> {
+  LoginCubit({
+    required AuthRepository authRepository,
+  })  : _authRepository = authRepository,
+        super(const LoginState());
 
-**Quick Backs**: Users who immediately navigate back, suggesting the destination wasn't what they expected.
+  final AuthRepository _authRepository;
 
-You can filter sessions by these signals to prioritize fixing the most frustrating user experiences.
+  void emailChanged(String value) {
+    final email = Email.dirty(value);
+    emit(
+      state.copyWith(
+        email: email,
+        isValid: Formz.validate([email, state.password]),
+      ),
+    );
+  }
+
+  void passwordChanged(String value) {
+    final password = Password.dirty(value);
+    emit(
+      state.copyWith(
+        password: password,
+        isValid: Formz.validate([state.email, password]),
+      ),
+    );
+  }
+
+  Future<void> logInWithCredentials() async {
+    final email = Email.dirty(state.email.value);
+    final password = Password.dirty(state.password.value);
+    emit(
+      state.copyWith(
+        email: email,
+        password: password,
+        isValid: Formz.validate([email, password]),
+      ),
+    );
+    if (!state.isValid) return;
+    emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
+    try {
+      // Perform login and persist user ID with Clarity tracking
+      await _authRepository.login();
+      emit(state.copyWith(status: FormzSubmissionStatus.success));
+    } on Exception catch (_) {
+      emit(state.copyWith(status: FormzSubmissionStatus.failure));
+    }
+  }
+}
+```
+
+The `_authRepository.login()` call handles both persistence and Clarity registration in a single operation, keeping the cubit focused on form state management.
+
+## Custom Events for Heatmap Context
+
+Raw heatmaps show interaction patterns, but custom events add semantic context. Tagging sessions with business events lets you filter heatmaps by user behavior—"show me heatmaps only from users who completed a booking."
+
+### Tagging Conversion Events
+
+Use `Clarity.setCustomTag()` to mark significant moments:
+
+```dart
+// lib/features/payment/view/payment_page.dart
+HotelynButton(
+  message: 'Pay Now',
+  onPressed: () {
+    Clarity.setCustomTag(
+      'booking_completed',
+      'hotel_grand_plaza',
+    );
+    // ... complete payment
+  },
+),
+```
+
+On the Clarity dashboard, you can filter session recordings and heatmaps by these tags. This transforms generic interaction data into conversion-specific insights.
+
+### Screen Tracking for Navigation Analysis
+
+Set screen names to segment heatmaps by feature area:
+
+```dart
+// lib/features/payment/view/payment_page.dart
+@override
+Widget build(BuildContext context) {
+  Clarity.setCurrentScreenName('payment');
+  return Scaffold(
+    // ...
+  );
+}
+```
+
+This enables dashboard queries like "show scroll heatmaps for the payment screen" without parsing generic session data.
+
+## Interpreting Heatmap Data
+
+After collecting sessions, the Clarity dashboard presents aggregated heatmap visualizations. Here's how to extract actionable insights.
+
+### Identifying Dead Zones
+
+Cold areas (blue/uncolored) on tap heatmaps indicate UI elements users ignore. Common causes:
+
+- **Low visual hierarchy**: The element doesn't stand out from surrounding content
+- **Poor positioning**: Users don't scroll far enough to see it
+- **Unclear affordance**: The element doesn't look interactive
+
+Cross-reference with scroll heatmaps—if users never reach an element, the issue is content hierarchy, not the element itself.
+
+### Detecting Rage Taps
+
+Clarity automatically flags sessions with rage taps (rapid repeated taps in the same location). High rage tap rates on specific screens indicate:
+
+- **Unresponsive UI**: Tap handlers are too slow or not registered
+- **Misleading affordances**: Elements look tappable but aren't
+- **Loading state confusion**: Users don't realize an action is processing
+
+Filter heatmaps to rage-tap sessions to identify exactly where users experience frustration.
+
+### Scroll Depth Analysis
+
+Scroll heatmaps show a gradient from 100% (top) to the percentage of users who scroll to each depth. Key patterns:
+
+- **Sharp drop-off at fold**: Above-the-fold content isn't compelling enough to scroll
+- **Gradual decline**: Expected behavior; optimize content order by importance
+- **Unexpected plateau**: Users stop at a specific point—look for visual barriers or "false bottoms"
 
 ## Performance Considerations
 
-While Clarity is designed to have minimal impact on app performance, understanding its resource usage helps you make informed decisions about when and how to use it.
+Clarity's SDK is designed for minimal runtime impact, but understanding its resource profile helps with production deployment decisions.
 
-### Resource Usage
+### Resource Footprint
 
-Based on Microsoft's testing, the Clarity Flutter SDK has the following impact:
+Based on Microsoft's benchmarks:
 
-**App Size**: Increases Android APK size by approximately 800 KB and iOS IPA size by approximately 900 KB.
+- **App size increase**: ~800 KB (Android), ~900 KB (iOS)
+- **Network usage**: ~10 KiB/second of recording
+- **CPU overhead**: Negligible for typical apps; may increase on image-heavy screens during initial asset capture
 
-**CPU Usage**: Main thread usage varies based on your app's nature. Most apps see negligible CPU impact during normal operation.
+### Production Configuration
 
-**Network Usage**: Sessions consume approximately 10 KiB per second of recording. Image-heavy apps may experience higher initial traffic due to asset uploading.
+For release builds, ensure logging is disabled:
 
-**Storage**: Clarity buffers data on disk before uploading. The SDK automatically deletes old buffered data periodically.
+```dart
+final config = ClarityConfig(
+  projectId: 'your_project_id',
+  logLevel: kReleaseMode ? LogLevel.None : LogLevel.Verbose,
+);
+```
 
-### Best Practices
-
-To minimize performance impact:
-
-**Use appropriate log levels**: Set `LogLevel.None` for production builds to eliminate logging overhead.
-
-**Mask large sections sparingly**: While masking is lightweight, masking and unmasking complex widget trees repeatedly can add overhead.
-
-**Avoid masking in hot paths**: Don't toggle masking during animations or rapidly changing screens.
-
-**Monitor memory usage**: Use Flutter DevTools to ensure Clarity isn't causing memory leaks in your specific use case.
-
-**Test on representative devices**: Performance characteristics vary across devices and Android/iOS versions.
+The `kReleaseMode` check from `package:flutter/foundation.dart` handles this automatically.
 
 ### Network Efficiency
 
-Clarity is designed to be network-efficient:
+Clarity batches and compresses session data before upload. By default, uploads only occur on WiFi. If your user base frequently operates on cellular, consider the trade-off between data freshness and user bandwidth consumption.
 
-- Sessions are batched and compressed before upload
-- Uploads happen on background threads
-- By default, uploads only occur on WiFi
-- Failed uploads are retried automatically
+## Where to Go From Here
 
-If network usage is a concern for your users, keep the default `allowMeteredNetworkUsage: false` configuration.
+You now have a production-ready heatmap implementation that:
 
-## Where to Go From Here?
+- Captures all user interactions while protecting sensitive data through hierarchical masking
+- Tracks authenticated users across sessions with persistent user IDs
+- Tags sessions with business events for filtered analysis
+- Follows clean architecture patterns with repository-based Clarity integration
 
-Congratulations! You've successfully integrated Microsoft Clarity into your Flutter application. You now have the tools to track user sessions, identify UX pain points, and make data-driven decisions to improve your app.
+To deepen your Clarity implementation:
 
-You can download the completed project using the *Download Materials* button at the top or bottom of this tutorial. This includes the full Hotelyn app with Clarity integration and privacy masking implemented.
+- Explore the [official Microsoft Clarity documentation](https://learn.microsoft.com/en-us/clarity/mobile-sdk/flutter-sdk) for additional configuration options
+- Review [Clarity's privacy guidelines](https://learn.microsoft.com/en-us/clarity/mobile-sdk/mobile-sdk-overview) for GDPR compliance considerations
+- Experiment with A/B testing by comparing heatmaps across app versions
 
-### Next Steps
-
-To deepen your Clarity knowledge:
-
-- Explore the [official Microsoft Clarity documentation](https://learn.microsoft.com/en-us/clarity/mobile-sdk/flutter-sdk) for advanced features
-- Review [Clarity's privacy guidelines](https://learn.microsoft.com/en-us/clarity/mobile-sdk/mobile-sdk-overview) to ensure GDPR and privacy compliance
-- Experiment with different masking strategies for your specific use case
-- Set up custom dashboards and alerts based on your key metrics
-
-### Additional Resources
-
-Want to learn more about Flutter analytics and monitoring? Check out these resources:
-
-- [Firebase Analytics for Flutter](https://firebase.google.com/docs/analytics/get-started?platform=flutter): Another powerful analytics solution
-- [Flutter Performance Best Practices](https://docs.flutter.dev/perf/best-practices): Optimize your app's performance
-- [User Privacy in Flutter](https://docs.flutter.dev/security/security-best-practices): Learn about privacy best practices
-
-If you have questions or want to share your Clarity integration experience, join the discussion in the comments below!
+The Hotelyn sample project demonstrates all patterns covered in this tutorial. Use it as a reference implementation for your own Clarity integration.

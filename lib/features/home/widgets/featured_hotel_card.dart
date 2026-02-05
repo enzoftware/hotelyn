@@ -1,3 +1,4 @@
+import 'package:clarity_flutter/clarity_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/components/theme/hotelyn_colors.dart';
@@ -15,25 +16,27 @@ class FeaturedHotelCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      color: LightGreyColors.lightGrey,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _HotelImage(),
-            const SizedBox(height: 12),
-            _HotelInfo(hotel: hotel),
-            const SizedBox(height: 8),
-            _PerksList(perks: hotel.perks),
-            const SizedBox(height: 12),
-            _BookNowButton(onPressed: onBookNow),
-          ],
+    return ClarityMask(
+      child: Card(
+        elevation: 0,
+        color: LightGreyColors.lightGrey,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _HotelImage(),
+              const SizedBox(height: 12),
+              ClarityUnmask(child: _HotelInfo(hotel: hotel)),
+              const SizedBox(height: 8),
+              _PerksList(perks: hotel.perks),
+              const SizedBox(height: 12),
+              _BookNowButton(onPressed: onBookNow),
+            ],
+          ),
         ),
       ),
     );

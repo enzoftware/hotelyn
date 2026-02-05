@@ -9,4 +9,6 @@ class SplashInitial extends SplashState {}
 
 class SplashToIntro extends SplashState {}
 
+class SplashToLogin extends SplashState {}
+
 class SplashToHome extends SplashState {}

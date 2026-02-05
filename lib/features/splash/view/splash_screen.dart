@@ -1,10 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hotelyn/core/domain/repository/repository.dart';
 import 'package:hotelyn/features/home/home.dart';
 import 'package:hotelyn/features/intro/intro.dart';
+import 'package:hotelyn/features/login/view/login_page.dart';
 import 'package:hotelyn/features/splash/splash.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -18,6 +18,7 @@ class SplashScreen extends StatelessWidget {
       body: BlocProvider(
         create: (context) => SplashBloc(
           introRepository: context.read<IntroRepository>(),
+          authRepository: context.read<AuthRepository>(),
         )..add(const SplashStarted()),
         child: const SplashView(),
       ),
@@ -35,11 +36,15 @@ class SplashView extends StatelessWidget {
     return BlocConsumer<SplashBloc, SplashState>(
       listener: (context, state) {
         if (state is SplashToHome) {
-          unawaited(Navigator.pushNamed(context, HomePage.route));
+          context.go(HomePage.route);
         }
 
         if (state is SplashToIntro) {
-          unawaited(Navigator.pushNamed(context, IntroPage.route));
+          context.go(IntroPage.route);
+        }
+
+        if (state is SplashToLogin) {
+          context.go(LoginPage.route);
         }
       },
       builder: (_, __) {

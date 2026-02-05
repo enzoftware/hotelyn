@@ -1,4 +1,3 @@
-import 'package:clarity_flutter/clarity_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:hotelyn/components/text_input/hotelyn_text_input.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';

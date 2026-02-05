@@ -6,8 +6,8 @@ import 'package:hotelyn/components/theme/hotelyn_colors.dart';
 const _cardElevation = 2.0;
 
 class HotelynHeader extends SliverPersistentHeaderDelegate {
-  final _maxExtent = 240.0;
-  final _minExtent = 190.0;
+  final _maxExtent = 250.0;
+  final _minExtent = 240.0;
 
   @override
   Widget build(

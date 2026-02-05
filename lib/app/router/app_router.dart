@@ -7,7 +7,7 @@ import 'package:hotelyn/features/splash/view/splash_screen.dart';
 
 class AppRouter {
   static final router = GoRouter(
-    initialLocation: '/home',
+    initialLocation: '/',
     routes: [
       GoRoute(
         path: '/',

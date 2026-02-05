@@ -7,21 +7,24 @@ import 'package:go_router/go_router.dart';
 import 'package:hotelyn/components/hotelyn_button.dart';
 import 'package:hotelyn/components/text_input/hotelyn_text_input.dart';
 import 'package:hotelyn/components/theme/hotelyn_colors.dart';
+import 'package:hotelyn/core/domain/repository/repository.dart';
 import 'package:hotelyn/features/login/bloc/login_cubit.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
+  static const route = '/login';
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => LoginCubit(),
+      create: (_) => LoginCubit(
+        authRepository: context.read<AuthRepository>(),
+      ),
       child: BlocListener<LoginCubit, LoginState>(
         listenWhen: (previous, current) => previous.status != current.status,
         listener: (context, state) {
           if (state.status.isSuccess) {
-            Clarity.setCustomUserId('user_hotelyn');
-            Clarity.setCustomTag('login_success', 'credentials');
             context.go('/home');
           }
         },

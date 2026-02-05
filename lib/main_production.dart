@@ -16,10 +16,14 @@ void main() {
       final preferenceRepository = IntroRepository(
         sharedStorage: localDataSource,
       );
+      final authRepository = AuthRepository(
+        sharedStorage: localDataSource,
+      );
       final clarityService = ClarityService();
 
       return HotelynApp(
         preferenceRepository: preferenceRepository,
+        authRepository: authRepository,
         clarityService: clarityService,
       );
     }),

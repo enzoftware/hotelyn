@@ -13,6 +13,7 @@ class PaymentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Clarity.setCurrentScreenName('payment');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Payment'),
@@ -39,39 +40,43 @@ class _PaymentBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        children: [
-          const SizedBox(height: 16),
-          const BookingSummaryCard(
-            hotelName: 'Grand Plaza Hotel',
-            checkIn: 'Dec 15, 2024',
-            checkOut: 'Dec 18, 2024',
-            totalPrice: r'$690.30',
-          ),
-          const SizedBox(height: 16),
-          const ClarityMask(child: PaymentFormCard()),
-          const SizedBox(height: 32),
-          HotelynButton(
-            message: 'Pay Now',
-            onPressed: () {
-              Clarity.setCustomTag(
-                'booking_completed',
-                'hotel_grand_plaza',
-              );
+    return ClarityMask(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          children: [
+            const SizedBox(height: 16),
+            const BookingSummaryCard(
+              hotelName: 'Grand Plaza Hotel',
+              checkIn: 'Dec 15, 2024',
+              checkOut: 'Dec 18, 2024',
+              totalPrice: r'$690.30',
+            ),
+            const SizedBox(height: 16),
+            const PaymentFormCard(),
+            const SizedBox(height: 32),
+            ClarityUnmask(
+              child: HotelynButton(
+                message: 'Pay Now',
+                onPressed: () {
+                  Clarity.setCustomTag(
+                    'booking_completed',
+                    'hotel_grand_plaza',
+                  );
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Payment successful!'),
-                  backgroundColor: GreenColors.green,
-                ),
-              );
-              Navigator.of(context).pop();
-            },
-          ),
-          const SizedBox(height: 24),
-        ],
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Payment successful!'),
+                      backgroundColor: GreenColors.green,
+                    ),
+                  );
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
+        ),
       ),
     );
   }
