@@ -338,15 +338,11 @@ Then filter your device logs for Clarity-specific messages. In Android Studio, u
 [Clarity]
 ```
 
-[SPACE FOR SCREENSHOT: Android Studio Logcat showing Clarity logs]
-
 Common issues and solutions:
 
 **No data appearing on dashboard**: Verify your project ID is correct and that your device has internet connectivity. Data typically appears within 30 minutes to 2 hours.
 
 **Initialization errors**: Check that you're calling `Clarity.initialize()` with a valid BuildContext after the widget is built.
-
-**Session not uploading**: Ensure the device is connected to an unmetered network, or enable `allowMeteredNetworkUsage` in your configuration.
 
 **Excessive logging in production**: Verify that `logLevel` is set to `LogLevel.None` for release builds.
 
@@ -392,18 +388,6 @@ class AuthService {
   }
 }
 ```
-
-[SPACE FOR CODE: Example from Hotelyn authentication flow]
-
-### User ID Requirements
-
-The custom user ID must meet these requirements:
-
-1. Cannot be an empty string
-2. Must be base36 encoded
-3. Should be smaller than "1Z141Z4"
-
-If you don't provide a user ID or pass `null`, Clarity will generate a unique anonymous ID automatically.
 
 ## Sending Custom Events
 
