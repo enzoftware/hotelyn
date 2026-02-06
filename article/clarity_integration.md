@@ -1,21 +1,19 @@
 # Microsoft Clarity Flutter SDK: Getting Started
 
-Learn how to integrate Microsoft Clarity analytics into your Flutter application to gain powerful insights into user behavior through session replays, heatmaps, and interaction analytics.
-
-By Enzo Lizama.
+<!-- Learn how to integrate Microsoft Clarity analytics into your Flutter application to gain powerful insights into user behavior through session replays, heatmaps, and interaction analytics. -->
 
 Session replay and user analytics have become essential tools for modern app development. Understanding how users interact with your app helps you identify pain points, optimize user flows, and make data-driven decisions to improve the overall user experience.
 
 Microsoft Clarity is a free, privacy-conscious analytics tool that captures user sessions, generates heatmaps, and provides detailed interaction metrics. While Clarity has been widely used for web applications, Microsoft recently released an official Flutter SDK, bringing these powerful analytics capabilities to mobile developers.
 
-In this tutorial, you'll learn how to:
+In this article, you'll learn how to:
 
 - Set up the Clarity Flutter SDK in your application
 - Configure Clarity to capture user sessions and interactions
 - Implement privacy controls using masking widgets
 - Handle sensitive data appropriately
 - Monitor and debug Clarity integration
-- Access session replays and analytics on the Clarity dashboard
+- Access session replays and heatmaps on the Clarity dashboard
 
 You'll work through these concepts by integrating Clarity into Hotelyn, a hotel booking application. By the end of this tutorial, you'll be able to track user journeys, identify UX issues, and gain actionable insights from real user behavior.
 
@@ -66,7 +64,7 @@ Open your `pubspec.yaml` file and add the `clarity_flutter` dependency under the
 dependencies:
   flutter:
     sdk: flutter
-  clarity_flutter: ^1.0.0
+  clarity_flutter: ^1.7.1
 ```
 
 After adding the dependency, run the following command in your terminal to fetch the package:
@@ -79,7 +77,7 @@ This command downloads the Clarity SDK and all its required dependencies, includ
 
 ### Importing Clarity
 
-With the package installed, you need to import it into your main application file. Open `lib/main.dart` and add the import statement at the top:
+With the package installed, you need to import it into your main application file. Open your app entrypoint file and add the import statement at the top:
 
 ```dart
 import 'package:flutter/material.dart';
@@ -96,7 +94,7 @@ Clarity offers two different initialization approaches: using the `ClarityWidget
 
 The `ClarityWidget` approach is the recommended method for most applications. It wraps your entire app and ensures Clarity is initialized before any widgets are rendered.
 
-Here's how to set it up in your `main.dart` file:
+Here's how to set it up in your app entrypoint file:
 
 ```dart
 void main() {
@@ -122,7 +120,6 @@ Let's break down what's happening in this code:
 2. `ClarityConfig` creates a configuration object with your project ID and logging preferences
 3. `ClarityWidget` wraps your application and handles initialization automatically
 
-[SPACE FOR CODE: Example from actual Hotelyn main.dart implementation]
 
 ### Using Clarity.initialize()
 
@@ -253,7 +250,12 @@ class _LoginForm extends StatelessWidget {
 }
 ```
 
-In this example, the entire login form is wrapped with `ClarityMask`. When users enter their credentials, the session replay will show a masked area instead of the actual input fields.
+Let's break down what's happening in this code:
+
+1. `_LoginForm` is a private `StatelessWidget` that builds the login form UI
+2. `ClarityMask` wraps the entire `Column` containing form fields—this tells Clarity to hide everything inside from session recordings
+3. Any child widgets (text fields, buttons, labels) within the `Column` are automatically masked
+4. Users interacting with the form will have their input hidden in replays, protecting credentials from being recorded
 
 
 ### Selective Unmasking
@@ -305,7 +307,14 @@ class _PaymentBody extends StatelessWidget {
 }
 ```
 
-This approach gives you granular control over what appears in session recordings. You can see the user's journey through the payment process without exposing their payment credentials.
+Let's break down what's happening in this code:
+
+1. `ClarityMask` wraps the entire `SingleChildScrollView`, making the whole payment screen hidden by default in session recordings
+2. `BookingSummaryCard` is wrapped with `ClarityUnmask` this overrides the parent mask, making the hotel name, dates, and total price visible in replays since this information is non-sensitive
+3. `PaymentFormCard` remains masked (no `ClarityUnmask` wrapper), so credit card numbers, CVV, and other payment details are hidden from recordings
+4. The "Pay Now" `HotelynButton` is wrapped with `ClarityUnmask` this allows you to see user interactions with the button in heatmaps and session replays without exposing sensitive data
+5. This hierarchical approach lets you selectively reveal safe UI elements while keeping sensitive payment information protected
+
 
 ### App-Wide Masking Modes
 
@@ -319,26 +328,7 @@ You can learn more about these modes in the [Clarity masking documentation](http
 
 [SPACE FOR IMAGE: Clarity dashboard showing session recordings]
 
-### Debugging Integration Issues
-
-If you're not seeing data on the Clarity dashboard, follow these troubleshooting steps:
-
-First, enable verbose logging to see detailed SDK activity:
-
-```dart
-final config = ClarityConfig(
-  projectId: "YOUR_PROJECT_ID_HERE",
-  logLevel: LogLevel.Verbose,
-);
-```
-
-Then filter your device logs for Clarity-specific messages. In Android Studio, use the Logcat filter:
-
-```
-[Clarity]
-```
-
-Common issues and solutions:
+### Common issues and solutions
 
 **No data appearing on dashboard**: Verify your project ID is correct and that your device has internet connectivity. Data typically appears within 30 minutes to 2 hours.
 
@@ -374,78 +364,85 @@ class AuthService {
   Future<void> signIn(String email, String password) async {
     // Perform authentication
     final user = await _authenticateUser(email, password);
-    
+
     // Set Clarity user ID after successful login
     await Clarity.setCustomUserId(user.id);
   }
-  
+
   Future<void> signOut() async {
     // Clear user session
     await _clearUserSession();
-    
+
     // Optionally reset to anonymous tracking
     await Clarity.setCustomUserId(null);
   }
 }
 ```
 
-## Sending Custom Events
+Let's break down what's happening in this code:
 
-While Clarity automatically tracks screen transitions and user interactions, you might want to track specific business events that matter to your application. Custom events let you mark important moments in the user journey.
+1. `AuthService` is a service class that handles user authentication logic
+2. In `signIn`, after successfully authenticating the user with `_authenticateUser`, we call `Clarity.setCustomUserId(user.id)` to associate all subsequent session data with this specific user
+3. The `user.id` should be a unique, non-sensitive identifier (avoid using email addresses or personal information)
+4. In `signOut`, after clearing the user session, we call `Clarity.setCustomUserId(null)` to reset tracking back to anonymous mode
 
-### When to Use Custom Events
+## Tracking Screen Names for Heatmaps
 
-Custom events are useful for tracking:
+One of Clarity's most valuable features is its ability to generate heatmaps showing where users interact most on each screen. For heatmaps to work effectively, Clarity needs to know which screen the user is currently viewing. This is where `Clarity.setCurrentScreenName` becomes essential.
 
-- Key conversion points (booking completed, payment successful)
-- Feature usage (filter applied, search performed)
-- Error conditions (payment failed, network timeout)
-- User flows (onboarding completed, profile updated)
+### Why Screen Names Matter
 
-### Implementing Custom Events
+When Clarity captures screenshots for heatmap generation, it groups them by screen name. Without explicit screen names, Clarity may not accurately associate user interactions with the correct screens, resulting in incomplete or fragmented heatmap data.
 
-The SDK provides a method for sending custom events with optional tags:
+Setting screen names helps Clarity:
+
+- **Generate accurate heatmaps**: Screenshots are properly grouped by screen, giving you meaningful interaction visualizations
+- **Organize session replays**: Screen transitions are clearly labeled in the recording timeline
+- **Filter analytics by screen**: Easily analyze user behavior on specific screens in the dashboard
+- **Track screen-level metrics**: Measure time spent and interactions per screen
+
+### Implementing setCurrentScreenName
+
+Call `Clarity.setCurrentScreenName` whenever the user navigates to a new screen. The method accepts a string parameter representing the screen name:
 
 ```dart
-await Clarity.setCustomTag("checkout_initiated", "premium_room");
+await Clarity.setCurrentScreenName("HomeScreen");
 ```
 
-Here's a practical example tracking the hotel booking flow:
+### Performance Impact
+
+A common concern when adding analytics tracking is the impact on app performance. The good news is that `Clarity.setCurrentScreenName` has **negligible performance impact** on your application.
+
+Here's why this method is performance-safe:
+
+- **Lightweight operation**: Setting the screen name is a simple string assignment that executes in microseconds
+- **No blocking calls**: The method doesn't perform network requests or heavy computations on the main thread
+- **Asynchronous processing**: Any screenshot capture or data processing happens on background threads
+- **Optimized SDK design**: Clarity's SDK is specifically designed to minimize main thread usage
+
+The actual screenshot capture for heatmaps is handled intelligently by the SDK—it captures screenshots at optimal moments without blocking the UI thread or affecting animations.
+
+### Best Practices for Screen Names
+
+Follow these conventions for consistent and useful screen tracking:
+
+1. **Use descriptive names**: Choose names that clearly identify the screen (e.g., "HotelDetailScreen" instead of "Screen1")
+2. **Be consistent**: Use the same naming convention throughout your app (PascalCase, snake_case, etc.)
+3. **Include context when needed**: For parameterized screens, include relevant context (e.g., "HotelDetail_Premium" vs "HotelDetail_Standard")
+4. **Avoid sensitive data**: Never include user IDs, personal information, or sensitive data in screen names
+5. **Keep names concise**: Long screen names can be truncated in the dashboard
 
 ```dart
-class BookingService {
-  Future<void> searchHotels(String location, DateTime checkIn) async {
-    // Track search event
-    await Clarity.setCustomTag("hotel_search", location);
-    
-    // Perform search
-    final results = await _performSearch(location, checkIn);
-    
-    return results;
-  }
-  
-  Future<void> completeBooking(Booking booking) async {
-    try {
-      // Process booking
-      await _processPayment(booking);
-      
-      // Track successful booking
-      await Clarity.setCustomTag(
-        "booking_completed", 
-        "hotel_${booking.hotelId}"
-      );
-    } catch (e) {
-      // Track booking failure
-      await Clarity.setCustomTag("booking_failed", e.toString());
-      rethrow;
-    }
-  }
-}
+// Good examples
+Clarity.setCurrentScreenName("HomeScreen");
+Clarity.setCurrentScreenName("BookingConfirmation");
+Clarity.setCurrentScreenName("PaymentScreen");
+
+// Avoid these patterns
+Clarity.setCurrentScreenName("Screen1");  // Not descriptive
+Clarity.setCurrentScreenName("user_123_profile");  // Contains user ID
+Clarity.setCurrentScreenName("TheMainHomeScreenWithAllTheHotelsAndSearchFunctionality");  // Too long
 ```
-
-[SPACE FOR CODE: Example from Hotelyn booking flow]
-
-Custom tags appear in the Clarity dashboard alongside session replays, allowing you to filter and analyze sessions based on specific events.
 
 ## Viewing Analytics on the Dashboard
 
@@ -457,13 +454,10 @@ Navigate to [clarity.microsoft.com](https://clarity.microsoft.com) and sign in w
 
 The dashboard is organized into several key sections:
 
-**Dashboard Overview**: Displays high-level metrics including total sessions, pages per session, and average session duration.
-
-**Recordings**: Shows individual session replays where you can watch exactly how users interacted with your app.
-
-**Heatmaps**: Visualizes aggregate user interactions showing where users tap, scroll, and engage most frequently.
-
-**Insights**: Automatically identifies user frustration signals like rage taps and dead taps.
+- **Dashboard Overview**: Displays high-level metrics including total sessions, pages per session, and average session duration.
+- **Recordings**: Shows individual session replays where you can watch exactly how users interacted with your app.
+- **Heatmaps**: Visualizes aggregate user interactions showing where users tap, scroll, and engage most frequently.
+- **Settings**: Configure Clarity settings, including funnels, masking, and mask events.
 
 [SPACE FOR SCREENSHOT: Clarity dashboard overview]
 
@@ -503,54 +497,12 @@ Use heatmaps to:
 
 Clarity automatically detects frustration signals:
 
-**Rage Taps**: When users repeatedly tap the same area quickly, indicating frustration with an unresponsive element.
-
-**Dead Taps**: Taps on elements that don't respond or provide feedback.
-
-**Quick Backs**: Users who immediately navigate back, suggesting the destination wasn't what they expected.
+- **Rage Taps**: When users repeatedly tap the same area quickly, indicating frustration with an unresponsive element.
+- **Dead Taps**: Taps on elements that don't respond or provide feedback.
+- **Quick Backs**: Users who immediately navigate back, suggesting the destination wasn't what they expected.
 
 You can filter sessions by these signals to prioritize fixing the most frustrating user experiences.
 
-## Performance Considerations
-
-While Clarity is designed to have minimal impact on app performance, understanding its resource usage helps you make informed decisions about when and how to use it.
-
-### Resource Usage
-
-Based on Microsoft's testing, the Clarity Flutter SDK has the following impact:
-
-**App Size**: Increases Android APK size by approximately 800 KB and iOS IPA size by approximately 900 KB.
-
-**CPU Usage**: Main thread usage varies based on your app's nature. Most apps see negligible CPU impact during normal operation.
-
-**Network Usage**: Sessions consume approximately 10 KiB per second of recording. Image-heavy apps may experience higher initial traffic due to asset uploading.
-
-**Storage**: Clarity buffers data on disk before uploading. The SDK automatically deletes old buffered data periodically.
-
-### Best Practices
-
-To minimize performance impact:
-
-**Use appropriate log levels**: Set `LogLevel.None` for production builds to eliminate logging overhead.
-
-**Mask large sections sparingly**: While masking is lightweight, masking and unmasking complex widget trees repeatedly can add overhead.
-
-**Avoid masking in hot paths**: Don't toggle masking during animations or rapidly changing screens.
-
-**Monitor memory usage**: Use Flutter DevTools to ensure Clarity isn't causing memory leaks in your specific use case.
-
-**Test on representative devices**: Performance characteristics vary across devices and Android/iOS versions.
-
-### Network Efficiency
-
-Clarity is designed to be network-efficient:
-
-- Sessions are batched and compressed before upload
-- Uploads happen on background threads
-- By default, uploads only occur on WiFi
-- Failed uploads are retried automatically
-
-If network usage is a concern for your users, keep the default `allowMeteredNetworkUsage: false` configuration.
 
 ## Where to Go From Here?
 
