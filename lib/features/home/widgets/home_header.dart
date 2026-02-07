@@ -43,7 +43,6 @@ class HotelynHeader extends SliverPersistentHeaderDelegate {
               style: HotelynTextStyle.h1,
             ),
             const SizedBox(height: 32),
-            // TODO(enzoftware): Split in different widget and pass controller
             if (!overlapsContent)
               const HotelynSearchInput(hintText: 'Search hotel'),
           ],
