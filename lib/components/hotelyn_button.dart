@@ -68,10 +68,8 @@ class _HotelynButtonState extends State<HotelynButton>
     super.dispose();
   }
 
-  Future<void> _handlePress() async {
+  void _handlePress() {
     if (widget.isLoading || widget.onPressed == null) return;
-    await _controller.forward();
-    await _controller.reverse();
     widget.onPressed?.call();
   }
 
@@ -85,7 +83,7 @@ class _HotelynButtonState extends State<HotelynButton>
         scale: _scaleAnimation,
         child: MaterialButton(
           minWidth: widget.width,
-          onPressed: widget.isLoading ? () {} : _handlePress,
+          onPressed: widget.isLoading ? null : _handlePress,
           height: widget.height,
           shape: const StadiumBorder(),
           color: widget.color,

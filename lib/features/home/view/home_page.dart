@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotelyn/components/navigation_bar/navigation_bar.dart';
 import 'package:hotelyn/components/navigation_bar/navigation_bar_cubit.dart';
 import 'package:hotelyn/components/navigation_bar/navigation_bar_state.dart';
+import 'package:hotelyn/core/services/clarity_service.dart';
+import 'package:hotelyn/features/home/widgets/featured_hotels_section.dart';
 import 'package:hotelyn/features/home/widgets/home_header.dart';
 import 'package:hotelyn/features/messages/messages_cubit.dart';
 import 'package:hotelyn/features/messages/messages_tab.dart';
@@ -21,7 +23,9 @@ class HomePage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => NavigationBarCubit(),
+          create: (_) => NavigationBarCubit(
+            clarityService: context.read<ClarityService>(),
+          ),
         ),
         BlocProvider(
           create: (_) => ProfileCubit(),
@@ -30,7 +34,9 @@ class HomePage extends StatelessWidget {
           create: (_) => MessagesCubit(),
         ),
         BlocProvider(
-          create: (_) => SearchCubit(),
+          create: (_) => SearchCubit(
+            clarityService: context.read<ClarityService>(),
+          ),
         ),
       ],
       child: BlocBuilder<NavigationBarCubit, NavigationBarState>(
@@ -66,7 +72,7 @@ class HomeTab extends StatelessWidget {
           pinned: true,
           delegate: HotelynHeader(),
         ),
-        const SliverToBoxAdapter(),
+        const FeaturedHotelsSection(),
       ],
     );
   }
