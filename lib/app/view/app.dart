@@ -4,14 +4,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hotelyn/app/router/app_router.dart';
 import 'package:hotelyn/components/theme/hotelyn_colors.dart';
 import 'package:hotelyn/core/domain/repository/repository.dart';
+import 'package:hotelyn/core/services/clarity_service.dart';
 
 class HotelynApp extends StatelessWidget {
   const HotelynApp({
-    required OnBoardingRepository preferenceRepository,
+    required IntroRepository preferenceRepository,
+    required AuthRepository authRepository,
+    required ClarityService clarityService,
     super.key,
-  }) : _preferenceRepository = preferenceRepository;
+  })  : _preferenceRepository = preferenceRepository,
+        _authRepository = authRepository,
+        _clarityService = clarityService;
 
-  final OnBoardingRepository _preferenceRepository;
+  final IntroRepository _preferenceRepository;
+  final AuthRepository _authRepository;
+  final ClarityService _clarityService;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +26,8 @@ class HotelynApp extends StatelessWidget {
       child: MultiRepositoryProvider(
         providers: [
           RepositoryProvider.value(value: _preferenceRepository),
+          RepositoryProvider.value(value: _authRepository),
+          RepositoryProvider.value(value: _clarityService),
         ],
         child: MaterialApp.router(
           routerConfig: AppRouter.router,

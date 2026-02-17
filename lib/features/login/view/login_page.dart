@@ -1,21 +1,37 @@
+import 'package:clarity_flutter/clarity_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formz/formz.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hotelyn/components/hotelyn_button.dart';
 import 'package:hotelyn/components/text_input/hotelyn_text_input.dart';
 import 'package:hotelyn/components/theme/hotelyn_colors.dart';
+import 'package:hotelyn/core/domain/repository/repository.dart';
 import 'package:hotelyn/features/login/bloc/login_cubit.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
+  static const route = '/login';
+
   @override
   Widget build(BuildContext context) {
+    Clarity.setCurrentScreenName('login');
     return BlocProvider(
-      create: (_) => LoginCubit(),
-      child: const Scaffold(
-        body: LoginView(),
+      create: (_) => LoginCubit(
+        authRepository: context.read<AuthRepository>(),
+      ),
+      child: BlocListener<LoginCubit, LoginState>(
+        listenWhen: (previous, current) => previous.status != current.status,
+        listener: (context, state) {
+          if (state.status.isSuccess) {
+            context.go('/home');
+          }
+        },
+        child: const Scaffold(
+          body: LoginView(),
+        ),
       ),
     );
   }
@@ -87,59 +103,61 @@ class _LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        BlocBuilder<LoginCubit, LoginState>(
-          buildWhen: (previous, current) => previous.email != current.email,
-          builder: (context, state) {
-            return HotelynTextInput(
-              hintText: 'Email',
-              prefixIcon: Icons.email_outlined,
-              keyboardType: TextInputType.emailAddress,
-              onChanged: (value) =>
-                  context.read<LoginCubit>().emailChanged(value),
-              errorText:
-                  state.email.displayError != null ? 'Invalid email' : null,
-            );
-          },
-        ),
-        const SizedBox(height: 16),
-        BlocBuilder<LoginCubit, LoginState>(
-          buildWhen: (previous, current) =>
-              previous.password != current.password,
-          builder: (context, state) {
-            return HotelynTextInput(
-              hintText: 'Password',
-              prefixIcon: Icons.lock_outline,
-              obscureText: true,
-              onChanged: (value) =>
-                  context.read<LoginCubit>().passwordChanged(value),
-              errorText: state.password.displayError != null
-                  ? 'Password cannot be empty'
-                  : null,
-            );
-          },
-        ),
-        const SizedBox(height: 8),
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-            onPressed: () {},
-            child: const Text('Forgot Password?'),
+    return ClarityMask(
+      child: Column(
+        children: [
+          BlocBuilder<LoginCubit, LoginState>(
+            buildWhen: (previous, current) => previous.email != current.email,
+            builder: (context, state) {
+              return HotelynTextInput(
+                hintText: 'Email',
+                prefixIcon: Icons.email_outlined,
+                keyboardType: TextInputType.emailAddress,
+                onChanged: (value) =>
+                    context.read<LoginCubit>().emailChanged(value),
+                errorText:
+                    state.email.displayError != null ? 'Invalid email' : null,
+              );
+            },
           ),
-        ),
-        const SizedBox(height: 24),
-        BlocBuilder<LoginCubit, LoginState>(
-          builder: (context, state) {
-            return HotelynButton(
-              message: 'Login',
-              isLoading: state.status.isInProgress,
-              onPressed: () =>
-                  context.read<LoginCubit>().logInWithCredentials(),
-            );
-          },
-        ),
-      ],
+          const SizedBox(height: 16),
+          BlocBuilder<LoginCubit, LoginState>(
+            buildWhen: (previous, current) =>
+                previous.password != current.password,
+            builder: (context, state) {
+              return HotelynTextInput(
+                hintText: 'Password',
+                prefixIcon: Icons.lock_outline,
+                obscureText: true,
+                onChanged: (value) =>
+                    context.read<LoginCubit>().passwordChanged(value),
+                errorText: state.password.displayError != null
+                    ? 'Password cannot be empty'
+                    : null,
+              );
+            },
+          ),
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () {},
+              child: const Text('Forgot Password?'),
+            ),
+          ),
+          const SizedBox(height: 24),
+          BlocBuilder<LoginCubit, LoginState>(
+            builder: (context, state) {
+              return HotelynButton(
+                message: 'Login',
+                isLoading: state.status.isInProgress,
+                onPressed: () =>
+                    context.read<LoginCubit>().logInWithCredentials(),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

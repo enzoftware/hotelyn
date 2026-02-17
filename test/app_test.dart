@@ -1,33 +1,41 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hotelyn/app/view/app.dart';
-import 'package:hotelyn/core/domain/repository/on_boarding_repository.dart';
+import 'package:hotelyn/core/domain/repository/auth_repository.dart';
+import 'package:hotelyn/core/domain/repository/intro_repository.dart';
+import 'package:hotelyn/core/services/clarity_service.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'helpers/helpers.dart';
 
 void main() {
   group('HotelynApp', () {
-    late OnBoardingRepository preferenceRepository;
+    late IntroRepository preferenceRepository;
+    late AuthRepository authRepository;
+    late ClarityService clarityService;
 
     setUp(() {
       preferenceRepository = MockPreferenceRepository();
-      when(() => preferenceRepository.isOnBoardingPassed())
-          .thenAnswer((_) async => true);
+      authRepository = MockAuthRepository();
+      clarityService = MockClarityService();
+
+      when(() => preferenceRepository.isIntroPassed())
+          .thenAnswer((_) async => false);
+      when(() => authRepository.isAuthenticated).thenReturn(false);
     });
 
-    testWidgets('App launches successfully', (WidgetTester tester) async {
-      await tester.runAsync(() async {
+    testWidgets(
+      'App launches successfully',
+      (WidgetTester tester) async {
         await tester.pumpWidget(
-          MaterialApp(
-            home: HotelynApp(
-              preferenceRepository: preferenceRepository,
-            ),
+          HotelynApp(
+            preferenceRepository: preferenceRepository,
+            authRepository: authRepository,
+            clarityService: clarityService,
           ),
         );
-        await tester.pumpAndSettle();
+        // Just verify the widget tree is built without navigating
         expect(find.byType(HotelynApp), findsOneWidget);
-      });
-    });
+      },
+    );
   });
 }

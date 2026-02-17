@@ -1,3 +1,4 @@
+import 'package:clarity_flutter/clarity_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotelyn/components/app_bar.dart';
@@ -5,15 +6,11 @@ import 'package:hotelyn/components/hotelyn_avatar.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/features/profile/profile_cubit.dart';
 import 'package:hotelyn/features/profile/profile_state.dart';
-
 import 'package:hotelyn/features/profile/widgets/profile_options_section.dart';
 import 'package:hotelyn/features/profile/widgets/profile_stats_card.dart';
 
 class ProfileTab extends StatelessWidget {
   const ProfileTab({super.key});
-
-  // TODO(enzoftware): When authentication is ready add a validation to
-  // redirect to login page to unauthenticated users.
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +25,6 @@ class ProfileTab extends StatelessWidget {
           return switch (state) {
             ProfileLoading() => const ProfileLoadingScreen(),
             ProfileLoadSuccess() => const ProfileDataScreen(),
-            // TODO(enzoftware): Create a custom error screen with a custom
-            // message screen
             ProfileFailure() => const Placeholder(),
           };
         },
@@ -78,15 +73,17 @@ class ProfileUserInformationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        HotelynAvatar(path: 'assets/images/profile_1.png', size: 50),
-        SizedBox(height: 16),
-        Text('Enzo Lizama', style: HotelynTextStyle.h2),
-        SizedBox(height: 8),
-        Text('Lima, Peru', style: HotelynTextStyle.description),
-      ],
+    return const ClarityMask(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          HotelynAvatar(path: 'assets/images/profile_1.png', size: 50),
+          SizedBox(height: 16),
+          Text('Enzo Lizama', style: HotelynTextStyle.h2),
+          SizedBox(height: 8),
+          Text('Lima, Peru', style: HotelynTextStyle.description),
+        ],
+      ),
     );
   }
 }

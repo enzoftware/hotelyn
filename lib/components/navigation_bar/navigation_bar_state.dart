@@ -1,5 +1,7 @@
-class NavigationBarState {
-  NavigationBarState({
+import 'package:equatable/equatable.dart';
+
+class NavigationBarState extends Equatable {
+  const NavigationBarState({
     required this.selectedTabIndex,
   });
 
@@ -10,4 +12,7 @@ class NavigationBarState {
       selectedTabIndex: selectedTabIndex ?? this.selectedTabIndex,
     );
   }
+
+  @override
+  List<Object> get props => [selectedTabIndex];
 }

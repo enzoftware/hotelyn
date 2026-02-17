@@ -1,20 +1,21 @@
 import 'package:go_router/go_router.dart';
 import 'package:hotelyn/features/home/view/home_page.dart';
+import 'package:hotelyn/features/intro/intro.dart';
 import 'package:hotelyn/features/login/view/login_page.dart';
-import 'package:hotelyn/features/on_boarding/view/on_boarding_page.dart';
+import 'package:hotelyn/features/payment/view/payment_page.dart';
 import 'package:hotelyn/features/splash/view/splash_screen.dart';
 
 class AppRouter {
   static final router = GoRouter(
-    initialLocation: '/login',
+    initialLocation: '/',
     routes: [
       GoRoute(
         path: '/',
         builder: (context, state) => const SplashScreen(),
       ),
       GoRoute(
-        path: '/onboarding',
-        builder: (context, state) => const OnBoardingPage(),
+        path: '/intro',
+        builder: (context, state) => const IntroPage(),
       ),
       GoRoute(
         path: '/home',
@@ -23,6 +24,10 @@ class AppRouter {
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: '/payment',
+        builder: (context, state) => const PaymentPage(),
       ),
     ],
   );
