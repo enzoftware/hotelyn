@@ -1,72 +1,16 @@
-name: hotelyn
-description: "Awesome Flutter project"
-
-version: 1.0.0+1
+name: hotelyn_workspace
+description: "Hotelyn Dart workspaces monorepo root."
 
 environment:
-  sdk: ">=3.2.3 <4.0.0"
+  sdk: ">=3.5.0 <4.0.0"
 
-dependencies:
-  bloc: ^9.2.0
-  clarity_flutter: ^1.7.1
-  cupertino_icons: ^1.0.2
-  equatable: ^2.0.8
-  flutter:
-    sdk: flutter
-  flutter_bloc: ^9.1.1
-  flutter_localizations:
-    sdk: flutter
-  flutter_riverpod: ^3.0.3
-  font_awesome_flutter: ">=10.12.0 <12.0.0"
-  formz: ^0.8.0
-  go_router: ^17.0.1
-  intl: ^0.20.2
-  json_annotation: ^4.8.1
-  logger: ^2.6.2
-  shared_preferences: ^2.5.4
-  uuid: ^4.5.1
+workspace:
+  - apps/hotelyn_app
+  - packages/hotelyn_domain
+  - packages/hotelyn_gql
+  - packages/hotelyn_ui
+  - server/hotelyn_server
 
 dev_dependencies:
-  bloc_test: ^10.0.0
-  build_runner: ^2.7.1
-  custom_lint: ^0.8.0
-  fake_async: ^1.3.1
-  flutter_lints: ^6.0.0
-  flutter_test:
-    sdk: flutter
-  json_serializable: ^6.11.2
   melos: ^7.3.0
-  mocktail: ^1.0.3
-  riverpod_lint: ^3.0.3
-  test: ^1.26.2
   very_good_analysis: ^10.0.0
-
-fonts:
-  - family: DMSans
-    fonts:
-      - asset: assets/fonts/DMSans_18pt-Regular.ttf
-        style: regular
-      - asset: assets/fonts/DMSans_18pt-Medium.ttf
-        style: medium
-      - asset: assets/fonts/DMSans_18pt-Bold.ttf
-        style: bold
-
-flutter:
-  uses-material-design: true
-  generate: true
-
-  assets:
-    - assets/images/
-    - assets/images/hotelyn/
-    - assets/images/intro/
-    - assets/images/messages/
-    - assets/icons/
-
-  fonts:
-    - family: DMSans
-      fonts:
-        - asset: assets/fonts/DMSans_18pt-Regular.ttf
-        - asset: assets/fonts/DMSans_18pt-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/DMSans_18pt-Bold.ttf
-          weight: 700
