@@ -94,6 +94,12 @@ backend/pubspec.lock
 
 # Coverage
 coverage/
+*.lcov
+
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
 
 # Web related
 lib/generated_plugin_registrant.dart

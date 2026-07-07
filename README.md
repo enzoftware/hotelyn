@@ -24,16 +24,39 @@ hotelyn/
 
 **Prerequisites:** Flutter stable channel, Dart ≥ 3.5.0, [Melos](https://melos.codes) ≥ 7.
 
-```bash
-# Activate Melos globally (once)
-dart pub global activate melos
+Follow these steps in order on a fresh clone:
 
-# Install all workspace dependencies from the repo root
-dart pub get
+1. Install Flutter (stable channel) by following the [official install guide](https://docs.flutter.dev/get-started/install) for your OS.
+2. Confirm your toolchain is healthy:
+   ```bash
+   flutter doctor
+   ```
+   Resolve any issues it reports (e.g. missing Android/iOS toolchains) before continuing.
+3. Clone the repository and `cd` into it:
+   ```bash
+   git clone https://github.com/enzoftware/hotelyn.git
+   cd hotelyn
+   ```
+4. Activate Melos globally (once per machine), then make sure the Pub cache `bin` directory is on your `PATH` so the `melos` command is available in new shells:
+   ```bash
+   dart pub global activate melos
+   export PATH="$PATH:$HOME/.pub-cache/bin"
+   ```
+5. Bootstrap the workspace — this resolves and links every app/package/server in one shot:
+   ```bash
+   melos bootstrap
+   ```
+6. Verify the workspace is healthy:
+   ```bash
+   melos run analyze
+   melos run test
+   ```
+7. Re-run `flutter doctor` — it should be clean with no unresolved issues:
+   ```bash
+   flutter doctor
+   ```
 
-# Or bootstrap via Melos (equivalent, also links packages)
-melos bootstrap
-```
+No other manual setup is required. Steps 1–7 are the complete bootstrap sequence for a new machine.
 
 ## Running the app
 
