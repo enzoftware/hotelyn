@@ -195,9 +195,13 @@ password_requirements = ""
 # rp_origins = ["http://127.0.0.1:3000"]
 
 [auth.rate_limit]
-# Number of emails that can be sent per hour. Requires auth.email.smtp to be enabled.
-email_sent = 2
-# Number of SMS messages that can be sent per hour. Requires auth.sms to be enabled.
+# Project-wide cap on auth emails sent per hour (OTP codes, confirmations, etc.).
+# Resend free tier allows 100 emails/day globally; 5/hour leaves headroom for
+# multiple concurrent users requesting codes without hitting the daily ceiling.
+email_sent = 5
+# Project-wide cap on SMS messages per hour. Kept at the Supabase default;
+# effectively inert because [auth.sms].enable_signup = false (phone OTP replaced
+# by email OTP — see INFRA-105).
 sms_sent = 30
 # Number of anonymous sign-ins that can be made per hour per IP address. Requires enable_anonymous_sign_ins = true.
 anonymous_users = 30
@@ -222,26 +226,45 @@ enable_signup = true
 # If enabled, a user will be required to confirm any email change on both the old, and new email
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
-# If enabled, users need to confirm their email address before signing in.
+# For OTP-based login (signInWithOtp), email confirmations are validated by the
+# OTP code itself — the 6-digit code proves inbox access. Keep false.
 enable_confirmations = false
 # If enabled, users will need to reauthenticate or have logged in recently to change their password.
 secure_password_change = false
-# Controls the minimum amount of time that must pass before sending another signup confirmation or password reset email.
-max_frequency = "1s"
+# Minimum time between successive OTP requests per address. 60 s prevents
+# rapid-fire code requests while staying comfortable for guests who mistype.
+max_frequency = "60s"
 # Number of characters used in the email OTP.
 otp_length = 6
-# Number of seconds before the email OTP expires (defaults to 1 hour).
-otp_expiry = 3600
+# Email OTP validity window: 600 s (10 min) balances security and the latency
+# of transactional email delivery via Resend. Was 3600 s (1 h) — too long.
+otp_expiry = 600
 
-# Use a production-ready SMTP server
+# ─── Resend SMTP (staging / production) ──────────────────────────────────────
+# Local dev does NOT need this — emails are captured by the inbucket viewer at
+# http://127.0.0.1:54324. Uncomment only when running `supabase start` with a
+# real RESEND_SMTP_PASSWORD env var and you want to smoke-test real delivery.
+#
+# For HOSTED Supabase projects (staging / production), configure SMTP via the
+# Supabase Dashboard → Auth → SMTP Settings using the same values below.
+# Do NOT uncomment this block for hosted projects — config.toml only affects
+# the local CLI stack.
+#
+# Setup steps (one-time):
+#   1. Create a free account at https://resend.com (3,000 emails/month, 100/day).
+#   2. Generate an API key under Resend → API Keys. Keep it secret; never commit.
+#   3. Verify a sending domain under Resend → Domains, OR use the shared
+#      onboarding@resend.dev sender for staging (no domain setup required).
+#   4. Set RESEND_SMTP_PASSWORD and RESEND_FROM_EMAIL in backend/.env
+#      (see backend/.env.example for the exact variable names).
 # [auth.email.smtp]
 # enabled = true
-# host = "smtp.sendgrid.net"
+# host = "smtp.resend.com"
 # port = 587
-# user = "apikey"
-# pass = "env(SENDGRID_API_KEY)"
-# admin_email = "admin@email.com"
-# sender_name = "Admin"
+# user = "resend"
+# pass = "env(RESEND_SMTP_PASSWORD)"
+# admin_email = "env(RESEND_FROM_EMAIL)"
+# sender_name = "Hotelyn"
 
 # Uncomment to customize email template
 # [auth.email.template.invite]

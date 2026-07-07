@@ -90,6 +90,59 @@ Migrations live in `supabase/migrations/`; the first one enables the `postgis` e
 supabase db reset
 ```
 
+### Email testing (local)
+
+Auth emails (OTP codes) are **not** sent to a real inbox during local development.
+They are captured by the built-in inbucket viewer at
+**http://127.0.0.1:54324** — open it in your browser after `supabase start` to
+read any OTP that would have been delivered.
+
+## Email delivery (Resend)
+
+Guest authentication uses email OTP. In staging and production, Supabase Auth
+delivers the 6-digit code via [Resend](https://resend.com) (free tier: 3,000
+emails/month, 100/day).
+
+### Why Resend, not SMS?
+
+SMS providers (Twilio, MessageBird, Vonage) charge per message with no free
+tier. LatAm — the primary Hotelyn market — has among the highest per-SMS rates.
+Resend's free quota covers the entire MVP phase at zero cost. See issue
+[#158](https://github.com/enzoftware/hotelyn/issues/158) for the decision record.
+
+### One-time Resend setup (staging / production)
+
+> Local dev does **not** need this. Emails are captured by the inbucket at
+> `http://127.0.0.1:54324`.
+
+1. Create a free account at <https://resend.com>.
+2. Generate an API key under **Resend → API Keys**. Keep it secret — never
+   commit it.
+3. **Optional (recommended for production):** Verify your sending domain under
+   **Resend → Domains** to avoid spam filters. For staging you can use the
+   shared `onboarding@resend.dev` sender without any domain setup.
+4. In the **Supabase Dashboard** for your hosted project, go to
+   **Auth → SMTP Settings** and fill in:
+
+   | Field | Value |
+   |---|---|
+   | Host | `smtp.resend.com` |
+   | Port | `587` |
+   | Username | `resend` |
+   | Password | *(your Resend API key)* |
+   | Sender name | `Hotelyn` |
+   | Sender email | your verified address, or `onboarding@resend.dev` for staging |
+
+5. Add the two variables to your CI secrets / Supabase project secrets (see
+   `backend/.env.example`):
+5. Add the two variables to your CI secrets / Supabase project secrets (see
+   `backend/.env.example`):
+6. In **Auth → Email**, set the OTP expiry to **600 seconds** (10 min) —
+   already configured in `supabase/config.toml` for the local stack.
+
+> **Never** commit your Resend API key. Store it in CI/CD secrets and in the
+> Supabase project's secret manager only.
+
 ## Running the app
 
 Each app has three entry points — one per environment:
