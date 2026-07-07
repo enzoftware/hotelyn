@@ -1,0 +1,4 @@
+{
+  "_comment": "Copy to staging.json and fill in the real staging endpoint. This file is NOT committed.",
+  "GRAPHQL_URL": "https://api.staging.hotelyn.com/graphql"
+}

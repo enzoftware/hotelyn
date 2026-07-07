@@ -1,0 +1,4 @@
+{
+  "_comment": "Copy to production.json and fill in the real production endpoint. This file is NOT committed.",
+  "GRAPHQL_URL": "https://api.hotelyn.com/graphql"
+}

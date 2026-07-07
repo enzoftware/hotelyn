@@ -101,6 +101,11 @@ coverage/
 .env.*
 !.env.example
 
+# Dart compile-time defines (--dart-define-from-file)
+# Only *.json.example files are committed; real files stay local.
+**/.dart_defines/*.json
+!**/.dart_defines/*.json.example
+
 # Web related
 lib/generated_plugin_registrant.dart
 
