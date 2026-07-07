@@ -17,7 +17,8 @@ hotelyn/
 │   ├── hotelyn_domain/     ← domain entities & repository interfaces
 │   ├── hotelyn_gql/        ← Ferry GraphQL codegen + generated types
 │   └── hotelyn_ui/         ← shared widget library & design system
-└── backend/                ← Dart Frog GraphQL server (talks to Supabase)
+├── backend/                ← Dart Frog GraphQL server (talks to Supabase)
+└── supabase/               ← local Supabase stack config + migrations
 ```
 
 ## Setup
@@ -57,6 +58,37 @@ Follow these steps in order on a fresh clone:
    ```
 
 No other manual setup is required. Steps 1–7 are the complete bootstrap sequence for a new machine.
+
+## Local Supabase stack
+
+The app never talks to Supabase directly (see [Architecture](CLAUDE.md#architecture)) — only the `backend` GraphQL server does. To run that stack locally:
+
+**Prerequisites:** [Docker](https://www.docker.com/products/docker-desktop/) running, [Supabase CLI](https://supabase.com/docs/guides/local-development/cli/getting-started) ≥ 2.x.
+
+1. Start the stack (Postgres, Auth, Storage, Realtime, PostgREST, Studio):
+   ```bash
+   supabase start
+   ```
+2. Confirm every service is healthy:
+   ```bash
+   supabase status
+   ```
+3. Open Studio at the printed `STUDIO_URL` (defaults to `http://127.0.0.1:54323`) to browse the seeded schema.
+4. Copy the env templates and fill in the values `supabase status` printed:
+   ```bash
+   cp backend/.env.example backend/.env
+   cp apps/hotelyn_app/.env.example apps/hotelyn_app/.env
+   cp apps/hotelyn_dashboard/.env.example apps/hotelyn_dashboard/.env
+   ```
+5. When you're done, stop the stack:
+   ```bash
+   supabase stop
+   ```
+
+Migrations live in `supabase/migrations/`; the first one enables the `postgis` extension. To apply all migrations to a fresh database:
+```bash
+supabase db reset
+```
 
 ## Running the app
 
