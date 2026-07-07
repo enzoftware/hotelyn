@@ -92,15 +92,55 @@ supabase db reset
 
 ## Running the app
 
-```bash
-cd apps/hotelyn_app
+Each app has three entry points — one per environment:
 
-# Development flavor
-flutter run -t lib/main_development.dart
+| Entry point | Environment |
+|---|---|
+| `lib/main_development.dart` | Local development |
+| `lib/main_staging.dart` | Staging |
+| `lib/main_production.dart` | Production |
 
-# Production flavor
-flutter run -t lib/main_production.dart
-```
+The backend endpoint (`GRAPHQL_URL`) is injected at build time via
+`--dart-define-from-file`. No source edits are needed to switch environments.
+
+### Switching environments (single command)
+
+All commands below are run from **`apps/hotelyn_app/`**.
+
+1. Copy the template for your target environment:
+   ```bash
+   # Local
+   cp .dart_defines/local.json.example .dart_defines/local.json
+
+   # Staging
+   cp .dart_defines/staging.json.example .dart_defines/staging.json
+
+   # Production
+   cp .dart_defines/production.json.example .dart_defines/production.json
+   ```
+2. Edit the copied file and fill in the real endpoint URL.
+3. Run with the matching entry point and define file:
+   ```bash
+   # Local (default — works without a define file)
+   flutter run -t lib/main_development.dart \
+     --dart-define-from-file=.dart_defines/local.json
+
+   # Staging
+   flutter run -t lib/main_staging.dart \
+     --dart-define-from-file=.dart_defines/staging.json
+
+   # Production
+   flutter run -t lib/main_production.dart \
+     --dart-define-from-file=.dart_defines/production.json
+   ```
+
+> **Note:** `.dart_defines/*.json` files are gitignored. Only the
+> `*.json.example` templates are committed. Never commit real endpoint URLs
+> or credentials.
+
+For **Android emulator** or **physical device**, override `GRAPHQL_URL` to the
+LAN address of your machine (e.g. `http://10.0.2.2:8080/graphql` for the
+Android emulator) instead of `127.0.0.1`.
 
 ## Common Melos commands
 

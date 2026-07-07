@@ -1,0 +1,4 @@
+{
+  "_comment": "Copy to local.json and adjust as needed. This file is NOT committed.",
+  "GRAPHQL_URL": "http://127.0.0.1:8080/graphql"
+}
