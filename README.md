@@ -90,6 +90,45 @@ Migrations live in `supabase/migrations/`; the first one enables the `postgis` e
 supabase db reset
 ```
 
+### Data model
+
+The schema (see `supabase/migrations/`) is four normalized tables plus enum
+types and Row Level Security:
+
+| Table          | Notes                                                                              |
+| -------------- | ---------------------------------------------------------------------------------- |
+| `profiles`     | 1:1 with `auth.users`; holds `role` (`guest`/`hotel_staff`/`admin`) + `hotel_id`.  |
+| `hotels`       | Includes a PostGIS `location geometry(Point, 4326)` with a GiST index.             |
+| `rooms`        | FK → `hotels`; `is_available` flags bookable rooms.                                 |
+| `reservations` | FK → `hotels`/`rooms`/`profiles`; `status` enum; index on `(hotel_id, status, created_at)`. |
+
+RLS is enabled on every table: guests browse available rooms and manage only
+their own reservations; hotel staff read/write only their own hotel's rooms and
+reservations. `supabase db reset` also loads `supabase/seed.sql` — deterministic
+hotels across six LatAm + North America launch cities and two test accounts
+(local password `password123`):
+
+| Account              | Role          |
+| -------------------- | ------------- |
+| `guest@hotelyn.test` | `guest`       |
+| `staff@hotelyn.test` | `hotel_staff` (owns the Lima hotel) |
+
+Metre-accurate proximity search casts `location` to `geography` (a distance in
+metres), which is served by the dedicated functional GiST index rather than the
+degree-based one:
+```sql
+-- hotels within 5 km of a point (lon, lat)
+select name from hotels
+where st_dwithin(location::geography,
+                 st_setsrid(st_makepoint(-77.03, -12.11), 4326)::geography, 5000);
+```
+
+The RLS policies are covered by an automated pgTAP test that proves a Hotel A
+staff session cannot read or write Hotel B's data:
+```bash
+supabase test db
+```
+
 ### Email testing (local)
 
 Auth emails (OTP codes) are **not** sent to a real inbox during local development.
