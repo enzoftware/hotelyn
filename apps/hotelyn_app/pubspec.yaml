@@ -1,10 +1,12 @@
 name: hotelyn
-description: "Awesome Flutter project"
+description: "Hotelyn Flutter mobile app"
 
 version: 1.0.0+1
 
+resolution: workspace
+
 environment:
-  sdk: ">=3.2.3 <4.0.0"
+  sdk: ">=3.5.0 <4.0.0"
 
 dependencies:
   bloc: ^9.2.0
