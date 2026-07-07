@@ -3,22 +3,21 @@
 </p>
 <p align="center">The most incredible 🏨 app in the 🌎</p>
 <a href="https://github.com/enzoftware/hotelyn/actions"><img src="https://github.com/enzoftware/hotelyn/actions/workflows/main.yaml/badge.svg" alt="Build Status"></a>
-<p align="center">⚠️ Hotelyn is being reimagined as a Dart workspaces monorepo. See INFRA-1004 for the full migration plan. ⚠️</p>
+<p align="center">Hotelyn is a Dart workspaces monorepo. See INFRA-1004 for the migration history.</p>
 
 ## Repository layout
 
 ```
 hotelyn/
-├── pubspec.yaml            ← workspace root (workspace: [...])
-├── melos.yaml              ← Melos scripting (analyze, test, build, format)
+├── pubspec.yaml            ← workspace root (workspace: [...], melos: [...])
 ├── apps/
-│   └── hotelyn_app/        ← Flutter mobile app
+│   ├── hotelyn_app/        ← Flutter mobile app (Android, iOS)
+│   └── hotelyn_dashboard/  ← Flutter dashboard app (Android, iOS, Web)
 ├── packages/
 │   ├── hotelyn_domain/     ← domain entities & repository interfaces
 │   ├── hotelyn_gql/        ← Ferry GraphQL codegen + generated types
 │   └── hotelyn_ui/         ← shared widget library & design system
-└── server/
-    └── hotelyn_server/     ← Dart Frog GraphQL server (talks to Supabase)
+└── backend/                ← Dart Frog GraphQL server (talks to Supabase)
 ```
 
 ## Setup

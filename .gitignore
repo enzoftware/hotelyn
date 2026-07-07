@@ -46,7 +46,7 @@ unlinked_spec.ds
 # Workspace root lockfile is committed; package-level lockfiles are not
 apps/**/pubspec.lock
 packages/**/pubspec.lock
-server/**/pubspec.lock
+backend/pubspec.lock
 # Exception: the workspace root pubspec.lock is committed
 !pubspec.lock
 
