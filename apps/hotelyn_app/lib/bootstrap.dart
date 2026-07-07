@@ -6,6 +6,7 @@ import 'package:clarity_flutter/clarity_flutter.dart';
 import 'package:flutter/foundation.dart' show kReleaseMode;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:hotelyn/core/config/app_config.dart';
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
@@ -31,6 +32,19 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   };
 
   Bloc.observer = const AppBlocObserver();
+
+  // Fail fast in release mode if the GraphQL endpoint was not injected.
+  // Run with --dart-define-from-file=.dart_defines/<env>.json for every
+  // non-local build.
+  assert(
+    !kReleaseMode || !AppConfig.graphqlUrl.startsWith('http://127.0.0.1'),
+    'GRAPHQL_URL must be set via --dart-define-from-file for release builds. '
+    'Current value is the localhost fallback.',
+  );
+
+  if (!kReleaseMode) {
+    log('GraphQL endpoint: ${AppConfig.graphqlUrl}');
+  }
 
   final config = ClarityConfig(
     projectId: 'vaoffuzfn7',

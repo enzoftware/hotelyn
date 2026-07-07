@@ -105,19 +105,18 @@ The backend endpoint (`GRAPHQL_URL`) is injected at build time via
 
 ### Switching environments (single command)
 
+All commands below are run from **`apps/hotelyn_app/`**.
+
 1. Copy the template for your target environment:
    ```bash
    # Local
-   cp apps/hotelyn_app/.dart_defines/local.json.example \
-      apps/hotelyn_app/.dart_defines/local.json
+   cp .dart_defines/local.json.example .dart_defines/local.json
 
    # Staging
-   cp apps/hotelyn_app/.dart_defines/staging.json.example \
-      apps/hotelyn_app/.dart_defines/staging.json
+   cp .dart_defines/staging.json.example .dart_defines/staging.json
 
    # Production
-   cp apps/hotelyn_app/.dart_defines/production.json.example \
-      apps/hotelyn_app/.dart_defines/production.json
+   cp .dart_defines/production.json.example .dart_defines/production.json
    ```
 2. Edit the copied file and fill in the real endpoint URL.
 3. Run with the matching entry point and define file:
