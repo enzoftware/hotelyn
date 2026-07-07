@@ -65,29 +65,90 @@ The app never talks to Supabase directly (see [Architecture](CLAUDE.md#architect
 
 **Prerequisites:** [Docker](https://www.docker.com/products/docker-desktop/) running, [Supabase CLI](https://supabase.com/docs/guides/local-development/cli/getting-started) ≥ 2.x.
 
-1. Start the stack (Postgres, Auth, Storage, Realtime, PostgREST, Studio):
+1. Start the stack (Postgres, Auth, Storage, Realtime, PostgREST, Studio). On the
+   first run this also applies every migration in `supabase/migrations/` and loads
+   `supabase/seed.sql`:
    ```bash
    supabase start
    ```
-2. Confirm every service is healthy:
+2. Confirm every service is healthy and note the printed URLs/keys:
    ```bash
    supabase status
    ```
-3. Open Studio at the printed `STUDIO_URL` (defaults to `http://127.0.0.1:54323`) to browse the seeded schema.
-4. Copy the env templates and fill in the values `supabase status` printed:
+3. Apply the schema and (re)load the seed data. Run this whenever migrations or
+   `supabase/seed.sql` change, or whenever you want a clean, known dataset — it
+   drops the local database, re-runs all migrations (the first enables `postgis`),
+   then loads the seed:
+   ```bash
+   supabase db reset
+   ```
+   The seed is **idempotent and deterministic** (fixed IDs/coordinates), so a
+   reset always produces the same six hotels, their rooms, and the two test
+   accounts listed under [Data model](#data-model) — safe to run as often as you
+   like.
+4. Verify the seed loaded (should print `6`). Copy `DB_URL` from `supabase status`:
+   ```bash
+   psql "$DB_URL" -c 'select count(*) from hotels;'
+   ```
+   No local `psql`? Browse the tables in Studio (step 6), or run the query inside
+   the database container:
+   ```bash
+   docker exec -it supabase_db_hotelyn \
+     psql -U postgres -d postgres -c 'select count(*) from public.hotels;'
+   ```
+5. Copy the env templates and fill in the values `supabase status` printed:
    ```bash
    cp backend/.env.example backend/.env
    cp apps/hotelyn_app/.env.example apps/hotelyn_app/.env
    cp apps/hotelyn_dashboard/.env.example apps/hotelyn_dashboard/.env
    ```
-5. When you're done, stop the stack:
+6. Open Studio at the printed `STUDIO_URL` (defaults to `http://127.0.0.1:54323`)
+   to browse the seeded schema and data.
+7. When you're done, stop the stack:
    ```bash
    supabase stop
    ```
 
-Migrations live in `supabase/migrations/`; the first one enables the `postgis` extension. To apply all migrations to a fresh database:
+### Data model
+
+The schema (see `supabase/migrations/`) is four normalized tables plus enum
+types and Row Level Security:
+
+| Table          | Notes                                                                              |
+| -------------- | ---------------------------------------------------------------------------------- |
+| `profiles`     | 1:1 with `auth.users`; holds `role` (`guest`/`hotel_staff`/`admin`) + `hotel_id`.  |
+| `hotels`       | Includes a PostGIS `location geometry(Point, 4326)` with a GiST index.             |
+| `rooms`        | FK → `hotels`; `is_available` flags bookable rooms.                                 |
+| `reservations` | FK → `hotels`/`rooms`/`profiles`; `status` enum; index on `(hotel_id, status, created_at)`. |
+
+RLS is enabled on every table: guests browse available rooms and manage only
+their own reservations; hotel staff read/write only their own hotel's rooms and
+reservations. The seed (`supabase/seed.sql`, loaded by `supabase db reset`) is
+deterministic: six hotels across LatAm + North America launch cities, a mix of
+available/unavailable rooms, and two test accounts (local password
+`password123`):
+
+| Account              | Role          |
+| -------------------- | ------------- |
+| `guest@hotelyn.test` | `guest`       |
+| `staff@hotelyn.test` | `hotel_staff` (owns the Lima hotel) |
+
+Metre-accurate proximity search casts `location` to `geography` (a distance in
+metres), which is served by the dedicated functional GiST index rather than the
+degree-based one:
+
+```sql
+-- hotels within 5 km of a point (lon, lat)
+select name from hotels
+where st_dwithin(location::geography,
+                 st_setsrid(st_makepoint(-77.03, -12.11), 4326)::geography, 5000);
+```
+
+The RLS policies are covered by an automated pgTAP test that proves a Hotel A
+staff session cannot read or write Hotel B's data:
+
 ```bash
-supabase db reset
+supabase test db
 ```
 
 ### Email testing (local)
