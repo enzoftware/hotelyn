@@ -1,0 +1,13 @@
+name: hotelyn_gql
+description: "Ferry GraphQL codegen and generated types for Hotelyn."
+
+version: 0.1.0+1
+
+resolution: workspace
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dev_dependencies:
+  test: ^1.26.2
+  very_good_analysis: ^10.0.0

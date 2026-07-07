@@ -43,6 +43,13 @@ unlinked.ds
 unlinked_spec.ds
 .fvm/
 
+# Workspace root lockfile is committed; package-level lockfiles are not
+apps/**/pubspec.lock
+packages/**/pubspec.lock
+backend/pubspec.lock
+# Exception: the workspace root pubspec.lock is committed
+!pubspec.lock
+
 # Android related
 **/android/**/gradle-wrapper.jar
 **/android/.gradle
@@ -87,9 +94,6 @@ unlinked_spec.ds
 
 # Coverage
 coverage/
-
-# Submodules
-packages/**/pubspec.lock
 
 # Web related
 lib/generated_plugin_registrant.dart
