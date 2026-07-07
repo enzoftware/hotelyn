@@ -116,6 +116,7 @@ hotels across six LatAm + North America launch cities and two test accounts
 Metre-accurate proximity search casts `location` to `geography` (a distance in
 metres), which is served by the dedicated functional GiST index rather than the
 degree-based one:
+
 ```sql
 -- hotels within 5 km of a point (lon, lat)
 select name from hotels
@@ -125,6 +126,7 @@ where st_dwithin(location::geography,
 
 The RLS policies are covered by an automated pgTAP test that proves a Hotel A
 staff session cannot read or write Hotel B's data:
+
 ```bash
 supabase test db
 ```

@@ -12,7 +12,7 @@
 
 begin;
 
-select plan(13);
+select plan(14);
 
 -- ---------------------------------------------------------------------------
 -- Fixtures (Hotel A = staff's own hotel, Hotel B = a foreign hotel)
@@ -142,6 +142,14 @@ select cmp_ok(
   (select count(*)::int from public.rooms where is_available = true),
   '>=', 6,
   'Guest can browse available rooms broadly'
+);
+
+-- ...but a guest cannot see a seeded UNAVAILABLE room (Lima's City View 102).
+select is(
+  (select count(*)::int from public.rooms
+     where id = '20000000-0000-0000-0000-000000000002'),
+  0,
+  'Guest cannot see an unavailable room'
 );
 
 -- Boundary #6: a guest cannot read a reservation that is not theirs, even at a
