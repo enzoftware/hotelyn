@@ -219,7 +219,7 @@ class _SocialButton extends StatelessWidget {
     required this.color,
   });
 
-  final IconData icon;
+  final FaIconData icon;
   final VoidCallback onPressed;
   final Color color;
 
@@ -234,7 +234,7 @@ class _SocialButton extends StatelessWidget {
           shape: BoxShape.circle,
           border: Border.all(color: GreyColors.grey3),
         ),
-        child: Icon(
+        child: FaIcon(
           icon,
           color: color,
           size: 24,
