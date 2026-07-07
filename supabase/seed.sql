@@ -1,0 +1,4 @@
+-- Seed data for local development. Populated incrementally as domain tables
+-- land (see BE-201 and friends); intentionally empty for now so that
+-- `supabase db reset` succeeds on a fresh clone with only the PostGIS
+-- extension in place.
