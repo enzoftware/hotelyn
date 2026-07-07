@@ -195,10 +195,13 @@ password_requirements = ""
 # rp_origins = ["http://127.0.0.1:3000"]
 
 [auth.rate_limit]
-# Number of emails that can be sent per hour. Resend free tier allows 100/day;
-# 5/hour is a safe cap that still accommodates normal usage.
+# Project-wide cap on auth emails sent per hour (OTP codes, confirmations, etc.).
+# Resend free tier allows 100 emails/day globally; 5/hour leaves headroom for
+# multiple concurrent users requesting codes without hitting the daily ceiling.
 email_sent = 5
-# SMS is disabled (phone OTP replaced by email OTP — see INFRA-105).
+# Project-wide cap on SMS messages per hour. Kept at the Supabase default;
+# effectively inert because [auth.sms].enable_signup = false (phone OTP replaced
+# by email OTP — see INFRA-105).
 sms_sent = 30
 # Number of anonymous sign-ins that can be made per hour per IP address. Requires enable_anonymous_sign_ins = true.
 anonymous_users = 30
