@@ -135,10 +135,8 @@ Resend's free quota covers the entire MVP phase at zero cost. See issue
 
 5. Add the two variables to your CI secrets / Supabase project secrets (see
    `backend/.env.example`):
-   ```
-   RESEND_SMTP_PASSWORD=re_<your_key>
-   RESEND_FROM_EMAIL=onboarding@resend.dev
-   ```
+5. Add the two variables to your CI secrets / Supabase project secrets (see
+   `backend/.env.example`):
 6. In **Auth → Email**, set the OTP expiry to **600 seconds** (10 min) —
    already configured in `supabase/config.toml` for the local stack.
 
