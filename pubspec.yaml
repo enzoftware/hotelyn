@@ -14,7 +14,7 @@ workspace:
 
 dev_dependencies:
   melos: ^7.3.0
-  very_good_analysis: ^10.0.0
+  very_good_analysis: ^10.3.0
 
 melos:
   name: hotelyn
