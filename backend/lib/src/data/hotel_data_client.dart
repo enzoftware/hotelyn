@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:hotelyn_domain/hotelyn_domain.dart';
 import 'package:supabase/supabase.dart';
 
@@ -29,9 +31,17 @@ abstract class HotelDataClient {
 
 /// [HotelDataClient] backed by Supabase RPC calls to the SQL functions.
 class SupabaseHotelDataClient implements HotelDataClient {
-  const SupabaseHotelDataClient(this._client);
+  const SupabaseHotelDataClient(
+    this._client, {
+    this.requestTimeout = const Duration(seconds: 10),
+  });
 
   final SupabaseClient _client;
+
+  /// Upper bound on a single RPC round-trip. A slow or unreachable Supabase
+  /// makes the call fail fast with a [TimeoutException] — which route handlers
+  /// turn into a `500` — instead of hanging the request indefinitely.
+  final Duration requestTimeout;
 
   @override
   Future<List<Hotel>> nearbyHotels({
@@ -62,10 +72,12 @@ class SupabaseHotelDataClient implements HotelDataClient {
     required double lng,
     required double radiusKm,
   }) async {
-    final rows = await _client.rpc<List<dynamic>>(
-      function,
-      params: {'lat': lat, 'lng': lng, 'radius_km': radiusKm},
-    );
+    final rows = await _client
+        .rpc<List<dynamic>>(
+          function,
+          params: {'lat': lat, 'lng': lng, 'radius_km': radiusKm},
+        )
+        .timeout(requestTimeout);
     return rows
         .map((row) => Hotel.fromJson(row as Map<String, dynamic>))
         .toList();
@@ -73,10 +85,12 @@ class SupabaseHotelDataClient implements HotelDataClient {
 
   @override
   Future<List<Room>> roomsAvailability({String? hotelId}) async {
-    final rows = await _client.rpc<List<dynamic>>(
-      'rooms_with_availability',
-      params: {'p_hotel_id': hotelId},
-    );
+    final rows = await _client
+        .rpc<List<dynamic>>(
+          'rooms_with_availability',
+          params: {'p_hotel_id': hotelId},
+        )
+        .timeout(requestTimeout);
     return rows
         .map((row) => Room.fromJson(row as Map<String, dynamic>))
         .toList();
