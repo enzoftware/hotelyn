@@ -2,4 +2,5 @@
 library;
 
 export 'src/hotel.dart';
+export 'src/reservation.dart';
 export 'src/room.dart';

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:hotelyn_api_client/hotelyn_api_client.dart';
+import 'package:hotelyn_domain/hotelyn_domain.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:test/test.dart';
@@ -148,6 +149,103 @@ void main() {
         client.getNearbyHotels(lat: 0, lng: 0, radiusKm: 1),
         throwsA(isA<ApiException>()),
       );
+    });
+
+    group('createReservationHold', () {
+      const heldRow = {
+        'id': 'res-1',
+        'hotel_id': 'h1',
+        'room_id': 'r1',
+        'guest_id': 'g1',
+        'status': 'held',
+        'check_in': '2026-09-01',
+        'check_out': '2026-09-03',
+        'hold_expires_at': '2026-09-01T00:15:00Z',
+        'confirmation_code': 'HZ-3F7K9Q2A',
+      };
+
+      test('POSTs to /hotels/{id}/holds and decodes the reservation', () async {
+        late http.Request captured;
+        final client = clientReturning(
+          heldRow,
+          statusCode: 201,
+          onRequest: (request) => captured = request,
+        );
+
+        final reservation = await client.createReservationHold(
+          hotelId: 'h1',
+          roomId: 'r1',
+          checkIn: DateTime.utc(2026, 9),
+          checkOut: DateTime.utc(2026, 9, 3),
+        );
+
+        expect(captured.method, 'POST');
+        expect(captured.url.path, '/hotels/h1/holds');
+        final body = jsonDecode(captured.body) as Map<String, dynamic>;
+        expect(body['room_id'], 'r1');
+        // Dates are sent as bare YYYY-MM-DD, not full timestamps.
+        expect(body['check_in'], '2026-09-01');
+        expect(body['check_out'], '2026-09-03');
+        expect(reservation.status, ReservationStatus.held);
+        expect(reservation.confirmationCode, 'HZ-3F7K9Q2A');
+        expect(reservation.holdExpiresAt, isNotNull);
+      });
+
+      test('maps a 409 to a typed RoomAlreadyHeldException', () async {
+        final client = clientReturning(
+          {
+            'errors': [
+              {'message': 'already held'},
+            ],
+          },
+          statusCode: 409,
+        );
+
+        await expectLater(
+          client.createReservationHold(
+            hotelId: 'h1',
+            roomId: 'r1',
+            checkIn: DateTime.utc(2026, 9),
+            checkOut: DateTime.utc(2026, 9, 3),
+          ),
+          throwsA(
+            isA<RoomAlreadyHeldException>()
+                // Still an ApiException, so a generic catch also handles it.
+                .having((e) => e, 'is an ApiException', isA<ApiException>())
+                .having((e) => e.statusCode, 'statusCode', 409)
+                .having((e) => e.message, 'message', 'already held'),
+          ),
+        );
+      });
+
+      test('maps other non-2xx to a plain ApiException', () async {
+        final client = clientReturning(
+          {
+            'errors': [
+              {'message': 'nope'},
+            ],
+          },
+          statusCode: 400,
+        );
+
+        await expectLater(
+          client.createReservationHold(
+            hotelId: 'h1',
+            roomId: 'r1',
+            checkIn: DateTime.utc(2026, 9),
+            checkOut: DateTime.utc(2026, 9, 3),
+          ),
+          throwsA(
+            isA<ApiException>()
+                .having((e) => e.statusCode, 'statusCode', 400)
+                .having(
+                  (e) => e,
+                  'not the held subtype',
+                  isNot(isA<RoomAlreadyHeldException>()),
+                ),
+          ),
+        );
+      });
     });
   });
 }
