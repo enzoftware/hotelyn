@@ -14,10 +14,10 @@ hotelyn/
 │   ├── hotelyn_app/        ← Flutter mobile app (Android, iOS)
 │   └── hotelyn_dashboard/  ← Flutter dashboard app (Android, iOS, Web)
 ├── packages/
-│   ├── hotelyn_domain/     ← domain entities & repository interfaces
-│   ├── hotelyn_gql/        ← Ferry GraphQL codegen + generated types
+│   ├── hotelyn_api_client/ ← REST client (package:http) over the Dart Frog API
+│   ├── hotelyn_domain/     ← domain entities (json_serializable) & interfaces
 │   └── hotelyn_ui/         ← shared widget library & design system
-├── backend/                ← Dart Frog GraphQL server (talks to Supabase)
+├── backend/                ← Dart Frog REST server (talks to Supabase)
 └── supabase/               ← local Supabase stack config + migrations
 ```
 
@@ -61,7 +61,7 @@ No other manual setup is required. Steps 1–7 are the complete bootstrap sequen
 
 ## Local Supabase stack
 
-The app never talks to Supabase directly (see [Architecture](CLAUDE.md#architecture)) — only the `backend` GraphQL server does. To run that stack locally:
+The app never talks to Supabase directly (see [Architecture](CLAUDE.md#architecture)) — only the `backend` REST server does. To run that stack locally:
 
 **Prerequisites:** [Docker](https://www.docker.com/products/docker-desktop/) running, [Supabase CLI](https://supabase.com/docs/guides/local-development/cli/getting-started) ≥ 2.x.
 
@@ -144,12 +144,53 @@ where st_dwithin(location::geography,
                  st_setsrid(st_makepoint(-77.03, -12.11), 4326)::geography, 5000);
 ```
 
-The RLS policies are covered by an automated pgTAP test that proves a Hotel A
-staff session cannot read or write Hotel B's data:
+The RLS policies (and the geolocation functions below) are covered by automated
+pgTAP tests — the Hotel A / Hotel B isolation proof plus the search-function
+behaviour:
 
 ```bash
 supabase test db
 ```
+
+### Geolocation search & recommendations
+
+Three SECURITY DEFINER SQL functions (migration `..._geo_search.sql`) power
+search. They read every reservation to compute availability but only ever return
+public catalogue rows:
+
+| Function | Purpose |
+| -------- | ------- |
+| `nearby_hotels(lat, lng, radius_km)` | Hotels within the radius (`ST_DWithin`), nearest-first with a `distance_km` (`ST_Distance`). Empty set when nothing is in range. |
+| `rooms_with_availability(hotel_id?)` | Each room with `available_now` = flagged available **and** no unexpired `held`/`confirmed` hold (`hold_expires_at > now()`). Expired holds don't block. |
+| `recommended_hotels(lat, lng, radius_km)` | In-radius hotels ranked by `confirmed` reservations in the trailing `recommendation_window_days()` (30), ties broken by proximity. Cold-start (all zero) falls back to nearby filtered to available-now. |
+
+Nearby search is index-accelerated: **p95 ≈ 0.3 ms with 100 hotels** (200 runs,
+local stack) — well under the 300 ms budget.
+
+### REST API (Dart Frog)
+
+The `backend/` Dart Frog server exposes these over resource-based REST endpoints,
+each handled through a Supabase-backed data client — the Flutter apps never call
+Supabase directly. Run it with the local stack up:
+
+```bash
+cd backend && dart_frog dev   # http://localhost:8080
+```
+
+| Method & path | Purpose |
+| --- | --- |
+| `GET /health` | Liveness probe (`{ "status": "ok" }`). |
+| `GET /hotels/nearby?lat=&lng=&radiusKm=` | Nearby hotels, nearest-first. |
+| `GET /hotels/recommended?lat=&lng=&radiusKm=` | Recommended hotels. |
+| `GET /hotels/{id}/rooms` | Rooms for a hotel with `available_now`. |
+
+```bash
+curl 'http://localhost:8080/hotels/nearby?lat=-12.11&lng=-77.03&radiusKm=200'
+```
+
+Responses are JSON arrays with snake_case keys (e.g. `distance_km`), matching the
+`hotelyn_domain` `json_serializable` models. A missing/invalid query parameter
+returns `400`; a data-layer failure returns `500` (internal detail not leaked).
 
 ### Email testing (local)
 
@@ -214,7 +255,7 @@ Each app has three entry points — one per environment:
 | `lib/main_staging.dart` | Staging |
 | `lib/main_production.dart` | Production |
 
-The backend endpoint (`GRAPHQL_URL`) is injected at build time via
+The backend endpoint (`API_BASE_URL`) is injected at build time via
 `--dart-define-from-file`. No source edits are needed to switch environments.
 
 ### Switching environments (single command)
@@ -252,9 +293,8 @@ All commands below are run from **`apps/hotelyn_app/`**.
 > `*.json.example` templates are committed. Never commit real endpoint URLs
 > or credentials.
 
-For **Android emulator** or **physical device**, override `GRAPHQL_URL` to the
-LAN address of your machine (e.g. `http://10.0.2.2:8080/graphql` for the
-Android emulator) instead of `127.0.0.1`.
+For the **Android emulator**, use `http://10.0.2.2:8080`.
+For a **physical device**, override `API_BASE_URL` to your machine's LAN IP instead of `127.0.0.1`.
 
 ## Common Melos commands
 

@@ -59,7 +59,7 @@ Repositories are constructed in `main_development.dart` / `main_production.dart`
 
 - **BLoC** (`Bloc<Event, State>`) for features with multiple distinct events: `AppBloc`, `SplashBloc`, `HomeBloc`, `IntroBloc`, `PaymentBloc`, `RegisterBloc`.
 - **Cubit** for simpler, single-stream state: `LoginCubit`, `NavigationBarCubit`, `ProfileCubit`, `MessagesCubit`, `SearchCubit`.
-- **Riverpod** (`ProviderScope`) wraps the app but is not used in any existing feature — reserved for the upcoming GQL/Ferry layer.
+- **Riverpod** (`ProviderScope`) wraps the app but is not used in any existing feature — reserved for the upcoming REST data layer.
 - `formz` is used for form-field validation models (see `lib/features/login/models/`).
 
 ### Routing
@@ -89,10 +89,10 @@ hotelyn/
 │   ├── hotelyn_app/        # Flutter mobile app (Android, iOS)
 │   └── hotelyn_dashboard/  # Flutter dashboard app (Android, iOS, Web)
 ├── packages/
-│   ├── hotelyn_gql/        # Ferry + built_value codegen (GQL types)
-│   ├── hotelyn_domain/     # Domain entities & repository interfaces
+│   ├── hotelyn_api_client/ # REST client (package:http) over the Dart Frog API
+│   ├── hotelyn_domain/     # Domain entities (json_serializable) & interfaces
 │   └── hotelyn_ui/         # Shared widget library
-└── backend/                # Dart Frog GraphQL API (talks to Supabase)
+└── backend/                # Dart Frog REST API (talks to Supabase)
 ```
 
-The Flutter apps will have **no** direct Supabase dependency. All data access goes through the Dart Frog GraphQL layer; apps use Ferry (`package:ferry`) with generated types from `hotelyn_gql`. See issues #209–#220 for the original migration plan (`hotelyn_dashboard` was added afterward and is not tracked by those issues).
+The Flutter apps will have **no** direct Supabase dependency. All data access goes through the Dart Frog **REST** layer; apps depend on `hotelyn_api_client`, which calls the REST endpoints with `package:http` and decodes JSON into `hotelyn_domain` models (`json_serializable`). See issues #209–#220 for the migration plan (`hotelyn_dashboard` was added afterward and is not tracked by those issues). REST is the single protocol between apps and backend.
