@@ -176,19 +176,21 @@ on conflict (id) do update set
 -- Reservations (one confirmed booking for the test guest at the Lima hotel)
 -- ---------------------------------------------------------------------------
 
-insert into public.reservations (id, hotel_id, room_id, guest_id, status, check_in, check_out)
+insert into public.reservations (id, hotel_id, room_id, guest_id, status, check_in, check_out, hold_expires_at)
 values
   (
     '30000000-0000-0000-0000-000000000001',
     '10000000-0000-0000-0000-000000000001',
     '20000000-0000-0000-0000-000000000002',
     '00000000-0000-0000-0000-000000000001',
-    'confirmed', date '2026-08-01', date '2026-08-05'
+    -- Confirmed booking that blocks the room through check-out (BE-302).
+    'confirmed', date '2026-08-01', date '2026-08-05', timestamptz '2026-08-05 00:00:00+00'
   )
 on conflict (id) do update set
-  hotel_id  = excluded.hotel_id,
-  room_id   = excluded.room_id,
-  guest_id  = excluded.guest_id,
-  status    = excluded.status,
-  check_in  = excluded.check_in,
-  check_out = excluded.check_out;
+  hotel_id        = excluded.hotel_id,
+  room_id         = excluded.room_id,
+  guest_id        = excluded.guest_id,
+  status          = excluded.status,
+  check_in        = excluded.check_in,
+  check_out       = excluded.check_out,
+  hold_expires_at = excluded.hold_expires_at;

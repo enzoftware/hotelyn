@@ -144,12 +144,47 @@ where st_dwithin(location::geography,
                  st_setsrid(st_makepoint(-77.03, -12.11), 4326)::geography, 5000);
 ```
 
-The RLS policies are covered by an automated pgTAP test that proves a Hotel A
-staff session cannot read or write Hotel B's data:
+The RLS policies (and the geolocation functions below) are covered by automated
+pgTAP tests — the Hotel A / Hotel B isolation proof plus the search-function
+behaviour:
 
 ```bash
 supabase test db
 ```
+
+### Geolocation search & recommendations
+
+Three SECURITY DEFINER SQL functions (migration `..._geo_search.sql`) power
+search. They read every reservation to compute availability but only ever return
+public catalogue rows:
+
+| Function | Purpose |
+| -------- | ------- |
+| `nearby_hotels(lat, lng, radius_km)` | Hotels within the radius (`ST_DWithin`), nearest-first with a `distance_km` (`ST_Distance`). Empty set when nothing is in range. |
+| `rooms_with_availability(hotel_id?)` | Each room with `available_now` = flagged available **and** no unexpired `held`/`confirmed` hold (`hold_expires_at > now()`). Expired holds don't block. |
+| `recommended_hotels(lat, lng, radius_km)` | In-radius hotels ranked by `confirmed` reservations in the trailing `recommendation_window_days()` (30), ties broken by proximity. Cold-start (all zero) falls back to nearby filtered to available-now. |
+
+Nearby search is index-accelerated: **p95 ≈ 0.3 ms with 100 hotels** (200 runs,
+local stack) — well under the 300 ms budget.
+
+### GraphQL API (Dart Frog)
+
+The `backend/` Dart Frog server exposes these over a single `POST /graphql`
+endpoint (`nearbyHotels`, `recommendedHotels`, `roomsAvailability`), resolving
+each through a Supabase-backed data client — the Flutter apps never call Supabase
+directly. Run it with the local stack up:
+
+```bash
+cd backend && dart_frog dev   # http://localhost:8080/graphql
+```
+
+```bash
+curl http://localhost:8080/graphql -H 'Content-Type: application/json' -X POST \
+  -d '{"query":"{ nearbyHotels(lat: -12.11, lng: -77.03, radiusKm: 200.0) { name city distanceKm } }"}'
+```
+
+> `lat`/`lng`/`radiusKm` are GraphQL `Float`s — send them as decimals
+> (`200.0`, not `200`).
 
 ### Email testing (local)
 

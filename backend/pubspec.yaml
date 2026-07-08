@@ -8,6 +8,15 @@ resolution: workspace
 environment:
   sdk: ">=3.5.0 <4.0.0"
 
+dependencies:
+  dart_frog: ^1.2.0
+  graphql_schema2: ^6.5.0
+  graphql_server2: ^6.5.0
+  hotelyn_domain: any
+  supabase: ^2.14.0
+
 dev_dependencies:
-  test: ^1.31.0
+  mocktail: ^1.0.0
+  # Pinned to the version bundled with the Flutter SDK (test_api 0.7.10); see #225.
+  test: 1.30.0
   very_good_analysis: ^10.0.0
