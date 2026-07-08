@@ -20,6 +20,15 @@ Future<Response> onRequest(RequestContext context) async {
     lat = requiredDouble(context, 'lat');
     lng = requiredDouble(context, 'lng');
     radiusKm = requiredDouble(context, 'radiusKm');
+    if (lat < -90 || lat > 90) {
+      return badRequest('lat must be between -90 and 90');
+    }
+    if (lng < -180 || lng > 180) {
+      return badRequest('lng must be between -180 and 180');
+    }
+    if (radiusKm <= 0 || radiusKm > 100) {
+      return badRequest('radiusKm must be between 0 and 100');
+    }
   } on BadRequestException catch (error) {
     return badRequest(error.message);
   }
