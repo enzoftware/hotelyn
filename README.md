@@ -119,7 +119,7 @@ types and Row Level Security:
 | `profiles`     | 1:1 with `auth.users`; holds `role` (`guest`/`hotel_staff`/`admin`) + `hotel_id`.  |
 | `hotels`       | Includes a PostGIS `location geometry(Point, 4326)` with a GiST index.             |
 | `rooms`        | FK → `hotels`; `is_available` flags bookable rooms.                                 |
-| `reservations` | FK → `hotels`/`rooms`/`profiles`; `status` enum; index on `(hotel_id, status, created_at)`. |
+| `reservations` | FK → `hotels`/`rooms`/`profiles`; `status` enum; `hold_expires_at` + unique `confirmation_code`. Partial unique index on `room_id WHERE status IN ('held','confirmed')` makes double-booking impossible. |
 
 RLS is enabled on every table: guests browse available rooms and manage only
 their own reservations; hotel staff read/write only their own hotel's rooms and
@@ -166,6 +166,22 @@ public catalogue rows:
 
 Nearby search is index-accelerated: **p95 ≈ 0.3 ms with 100 hotels** (200 runs,
 local stack) — well under the 300 ms budget.
+
+### Reservation holds (EPIC-04)
+
+A hold is a short-lived, exclusive claim on a room (default 15 min, see
+`hold_duration()`) so a guest can finish checkout without being double-booked.
+Correctness is the database's job — the migration
+`..._reservation_holds.sql` enforces it structurally:
+
+| Piece | What it does |
+| ----- | ------------ |
+| Partial unique index `reservations_active_room_uidx` | At most one `held`/`confirmed` reservation per room. A concurrent second hold loses to the constraint — no application lock needed (BE-401). |
+| `create_reservation_hold(room_id, guest_id, check_in, check_out)` | `INSERT … ON CONFLICT DO NOTHING`: returns the created reservation, or **zero rows** when the room is already held (the client maps this to a typed 409 `RoomAlreadyHeldException`). Generates the `confirmation_code` in the same transaction and reclaims any lapsed hold first (BE-402). |
+| Query-time expiry | No paid scheduler: `status` may read `held` after real expiry, but every read path treats `held AND hold_expires_at < now()` as free, so no user ever sees a stale-blocked room (BE-403). |
+
+The single-winner guarantee and expiry behaviour are covered by pgTAP
+(`supabase/tests/reservation_holds_test.sql`).
 
 ### REST API (Dart Frog)
 

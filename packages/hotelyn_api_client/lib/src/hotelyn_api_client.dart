@@ -57,6 +57,29 @@ class HotelynApiClient {
         .toList();
   }
 
+  /// Places a short-lived hold on [roomId] for the current guest, returning the
+  /// created [Reservation] (status `held`, with a confirmation code).
+  ///
+  /// Throws [RoomAlreadyHeldException] when the room was already taken (the
+  /// server's `409`), and a plain [ApiException] for any other failure.
+  Future<Reservation> createReservationHold({
+    required String hotelId,
+    required String roomId,
+    required DateTime checkIn,
+    required DateTime checkOut,
+  }) async {
+    final json = await _postJson(
+      '/hotels/${Uri.encodeComponent(hotelId)}/holds',
+      body: {
+        'room_id': roomId,
+        // Dates only — the API contract is a check-in/check-out day pair.
+        'check_in': _asDate(checkIn),
+        'check_out': _asDate(checkOut),
+      },
+    );
+    return Reservation.fromJson(json);
+  }
+
   /// Shared plumbing for the two radius searches, which share params and shape.
   Future<List<Hotel>> _getHotels(
     String path, {
@@ -118,10 +141,71 @@ class HotelynApiClient {
     return decoded;
   }
 
-  Future<Map<String, String>> _headers() async {
+  /// Issues an authenticated POST with a JSON [body] and decodes a top-level
+  /// JSON object. Maps `409` to [RoomAlreadyHeldException]; any other non-2xx
+  /// status or an unexpected body shape becomes an [ApiException].
+  Future<Map<String, dynamic>> _postJson(
+    String path, {
+    required Map<String, dynamic> body,
+  }) async {
+    final uri = _baseUrl.replace(path: path);
+
+    const timeout = Duration(seconds: 15);
+
+    final http.Response response;
+    try {
+      response = await _httpClient
+          .post(
+            uri,
+            headers: await _headers(json: true),
+            body: jsonEncode(body),
+          )
+          .timeout(timeout);
+    } on Object catch (error) {
+      throw ApiException('Request to $path failed: $error');
+    }
+
+    if (response.statusCode == 409) {
+      // Fall back to RoomAlreadyHeldException's own default message when the
+      // server sent no error detail, so the two don't drift.
+      final message = _extractError(response.body);
+      throw message == null
+          ? const RoomAlreadyHeldException()
+          : RoomAlreadyHeldException(message);
+    }
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw ApiException(
+        _extractError(response.body) ?? 'Request to $path failed.',
+        statusCode: response.statusCode,
+      );
+    }
+
+    final dynamic decoded;
+    try {
+      decoded = jsonDecode(response.body);
+    } on FormatException {
+      throw ApiException('Response from $path was not valid JSON.');
+    }
+    if (decoded is! Map<String, dynamic>) {
+      throw ApiException('Expected a JSON object from $path.');
+    }
+    return decoded;
+  }
+
+  /// Formats a [DateTime] as a bare `YYYY-MM-DD` date (the API date contract).
+  String _asDate(DateTime date) {
+    final y = date.year.toString().padLeft(4, '0');
+    final m = date.month.toString().padLeft(2, '0');
+    final d = date.day.toString().padLeft(2, '0');
+    return '$y-$m-$d';
+  }
+
+  Future<Map<String, String>> _headers({bool json = false}) async {
     final token = await _tokenProvider?.call();
     return {
       'Accept': 'application/json',
+      if (json) 'Content-Type': 'application/json',
       if (token != null) 'Authorization': 'Bearer $token',
     };
   }

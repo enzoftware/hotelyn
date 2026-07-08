@@ -120,12 +120,20 @@ delete from public.reservations;
 -- BE-304 · recommended_hotels
 -- ---------------------------------------------------------------------------
 
--- Two confirmed bookings at Bogota, one at Lima, all within the window.
+-- A second Bogota room so the two confirmed bookings below can live on distinct
+-- rooms — the BE-401 partial unique index allows only one active (held/confirmed)
+-- reservation per room, and popularity counts by hotel, not room. Rolled back
+-- with the surrounding transaction, so the shared seed's room counts are intact.
+insert into public.rooms (id, hotel_id, name, room_type, capacity, price_per_night, is_available)
+values ('20000000-0000-0000-0000-0000000000b0', '10000000-0000-0000-0000-000000000003',
+        'Boutique Twin', 'twin', 2, 150.00, true);
+
+-- Two confirmed bookings at Bogota (on its two rooms), one at Lima, all in window.
 insert into public.reservations (hotel_id, room_id, guest_id, status, check_in, check_out, hold_expires_at)
 values
   ('10000000-0000-0000-0000-000000000003', '20000000-0000-0000-0000-000000000005',
    '00000000-0000-0000-0000-000000000001', 'confirmed', date '2026-08-01', date '2026-08-03', now() + interval '10 days'),
-  ('10000000-0000-0000-0000-000000000003', '20000000-0000-0000-0000-000000000005',
+  ('10000000-0000-0000-0000-000000000003', '20000000-0000-0000-0000-0000000000b0',
    '00000000-0000-0000-0000-000000000001', 'confirmed', date '2026-08-04', date '2026-08-06', now() + interval '10 days'),
   ('10000000-0000-0000-0000-000000000001', '20000000-0000-0000-0000-000000000001',
    '00000000-0000-0000-0000-000000000001', 'confirmed', date '2026-08-01', date '2026-08-03', now() + interval '10 days');

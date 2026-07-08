@@ -37,13 +37,17 @@ values (
 
 -- A reservation on Hotel A owned by the STAFF profile, so we can prove a guest
 -- cannot read a reservation that is not theirs even at a hotel they can browse.
+-- Status is 'cancelled' (an inactive status, outside the BE-401 active-hold
+-- predicate) so it does not occupy Room A1's single active slot — test 14 below
+-- inserts the guest's own *held* reservation on A1. Its visibility (what this
+-- fixture actually asserts) does not depend on status.
 insert into public.reservations (id, hotel_id, room_id, guest_id, status, check_in, check_out)
 values (
   '30000000-0000-0000-0000-0000000000b2',
   '10000000-0000-0000-0000-000000000001',           -- Hotel A
-  '20000000-0000-0000-0000-000000000001',           -- Room A (available)
+  '20000000-0000-0000-0000-000000000001',           -- Room A1 (available)
   '00000000-0000-0000-0000-000000000002',           -- staff profile, not the guest
-  'held', date '2026-09-10', date '2026-09-12'
+  'cancelled', date '2026-09-10', date '2026-09-12'
 );
 
 -- ---------------------------------------------------------------------------
