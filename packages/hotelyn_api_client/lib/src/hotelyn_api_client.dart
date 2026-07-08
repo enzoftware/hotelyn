@@ -195,9 +195,10 @@ class HotelynApiClient {
 
   /// Formats a [DateTime] as a bare `YYYY-MM-DD` date (the API date contract).
   String _asDate(DateTime date) {
-    final y = date.year.toString().padLeft(4, '0');
-    final m = date.month.toString().padLeft(2, '0');
-    final d = date.day.toString().padLeft(2, '0');
+    final utc = date.toUtc();
+    final y = utc.year.toString().padLeft(4, '0');
+    final m = utc.month.toString().padLeft(2, '0');
+    final d = utc.day.toString().padLeft(2, '0');
     return '$y-$m-$d';
   }
 
