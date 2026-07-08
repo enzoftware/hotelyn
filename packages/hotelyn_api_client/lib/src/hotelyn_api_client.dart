@@ -50,7 +50,8 @@ class HotelynApiClient {
 
   /// Rooms for [hotelId], each with a computed `available_now` flag.
   Future<List<Room>> getRooms({required String hotelId}) async {
-    final json = await _getJsonList('/hotels/$hotelId/rooms');
+    final json =
+        await _getJsonList('/hotels/${Uri.encodeComponent(hotelId)}/rooms');
     return json
         .map((row) => Room.fromJson(row as Map<String, dynamic>))
         .toList();
