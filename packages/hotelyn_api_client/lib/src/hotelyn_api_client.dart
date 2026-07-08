@@ -88,9 +88,13 @@ class HotelynApiClient {
       queryParameters: query,
     );
 
+    const timeout = Duration(seconds: 15);
+
     final http.Response response;
     try {
-      response = await _httpClient.get(uri, headers: await _headers());
+      response = await _httpClient
+          .get(uri, headers: await _headers())
+          .timeout(timeout);
     } on Object catch (error) {
       throw ApiException('Request to $path failed: $error');
     }
