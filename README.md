@@ -293,9 +293,8 @@ All commands below are run from **`apps/hotelyn_app/`**.
 > `*.json.example` templates are committed. Never commit real endpoint URLs
 > or credentials.
 
-For **Android emulator** or **physical device**, override `API_BASE_URL` to the
-LAN address of your machine (e.g. `http://10.0.2.2:8080` for the Android
-emulator) instead of `127.0.0.1`.
+For the **Android emulator**, use `http://10.0.2.2:8080`.
+For a **physical device**, override `API_BASE_URL` to your machine's LAN IP instead of `127.0.0.1`.
 
 ## Common Melos commands
 
