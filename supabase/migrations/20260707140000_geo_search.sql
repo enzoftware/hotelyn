@@ -3,7 +3,7 @@
 -- BE-304 · Recommended hotels function
 --
 -- Geolocation search & recommendations (EPIC-03). Three read-only functions the
--- backend GraphQL layer calls; all are SECURITY DEFINER with a pinned
+-- backend REST data layer calls; all are SECURITY DEFINER with a pinned
 -- search_path so they can compute availability across every reservation (a guest
 -- cannot see other guests' holds under RLS) while only ever returning public
 -- catalogue data (hotels/rooms) — never another guest's reservation rows.
