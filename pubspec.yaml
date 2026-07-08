@@ -7,8 +7,8 @@ environment:
 workspace:
   - apps/hotelyn_app
   - apps/hotelyn_dashboard
+  - packages/hotelyn_api_client
   - packages/hotelyn_domain
-  - packages/hotelyn_gql
   - packages/hotelyn_ui
   - backend
 

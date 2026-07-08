@@ -1,5 +1,5 @@
 name: hotelyn_server
-description: "Dart Frog GraphQL server for Hotelyn (talks to Supabase)."
+description: "Dart Frog REST server for Hotelyn (talks to Supabase)."
 
 version: 0.1.0+1
 
@@ -10,8 +10,6 @@ environment:
 
 dependencies:
   dart_frog: ^1.2.0
-  graphql_schema2: ^6.5.0
-  graphql_server2: ^6.5.0
   hotelyn_domain: any
   supabase: ^2.14.0
 

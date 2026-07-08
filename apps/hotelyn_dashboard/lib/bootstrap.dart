@@ -29,17 +29,17 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
 
   Bloc.observer = const AppBlocObserver();
 
-  // Fail fast in release mode if the GraphQL endpoint was not injected.
+  // Fail fast in release mode if the API endpoint was not injected.
   // Run with --dart-define-from-file=.dart_defines/<env>.json for every
   // non-local build.
   assert(
-    !kReleaseMode || !AppConfig.graphqlUrl.startsWith('http://127.0.0.1'),
-    'GRAPHQL_URL must be set via --dart-define-from-file for release builds. '
+    !kReleaseMode || !AppConfig.apiBaseUrl.startsWith('http://127.0.0.1'),
+    'API_BASE_URL must be set via --dart-define-from-file for release builds. '
     'Current value is the localhost fallback.',
   );
 
   if (!kReleaseMode) {
-    log('GraphQL endpoint: ${AppConfig.graphqlUrl}');
+    log('API endpoint: ${AppConfig.apiBaseUrl}');
   }
 
   runApp(await builder());

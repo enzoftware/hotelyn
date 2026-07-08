@@ -3,22 +3,22 @@ import 'package:hotelyn_dashboard/core/config/app_config.dart';
 
 void main() {
   group('AppConfig', () {
-    group('graphqlUrl', () {
+    group('apiBaseUrl', () {
       test('uses the default localhost value when no dart-define is supplied',
           () {
         expect(
-          AppConfig.graphqlUrl,
-          'http://127.0.0.1:8080/graphql',
+          AppConfig.apiBaseUrl,
+          'http://127.0.0.1:8080',
         );
       });
 
       test('is a non-empty string', () {
-        expect(AppConfig.graphqlUrl, isNotEmpty);
+        expect(AppConfig.apiBaseUrl, isNotEmpty);
       });
 
       test('starts with http scheme', () {
         expect(
-          AppConfig.graphqlUrl,
+          AppConfig.apiBaseUrl,
           startsWith('http'),
         );
       });

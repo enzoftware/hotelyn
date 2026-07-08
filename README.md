@@ -14,10 +14,10 @@ hotelyn/
 │   ├── hotelyn_app/        ← Flutter mobile app (Android, iOS)
 │   └── hotelyn_dashboard/  ← Flutter dashboard app (Android, iOS, Web)
 ├── packages/
-│   ├── hotelyn_domain/     ← domain entities & repository interfaces
-│   ├── hotelyn_gql/        ← Ferry GraphQL codegen + generated types
+│   ├── hotelyn_api_client/ ← REST client (package:http) over the Dart Frog API
+│   ├── hotelyn_domain/     ← domain entities (json_serializable) & interfaces
 │   └── hotelyn_ui/         ← shared widget library & design system
-├── backend/                ← Dart Frog GraphQL server (talks to Supabase)
+├── backend/                ← Dart Frog REST server (talks to Supabase)
 └── supabase/               ← local Supabase stack config + migrations
 ```
 
@@ -61,7 +61,7 @@ No other manual setup is required. Steps 1–7 are the complete bootstrap sequen
 
 ## Local Supabase stack
 
-The app never talks to Supabase directly (see [Architecture](CLAUDE.md#architecture)) — only the `backend` GraphQL server does. To run that stack locally:
+The app never talks to Supabase directly (see [Architecture](CLAUDE.md#architecture)) — only the `backend` REST server does. To run that stack locally:
 
 **Prerequisites:** [Docker](https://www.docker.com/products/docker-desktop/) running, [Supabase CLI](https://supabase.com/docs/guides/local-development/cli/getting-started) ≥ 2.x.
 
@@ -167,24 +167,30 @@ public catalogue rows:
 Nearby search is index-accelerated: **p95 ≈ 0.3 ms with 100 hotels** (200 runs,
 local stack) — well under the 300 ms budget.
 
-### GraphQL API (Dart Frog)
+### REST API (Dart Frog)
 
-The `backend/` Dart Frog server exposes these over a single `POST /graphql`
-endpoint (`nearbyHotels`, `recommendedHotels`, `roomsAvailability`), resolving
-each through a Supabase-backed data client — the Flutter apps never call Supabase
-directly. Run it with the local stack up:
-
-```bash
-cd backend && dart_frog dev   # http://localhost:8080/graphql
-```
+The `backend/` Dart Frog server exposes these over resource-based REST endpoints,
+each handled through a Supabase-backed data client — the Flutter apps never call
+Supabase directly. Run it with the local stack up:
 
 ```bash
-curl http://localhost:8080/graphql -H 'Content-Type: application/json' -X POST \
-  -d '{"query":"{ nearbyHotels(lat: -12.11, lng: -77.03, radiusKm: 200.0) { name city distanceKm } }"}'
+cd backend && dart_frog dev   # http://localhost:8080
 ```
 
-> `lat`/`lng`/`radiusKm` are GraphQL `Float`s — send them as decimals
-> (`200.0`, not `200`).
+| Method & path | Purpose |
+| --- | --- |
+| `GET /health` | Liveness probe (`{ "status": "ok" }`). |
+| `GET /hotels/nearby?lat=&lng=&radiusKm=` | Nearby hotels, nearest-first. |
+| `GET /hotels/recommended?lat=&lng=&radiusKm=` | Recommended hotels. |
+| `GET /hotels/{id}/rooms` | Rooms for a hotel with `available_now`. |
+
+```bash
+curl 'http://localhost:8080/hotels/nearby?lat=-12.11&lng=-77.03&radiusKm=200'
+```
+
+Responses are JSON arrays with snake_case keys (e.g. `distance_km`), matching the
+`hotelyn_domain` `json_serializable` models. A missing/invalid query parameter
+returns `400`; a data-layer failure returns `500` (internal detail not leaked).
 
 ### Email testing (local)
 
@@ -249,7 +255,7 @@ Each app has three entry points — one per environment:
 | `lib/main_staging.dart` | Staging |
 | `lib/main_production.dart` | Production |
 
-The backend endpoint (`GRAPHQL_URL`) is injected at build time via
+The backend endpoint (`API_BASE_URL`) is injected at build time via
 `--dart-define-from-file`. No source edits are needed to switch environments.
 
 ### Switching environments (single command)
@@ -287,9 +293,9 @@ All commands below are run from **`apps/hotelyn_app/`**.
 > `*.json.example` templates are committed. Never commit real endpoint URLs
 > or credentials.
 
-For **Android emulator** or **physical device**, override `GRAPHQL_URL` to the
-LAN address of your machine (e.g. `http://10.0.2.2:8080/graphql` for the
-Android emulator) instead of `127.0.0.1`.
+For **Android emulator** or **physical device**, override `API_BASE_URL` to the
+LAN address of your machine (e.g. `http://10.0.2.2:8080` for the Android
+emulator) instead of `127.0.0.1`.
 
 ## Common Melos commands
 

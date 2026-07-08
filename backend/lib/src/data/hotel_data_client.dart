@@ -3,8 +3,9 @@ import 'package:supabase/supabase.dart';
 
 /// Read-only access to Hotelyn's geolocation-search data.
 ///
-/// This is the single seam through which the GraphQL layer reaches Supabase;
-/// no `supabase` call originates outside an implementation of this interface.
+/// This is the single seam through which the REST route handlers reach
+/// Supabase; no `supabase` call originates outside an implementation of this
+/// interface.
 abstract class HotelDataClient {
   /// Hotels within [radiusKm] of ([lat], [lng]), nearest-first
   /// (via `nearby_hotels`).
@@ -66,7 +67,7 @@ class SupabaseHotelDataClient implements HotelDataClient {
       params: {'lat': lat, 'lng': lng, 'radius_km': radiusKm},
     );
     return rows
-        .map((row) => hotelFromRow(row as Map<String, dynamic>))
+        .map((row) => Hotel.fromJson(row as Map<String, dynamic>))
         .toList();
   }
 
@@ -76,43 +77,8 @@ class SupabaseHotelDataClient implements HotelDataClient {
       'rooms_with_availability',
       params: {'p_hotel_id': hotelId},
     );
-    return rows.map((row) => roomFromRow(row as Map<String, dynamic>)).toList();
+    return rows
+        .map((row) => Room.fromJson(row as Map<String, dynamic>))
+        .toList();
   }
 }
-
-/// Maps a `nearby_hotels` / `recommended_hotels` result row to a [Hotel].
-///
-/// Kept as a pure top-level function so it is unit-testable without a live
-/// Supabase connection.
-Hotel hotelFromRow(Map<String, dynamic> row) {
-  return Hotel(
-    id: row['id'] as String,
-    name: row['name'] as String,
-    city: row['city'] as String,
-    country: row['country'] as String,
-    description: row['description'] as String?,
-    address: row['address'] as String?,
-    latitude: _toDouble(row['latitude']),
-    longitude: _toDouble(row['longitude']),
-    distanceKm: _toDouble(row['distance_km']),
-    popularity: (row['popularity'] as num?)?.toInt(),
-  );
-}
-
-/// Maps a `rooms_with_availability` result row to a [Room].
-Room roomFromRow(Map<String, dynamic> row) {
-  return Room(
-    id: row['id'] as String,
-    hotelId: row['hotel_id'] as String,
-    name: row['name'] as String,
-    roomType: row['room_type'] as String,
-    capacity: (row['capacity'] as num).toInt(),
-    // price_per_night is NOT NULL in the schema; parse it directly so a missing
-    // value surfaces as an error rather than a silent "free" room.
-    pricePerNight: (row['price_per_night'] as num).toDouble(),
-    isAvailable: row['is_available'] as bool,
-    availableNow: row['available_now'] as bool,
-  );
-}
-
-double? _toDouble(Object? value) => (value as num?)?.toDouble();

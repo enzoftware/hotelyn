@@ -1,10 +1,13 @@
-import 'package:hotelyn_server/hotelyn_server.dart';
+import 'package:hotelyn_domain/hotelyn_domain.dart';
 import 'package:test/test.dart';
 
+// The data client decodes `nearby_hotels` / `recommended_hotels` /
+// `rooms_with_availability` RPC rows via `Hotel.fromJson` / `Room.fromJson`.
+// These tests pin the RPC row shape the server relies on.
 void main() {
-  group('hotelFromRow', () {
+  group('Hotel.fromJson (RPC row)', () {
     test('maps a full nearby/recommended row into a Hotel', () {
-      final hotel = hotelFromRow({
+      final hotel = Hotel.fromJson(const {
         'id': 'h1',
         'name': 'Miraflores Bay Hotel',
         'description': 'Oceanfront',
@@ -28,7 +31,7 @@ void main() {
     });
 
     test('tolerates nullable projections and integer coordinates', () {
-      final hotel = hotelFromRow({
+      final hotel = Hotel.fromJson(const {
         'id': 'h2',
         'name': 'Reforma Grand',
         'description': null,
@@ -50,9 +53,9 @@ void main() {
     });
   });
 
-  group('roomFromRow', () {
+  group('Room.fromJson (RPC row)', () {
     test('maps a rooms_with_availability row into a Room', () {
-      final room = roomFromRow({
+      final room = Room.fromJson(const {
         'id': 'r1',
         'hotel_id': 'h1',
         'name': 'Ocean View 101',
@@ -73,7 +76,7 @@ void main() {
     });
 
     test('coerces an integer price into a double', () {
-      final room = roomFromRow({
+      final room = Room.fromJson(const {
         'id': 'r2',
         'hotel_id': 'h1',
         'name': 'City View 102',

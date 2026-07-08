@@ -5,7 +5,7 @@
 /// ```sh
 /// # From individual flags:
 /// flutter run -t lib/main_development.dart \
-///   --dart-define=GRAPHQL_URL=http://127.0.0.1:8080/graphql
+///   --dart-define=API_BASE_URL=http://127.0.0.1:8080
 ///
 /// # From a dart-define file (recommended):
 /// flutter run -t lib/main_development.dart \
@@ -16,14 +16,14 @@
 class AppConfig {
   const AppConfig._();
 
-  /// HTTP endpoint of the Hotelyn GraphQL backend.
+  /// Base URL of the Hotelyn REST backend (no path suffix).
   ///
   /// Default resolves to the local Dart Frog server on the same host
   /// (desktop / web). Override for remote environments:
-  ///   - Staging:    `https://api.staging.hotelyn.com/graphql`
-  ///   - Production: `https://api.hotelyn.com/graphql`
-  static const String graphqlUrl = String.fromEnvironment(
-    'GRAPHQL_URL',
-    defaultValue: 'http://127.0.0.1:8080/graphql',
+  ///   - Staging:    `https://api.staging.hotelyn.com`
+  ///   - Production: `https://api.hotelyn.com`
+  static const String apiBaseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'http://127.0.0.1:8080',
   );
 }
