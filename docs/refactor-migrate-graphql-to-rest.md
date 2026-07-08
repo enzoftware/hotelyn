@@ -1,8 +1,9 @@
 # Migrate GraphQL/Ferry to REST
 
-- **PR:** not yet opened
+- **PR:** #230 — https://github.com/enzoftware/hotelyn/pull/230
 - **Branch:** refactor/migrate-graphql-to-rest → main
-- **Date:** 2026-07-08 13:13
+- **Status:** open
+- **Created:** 2026-07-08
 - **Author:** Enzo Lizama
 
 ## Summary
