@@ -4,6 +4,7 @@
 - **Branch:** refactor/migrate-graphql-to-rest → main
 - **Status:** open
 - **Created:** 2026-07-08
+- **Updated:** 2026-07-08
 - **Author:** Enzo Lizama
 
 ## Summary
@@ -21,6 +22,15 @@ The 12 open GraphQL/Ferry GitHub issues were rewritten to their REST equivalents
   `GET /hotels/nearby`, `GET /hotels/recommended`, `GET /hotels/{id}/rooms` plus a
   `query_params` helper and route middleware. Kept the `HotelDataClient`/Supabase
   seam; it now decodes rows via `Hotel.fromJson`.
+- **backend — shared search handler:** extracted the identical
+  method-guard/param-parse/serialize flow of the `nearby` and `recommended`
+  routes into `handleHotelSearchRoute` (`src/http/hotel_search_handler.dart`);
+  both routes now delegate to it, passing the respective `HotelDataClient` method
+  as the injected `search`. Added a route test for `/hotels/recommended`.
+- **backend — RPC timeout:** `SupabaseHotelDataClient` now takes a
+  `requestTimeout` (default 10s) and wraps every `_client.rpc(...)` in
+  `.timeout(...)`, so a slow/unreachable Supabase fails fast (→ `500`) instead of
+  hanging the request.
 - **hotelyn_gql → hotelyn_api_client:** renamed the package and rebuilt it as a
   `package:http` REST client (`HotelynApiClient`) with `getNearbyHotels`,
   `getRecommendedHotels`, `getRooms`, a JWT token provider, and a typed
@@ -45,8 +55,8 @@ The 12 open GraphQL/Ferry GitHub issues were rewritten to their REST equivalents
 ## Verification
 - `flutter analyze` / `dart analyze` clean on all changed packages (including
   `--fatal-infos`).
-- Tests pass: hotelyn_domain (11), hotelyn_api_client (7), backend (14), both app
-  `app_config` suites.
+- Tests pass: hotelyn_domain (11), hotelyn_api_client (7), backend (19, incl. the
+  new `/hotels/recommended` route test), both app `app_config` suites.
 - Codegen re-runs to a no-op diff; `dart format --set-exit-if-changed` clean.
 - End-to-end: `dart_frog build` compiled the route tree; the running server
   returned `/health` → 200, missing/invalid params → 400, wrong method → 405, and
