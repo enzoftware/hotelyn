@@ -36,7 +36,9 @@ Future<Response> staffAction(
     return await action(actorId);
   } on RpcException catch (error) {
     return rpcErrorResponse(error);
-  } on Object {
+  } on Object catch (error, stackTrace) {
+    // TODO: replace with structured logger when available
+    print('Unexpected error in staffAction: $error\n$stackTrace');
     return internalError();
   }
 }
