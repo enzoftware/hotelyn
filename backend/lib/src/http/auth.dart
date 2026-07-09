@@ -99,44 +99,20 @@ String? _subFromJwt(String token) {
 }
 
 /// A JSON `401` response with a single error [message].
-Response unauthorized(String message) => Response.json(
-      statusCode: HttpStatus.unauthorized,
-      body: {
-        'errors': [
-          {'message': message},
-        ],
-      },
-    );
+Response unauthorized(String message) =>
+    errorResponse(HttpStatus.unauthorized, message);
 
 /// A JSON `403` response with a single error [message].
-Response forbidden(String message) => Response.json(
-      statusCode: HttpStatus.forbidden,
-      body: {
-        'errors': [
-          {'message': message},
-        ],
-      },
-    );
+Response forbidden(String message) =>
+    errorResponse(HttpStatus.forbidden, message);
 
 /// A JSON `404` response with a single error [message].
-Response notFound(String message) => Response.json(
-      statusCode: HttpStatus.notFound,
-      body: {
-        'errors': [
-          {'message': message},
-        ],
-      },
-    );
+Response notFound(String message) =>
+    errorResponse(HttpStatus.notFound, message);
 
 /// A JSON `409` response with a single error [message].
-Response conflict(String message) => Response.json(
-      statusCode: HttpStatus.conflict,
-      body: {
-        'errors': [
-          {'message': message},
-        ],
-      },
-    );
+Response conflict(String message) =>
+    errorResponse(HttpStatus.conflict, message);
 
 /// Maps a business-rule [RpcException] (raised by a SQL function) to the right
 /// HTTP response. The code is a stable token the RPC raised.

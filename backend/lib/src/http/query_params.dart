@@ -33,9 +33,13 @@ double requiredDouble(RequestContext context, String name) {
   return value;
 }
 
-/// A JSON `400` response with a single error [message].
-Response badRequest(String message) => Response.json(
-      statusCode: HttpStatus.badRequest,
+/// A JSON error response with [statusCode] and a single error [message], in the
+/// API's `{ "errors": [{ "message": ... }] }` envelope.
+///
+/// The one place that envelope shape lives; the named helpers below (and the
+/// `4xx` builders in `auth.dart`) delegate here so every error body matches.
+Response errorResponse(int statusCode, String message) => Response.json(
+      statusCode: statusCode,
       body: {
         'errors': [
           {'message': message},
@@ -43,12 +47,12 @@ Response badRequest(String message) => Response.json(
       },
     );
 
+/// A JSON `400` response with a single error [message].
+Response badRequest(String message) =>
+    errorResponse(HttpStatus.badRequest, message);
+
 /// A JSON `500` response that never leaks internal detail to the client.
-Response internalError() => Response.json(
-      statusCode: HttpStatus.internalServerError,
-      body: {
-        'errors': [
-          {'message': 'Unexpected error while handling the request.'},
-        ],
-      },
+Response internalError() => errorResponse(
+      HttpStatus.internalServerError,
+      'Unexpected error while handling the request.',
     );
