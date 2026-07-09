@@ -26,7 +26,9 @@ double requiredDouble(RequestContext context, String name) {
     throw BadRequestException('Query parameter "$name" must be a number.');
   }
   if (value.isNaN || value.isInfinite) {
-    throw BadRequestException('Query parameter "$name" must be a finite number.');
+    throw BadRequestException(
+      'Query parameter "$name" must be a finite number.',
+    );
   }
   return value;
 }

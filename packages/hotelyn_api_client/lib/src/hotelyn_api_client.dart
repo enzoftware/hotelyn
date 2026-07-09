@@ -68,7 +68,8 @@ class HotelynApiClient {
     required DateTime checkIn,
     required DateTime checkOut,
   }) async {
-    final json = await _postJson(
+    final json = await _sendJson(
+      'POST',
       '/hotels/${Uri.encodeComponent(hotelId)}/holds',
       body: {
         'room_id': roomId,
@@ -76,6 +77,60 @@ class HotelynApiClient {
         'check_in': _asDate(checkIn),
         'check_out': _asDate(checkOut),
       },
+      // A 409 means the room was grabbed first: surface the typed variant.
+      on409: (String? message) => message == null
+          ? const RoomAlreadyHeldException()
+          : RoomAlreadyHeldException(message),
+    );
+    return Reservation.fromJson(json);
+  }
+
+  /// The acting staff member's own hotel rooms, each with a derived
+  /// [RoomStatus] (BE-501). Scope comes from the caller's token, not a param.
+  Future<List<StaffRoom>> getStaffRooms() async {
+    final json = await _getJsonList('/staff/rooms');
+    return json
+        .map((row) => StaffRoom.fromJson(row as Map<String, dynamic>))
+        .toList();
+  }
+
+  /// Sets [roomId]'s availability (BE-502), returning the updated [StaffRoom]
+  /// with its freshly derived status.
+  ///
+  /// Throws an [ApiException] with `statusCode` 409 when the room has an active
+  /// reservation and cannot be made available.
+  Future<StaffRoom> setRoomAvailability({
+    required String roomId,
+    required bool isAvailable,
+  }) async {
+    final json = await _sendJson(
+      'PATCH',
+      '/staff/rooms/${Uri.encodeComponent(roomId)}/availability',
+      body: {'is_available': isAvailable},
+    );
+    return StaffRoom.fromJson(json);
+  }
+
+  /// Confirms a held reservation as owning-hotel staff (BE-503), returning the
+  /// now-`confirmed` [Reservation].
+  ///
+  /// Throws an [ApiException] with `statusCode` 409 when the hold has expired.
+  Future<Reservation> confirmReservation({
+    required String reservationId,
+  }) async {
+    final json = await _sendJson(
+      'POST',
+      '/reservations/${Uri.encodeComponent(reservationId)}/confirm',
+    );
+    return Reservation.fromJson(json);
+  }
+
+  /// Rejects a reservation as owning-hotel staff (BE-503), freeing the room
+  /// immediately. Returns the now-`rejected` [Reservation].
+  Future<Reservation> rejectReservation({required String reservationId}) async {
+    final json = await _sendJson(
+      'POST',
+      '/reservations/${Uri.encodeComponent(reservationId)}/reject',
     );
     return Reservation.fromJson(json);
   }
@@ -141,37 +196,39 @@ class HotelynApiClient {
     return decoded;
   }
 
-  /// Issues an authenticated POST with a JSON [body] and decodes a top-level
-  /// JSON object. Maps `409` to [RoomAlreadyHeldException]; any other non-2xx
-  /// status or an unexpected body shape becomes an [ApiException].
-  Future<Map<String, dynamic>> _postJson(
+  /// Issues an authenticated request with an optional JSON [body] via [method]
+  /// (`POST`/`PATCH`) and decodes a top-level JSON object. A non-2xx status or
+  /// an unexpected body shape becomes an [ApiException] (carrying the status).
+  ///
+  /// [on409] lets a caller substitute a typed exception for a `409 Conflict`,
+  /// receiving the server-provided message (or `null` when it sent none).
+  Future<Map<String, dynamic>> _sendJson(
+    String method,
     String path, {
-    required Map<String, dynamic> body,
+    Map<String, dynamic>? body,
+    Exception Function(String? message)? on409,
   }) async {
     final uri = _baseUrl.replace(path: path);
+    final request = http.Request(method, uri)
+      ..headers.addAll(await _headers(json: body != null));
+    if (body != null) request.body = jsonEncode(body);
 
     const timeout = Duration(seconds: 15);
 
     final http.Response response;
     try {
+      // Bound the whole exchange, not just header receipt: chaining the body
+      // read inside the timeout means a stalled body stream can't hang forever.
       response = await _httpClient
-          .post(
-            uri,
-            headers: await _headers(json: true),
-            body: jsonEncode(body),
-          )
+          .send(request)
+          .then(http.Response.fromStream)
           .timeout(timeout);
     } on Object catch (error) {
       throw ApiException('Request to $path failed: $error');
     }
 
-    if (response.statusCode == 409) {
-      // Fall back to RoomAlreadyHeldException's own default message when the
-      // server sent no error detail, so the two don't drift.
-      final message = _extractError(response.body);
-      throw message == null
-          ? const RoomAlreadyHeldException()
-          : RoomAlreadyHeldException(message);
+    if (response.statusCode == 409 && on409 != null) {
+      throw on409(_extractError(response.body));
     }
 
     if (response.statusCode < 200 || response.statusCode >= 300) {

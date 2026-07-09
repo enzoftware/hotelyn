@@ -183,6 +183,36 @@ Correctness is the database's job — the migration
 The single-winner guarantee and expiry behaviour are covered by pgTAP
 (`supabase/tests/reservation_holds_test.sql`).
 
+### Hotel-side inventory (EPIC-05)
+
+Staff-facing operations over their own hotel (migration
+`..._hotel_inventory.sql`). Because the backend holds the **service-role** key
+and so bypasses RLS, each staff RPC takes the acting profile (`p_actor`) and
+re-checks ownership itself (`actor_manages_hotel`) — exactly as the hold RPC
+guards on `auth.uid()`. RLS (BE-203) remains the boundary for any direct client.
+
+| Piece | What it does |
+| ----- | ------------ |
+| `staff_room_list(actor, hotel_id?)` | The actor's own hotel rooms with a derived status — `available` / `unavailable` / `held` / `occupied` — using the query-time expiry rule. Scope comes from the actor's profile, never a client-supplied hotel id (BE-501). |
+| `set_room_availability(actor, room_id, is_available)` | Toggle availability, ownership-checked. Refuses to set `available` while an active hold/confirmed reservation would double-allocate the room (`room_has_active_reservation`) (BE-502). |
+| `confirm_reservation(actor, id)` / `reject_reservation(actor, id)` | Owning staff confirm or reject a reservation. Confirming an expired hold fails (`hold_expired`) rather than resurrecting it; rejecting frees the room immediately (BE-503). |
+| `supabase_realtime` publication | `reservations` is published for Realtime; a staff session's subscription is scoped to its own hotel by the existing RLS `select` policy. The dashboard subscription is wired in the app layer (BE-504). |
+
+Covered by pgTAP (`supabase/tests/hotel_inventory_test.sql`).
+
+> **Realtime & the REST-only rule.** The apps have no direct Supabase dependency
+> (see the architecture note at the top), so #174's dashboard subscription is a
+> follow-up in the app layer; this change lands only the DB-side enabler.
+>
+> **Auth note.** The staff RPCs are granted to `service_role` only, so they are
+> reachable **only** through the backend (a logged-in user cannot call them
+> directly via PostgREST and pass someone else's `p_actor`). The backend derives
+> the acting user from the JWT `sub` claim, which it currently decodes but does
+> not signature-verify — it relies on an upstream ingress verifying the token, so
+> **this server must never be exposed directly to clients**. Verifying the
+> signature against the Supabase JWT secret in the backend (defence in depth) is
+> a tracked follow-up.
+
 ### REST API (Dart Frog)
 
 The `backend/` Dart Frog server exposes these over resource-based REST endpoints,
@@ -199,6 +229,10 @@ cd backend && dart_frog dev   # http://localhost:8080
 | `GET /hotels/nearby?lat=&lng=&radiusKm=` | Nearby hotels, nearest-first. |
 | `GET /hotels/recommended?lat=&lng=&radiusKm=` | Recommended hotels. |
 | `GET /hotels/{id}/rooms` | Rooms for a hotel with `available_now`. |
+| `POST /hotels/{id}/holds` | Place a reservation hold (guest). |
+| `GET /staff/rooms` | The caller's own hotel rooms with derived status (staff). |
+| `PATCH /staff/rooms/{id}/availability` | Toggle a room's availability (staff). |
+| `POST /reservations/{id}/confirm` · `/reject` | Confirm or reject a reservation (staff). |
 
 ```bash
 curl 'http://localhost:8080/hotels/nearby?lat=-12.11&lng=-77.03&radiusKm=200'

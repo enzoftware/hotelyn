@@ -8,12 +8,13 @@ import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
 import '../../../routes/hotels/recommended.dart' as route;
+import '../../helpers/unused_staff_methods.dart';
 
 class _MockRequestContext extends Mock implements RequestContext {}
 
 class _MockRequest extends Mock implements Request {}
 
-class _FakeHotelDataClient implements HotelDataClient {
+class _FakeHotelDataClient extends UnusedStaffMethodsBase {
   double? lastLat;
   double? lastLng;
   double? lastRadiusKm;
