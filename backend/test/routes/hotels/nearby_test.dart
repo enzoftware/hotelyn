@@ -8,12 +8,13 @@ import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
 import '../../../routes/hotels/nearby.dart' as route;
+import '../../helpers/unused_staff_methods.dart';
 
 class _MockRequestContext extends Mock implements RequestContext {}
 
 class _MockRequest extends Mock implements Request {}
 
-class _FakeHotelDataClient implements HotelDataClient {
+class _FakeHotelDataClient extends UnusedStaffMethodsBase {
   double? lastLat;
   double? lastLng;
   double? lastRadiusKm;
@@ -73,7 +74,7 @@ void main() {
   });
 
   test('returns hotels and forwards the radius args', () async {
-    stubUri({'lat': '-12.11', 'lng': '-77.03', 'radiusKm': '200'});
+    stubUri({'lat': '-12.11', 'lng': '-77.03', 'radiusKm': '80'});
 
     final response = await route.onRequest(context);
 
@@ -81,7 +82,7 @@ void main() {
     final body = jsonDecode(await response.body()) as List<dynamic>;
     expect((body.first as Map)['id'], 'h1');
     expect(client.lastLat, -12.11);
-    expect(client.lastRadiusKm, 200.0);
+    expect(client.lastRadiusKm, 80.0);
   });
 
   test('returns 400 when a required param is missing', () async {
@@ -104,7 +105,7 @@ void main() {
 
   test('returns 500 when the data client throws', () async {
     client.throwOnCall = true;
-    stubUri({'lat': '-12.11', 'lng': '-77.03', 'radiusKm': '200'});
+    stubUri({'lat': '-12.11', 'lng': '-77.03', 'radiusKm': '80'});
 
     final response = await route.onRequest(context);
 

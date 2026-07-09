@@ -247,5 +247,115 @@ void main() {
         );
       });
     });
+
+    group('staff inventory', () {
+      const staffRoomRow = {
+        'id': 'r1',
+        'hotel_id': 'h1',
+        'name': '101',
+        'room_type': 'double',
+        'capacity': 2,
+        'price_per_night': 180.0,
+        'is_available': true,
+        'status': 'held',
+      };
+
+      const reservationRow = {
+        'id': 'res-1',
+        'hotel_id': 'h1',
+        'room_id': 'r1',
+        'guest_id': 'g1',
+        'status': 'confirmed',
+        'check_in': '2026-09-01',
+        'check_out': '2026-09-03',
+      };
+
+      test('getStaffRooms GETs /staff/rooms and decodes the status', () async {
+        late Uri captured;
+        final client = clientReturning(
+          [staffRoomRow],
+          onRequest: (request) => captured = request.url,
+        );
+
+        final rooms = await client.getStaffRooms();
+
+        expect(captured.path, '/staff/rooms');
+        expect(rooms.single.status, RoomStatus.held);
+        expect(rooms.single.isAvailable, isTrue);
+      });
+
+      test('setRoomAvailability PATCHes the room and sends the flag', () async {
+        late http.Request captured;
+        final client = clientReturning(
+          {...staffRoomRow, 'is_available': false, 'status': 'unavailable'},
+          onRequest: (request) => captured = request,
+        );
+
+        final room = await client.setRoomAvailability(
+          roomId: 'r1',
+          isAvailable: false,
+        );
+
+        expect(captured.method, 'PATCH');
+        expect(captured.url.path, '/staff/rooms/r1/availability');
+        expect(jsonDecode(captured.body), {'is_available': false});
+        expect(room.status, RoomStatus.unavailable);
+      });
+
+      test('setRoomAvailability surfaces a 409 as an ApiException', () async {
+        final client = clientReturning(
+          {
+            'errors': [
+              {'message': 'room has an active reservation'},
+            ],
+          },
+          statusCode: 409,
+        );
+
+        await expectLater(
+          client.setRoomAvailability(roomId: 'r1', isAvailable: true),
+          throwsA(
+            isA<ApiException>()
+                .having((e) => e.statusCode, 'statusCode', 409)
+                // The staff 409 is NOT the hold-specific subtype.
+                .having(
+                  (e) => e,
+                  'not the held subtype',
+                  isNot(isA<RoomAlreadyHeldException>()),
+                ),
+          ),
+        );
+      });
+
+      test('confirmReservation POSTs to the confirm path', () async {
+        late http.Request captured;
+        final client = clientReturning(
+          reservationRow,
+          onRequest: (request) => captured = request,
+        );
+
+        final reservation =
+            await client.confirmReservation(reservationId: 'res-1');
+
+        expect(captured.method, 'POST');
+        expect(captured.url.path, '/reservations/res-1/confirm');
+        expect(reservation.status, ReservationStatus.confirmed);
+      });
+
+      test('rejectReservation POSTs to the reject path', () async {
+        late http.Request captured;
+        final client = clientReturning(
+          {...reservationRow, 'status': 'rejected'},
+          onRequest: (request) => captured = request,
+        );
+
+        final reservation =
+            await client.rejectReservation(reservationId: 'res-1');
+
+        expect(captured.method, 'POST');
+        expect(captured.url.path, '/reservations/res-1/reject');
+        expect(reservation.status, ReservationStatus.rejected);
+      });
+    });
   });
 }
