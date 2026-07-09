@@ -107,6 +107,7 @@ void main() {
       final body = jsonDecode(await response.body()) as Map<String, dynamic>;
       expect(body['status'], 'rejected');
       expect(client.lastReservationId, 'res-1');
+      expect(client.lastActorId, 'staff-1');
     });
 
     test('maps reservation_not_found to 404', () async {
