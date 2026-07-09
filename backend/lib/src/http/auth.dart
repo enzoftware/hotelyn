@@ -16,8 +16,8 @@ class UnauthorizedException implements Exception {
 }
 
 /// Runs a staff-authenticated action: resolves the acting user via
-/// [requireActorId], invokes [action] with it, and maps the common failures to
-/// responses — [UnauthorizedException] → `401`, [RpcException] → its business
+/// [actorIdOrNull], invokes [action] with it, and maps the common failures to
+/// responses — a missing/invalid token → `401`, [RpcException] → its business
 /// status (via [rpcErrorResponse]), anything else → `500`.
 ///
 /// Centralizes the auth + error-mapping boilerplate the staff routes share, so
@@ -27,11 +27,9 @@ Future<Response> staffAction(
   RequestContext context,
   Future<Response> Function(String actorId) action,
 ) async {
-  final String actorId;
-  try {
-    actorId = requireActorId(context);
-  } on UnauthorizedException catch (error) {
-    return unauthorized(error.message);
+  final actorId = actorIdOrNull(context);
+  if (actorId == null) {
+    return unauthorized('Authentication is required for this request.');
   }
 
   try {
@@ -61,14 +59,25 @@ Future<Response> staffAction(
 /// depth, so a misconfigured ingress can't become a full auth bypass) is a
 /// tracked follow-up. See the README "Auth note".
 String requireActorId(RequestContext context) {
+  final actorId = actorIdOrNull(context);
+  if (actorId == null) {
+    throw const UnauthorizedException();
+  }
+  return actorId;
+}
+
+/// Like [requireActorId], but returns `null` instead of throwing when the
+/// request carries no usable `Bearer` token — for callers that guard with an
+/// `if` rather than a `try`/`catch`.
+String? actorIdOrNull(RequestContext context) {
   final header = context.request.headers[HttpHeaders.authorizationHeader];
   if (header == null || !header.startsWith('Bearer ')) {
-    throw const UnauthorizedException();
+    return null;
   }
   final token = header.substring('Bearer '.length).trim();
   final sub = _subFromJwt(token);
   if (sub == null || sub.isEmpty) {
-    throw const UnauthorizedException('Malformed authentication token.');
+    return null;
   }
   return sub;
 }
