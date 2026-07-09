@@ -357,21 +357,24 @@ comment on function public.reject_reservation(uuid, uuid) is
 -- session) — CREATE FUNCTION grants EXECUTE to PUBLIC by default, so we revoke
 -- that first. `service_role` is a member of every role, so it retains access
 -- without an explicit grant; we grant it anyway to make the intent unambiguous.
+-- room_status is included: it is SECURITY DEFINER and so bypasses RLS, meaning a
+-- direct grant to `authenticated` would let any logged-in user probe any room's
+-- occupancy/hold state across every hotel. Its only callers are the definer
+-- functions above (staff_room_list, set_room_availability), which invoke it in
+-- their own definer context and do not need the caller to hold this grant.
 revoke execute on function public.actor_manages_hotel(uuid, uuid)            from public;
+revoke execute on function public.room_status(uuid)                         from public;
 revoke execute on function public.staff_room_list(uuid, uuid)               from public;
 revoke execute on function public.set_room_availability(uuid, uuid, boolean) from public;
 revoke execute on function public.confirm_reservation(uuid, uuid)           from public;
 revoke execute on function public.reject_reservation(uuid, uuid)            from public;
 
 grant execute on function public.actor_manages_hotel(uuid, uuid)            to service_role;
+grant execute on function public.room_status(uuid)                          to service_role;
 grant execute on function public.staff_room_list(uuid, uuid)               to service_role;
 grant execute on function public.set_room_availability(uuid, uuid, boolean) to service_role;
 grant execute on function public.confirm_reservation(uuid, uuid)           to service_role;
 grant execute on function public.reject_reservation(uuid, uuid)            to service_role;
-
--- room_status is a read-only helper with no p_actor / auth bypass; safe for any
--- authenticated session (e.g. for an RLS-scoped direct read).
-grant execute on function public.room_status(uuid)                          to authenticated;
 
 -- ---------------------------------------------------------------------------
 -- BE-504 · Realtime publication for reservations
