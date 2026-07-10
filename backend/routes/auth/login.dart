@@ -27,6 +27,13 @@ Future<Response> onRequest(RequestContext context) async {
           email: fields['email']!,
           password: fields['password']!,
         );
-    return Response.json(body: session.toJson());
+    // Token-bearing response: keep it out of any shared/browser cache.
+    return Response.json(
+      body: session.toJson(),
+      headers: const {
+        HttpHeaders.cacheControlHeader: 'no-store',
+        HttpHeaders.pragmaHeader: 'no-cache',
+      },
+    );
   });
 }

@@ -235,6 +235,21 @@ Response authFailureResponse(AuthFailure failure) {
     );
   }
 
+  // An upstream 5xx is a GoTrue/server fault, not a rejected credential — pass
+  // the status through rather than masking it as a 401 auth failure.
+  final statusCode = failure.statusCode;
+  if (statusCode != null && statusCode >= HttpStatus.internalServerError) {
+    return Response.json(
+      statusCode: statusCode,
+      body: {
+        'error': failure.code,
+        'errors': [
+          {'message': 'The authentication service is temporarily unavailable.'},
+        ],
+      },
+    );
+  }
+
   return Response.json(
     statusCode: HttpStatus.unauthorized,
     body: {

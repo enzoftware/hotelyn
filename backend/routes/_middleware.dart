@@ -5,7 +5,6 @@ import 'package:hotelyn_server/hotelyn_server.dart';
 import 'package:supabase/supabase.dart';
 
 HotelDataClient? _dataClient;
-AuthClient? _authClient;
 
 String _supabaseUrl() =>
     Platform.environment['SUPABASE_URL'] ?? 'http://127.0.0.1:54321';
@@ -30,7 +29,12 @@ HotelDataClient _resolveDataClient() {
   );
 }
 
-/// Builds the Supabase Auth client from the environment, once.
+/// Builds a fresh Supabase Auth client from the environment for each request.
+///
+/// A new [GoTrueClient] per request keeps auth state isolated: GoTrue caches
+/// the most recent session on the instance, so a single process-wide client
+/// could leak one caller's session into a concurrent request. The client is
+/// cheap (no connections held), so per-request construction is the default.
 ///
 /// Auth runs with the ANON key (a public, signed-out flow), never the
 /// service-role key — the service role would bypass GoTrue's rate limits and
@@ -48,7 +52,7 @@ AuthClient _resolveAuthClient() {
       '(see `supabase status`).',
     );
   }
-  return _authClient ??= SupabaseAuthClient(
+  return SupabaseAuthClient(
     GoTrueClient(
       url: '${_supabaseUrl()}/auth/v1',
       headers: {'apikey': anonKey, 'Authorization': 'Bearer $anonKey'},

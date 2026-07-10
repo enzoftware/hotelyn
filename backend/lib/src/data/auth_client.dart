@@ -181,6 +181,12 @@ class SupabaseAuthClient implements AuthClient {
         lower.contains('too many')) {
       return 'over_request_rate_limit';
     }
+    // Password/credential wording must map to the login error, not the OTP one —
+    // GoTrue's "Invalid login credentials" also contains "invalid", so this has
+    // to be checked before the generic invalid/expired branch below.
+    if (lower.contains('credential') || lower.contains('password')) {
+      return 'invalid_credentials';
+    }
     if (lower.contains('expired') || lower.contains('invalid')) {
       return 'otp_expired';
     }
