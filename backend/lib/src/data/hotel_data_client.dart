@@ -77,6 +77,15 @@ abstract class HotelDataClient {
     required String actorId,
     required String reservationId,
   });
+
+  /// Marks a held reservation paid in person (`mark_reservation_paid`),
+  /// transitioning it to `confirmed` and stamping who/when. Throws
+  /// [RpcException] with `not_authorized`, `reservation_not_found`, or
+  /// `reservation_not_payable`.
+  Future<Reservation> markReservationPaid({
+    required String actorId,
+    required String reservationId,
+  });
 }
 
 /// [HotelDataClient] backed by Supabase RPC calls to the SQL functions.
@@ -195,6 +204,18 @@ class SupabaseHotelDataClient implements HotelDataClient {
       params: {'p_actor': actorId, 'p_id': reservationId},
     );
     return Reservation.fromJson(_singleRow(rows, 'reject_reservation'));
+  }
+
+  @override
+  Future<Reservation> markReservationPaid({
+    required String actorId,
+    required String reservationId,
+  }) async {
+    final rows = await _rpcList(
+      'mark_reservation_paid',
+      params: {'p_actor': actorId, 'p_id': reservationId},
+    );
+    return Reservation.fromJson(_singleRow(rows, 'mark_reservation_paid'));
   }
 
   /// Unwraps the single row a mutating RPC is expected to return. These

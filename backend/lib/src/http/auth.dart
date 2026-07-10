@@ -203,6 +203,10 @@ Response rpcErrorResponse(RpcException error) {
       return conflict('This reservation is not awaiting confirmation.');
     case 'reservation_not_active':
       return conflict('This reservation is not active.');
+    case 'reservation_not_payable':
+      return conflict(
+        'This reservation cannot be marked paid; it is not a live hold.',
+      );
     default:
       return internalError();
   }
