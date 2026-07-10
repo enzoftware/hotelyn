@@ -35,4 +35,11 @@ abstract class UnusedStaffMethodsBase implements HotelDataClient {
     required String reservationId,
   }) =>
       throw UnimplementedError();
+
+  @override
+  Future<Reservation> markReservationPaid({
+    required String actorId,
+    required String reservationId,
+  }) =>
+      throw UnimplementedError();
 }

@@ -38,6 +38,8 @@ class Reservation extends Equatable {
     required this.checkOut,
     this.holdExpiresAt,
     this.confirmationCode,
+    this.paidBy,
+    this.paidAt,
   });
 
   /// Decodes a `Reservation` from a REST/RPC JSON row.
@@ -66,6 +68,13 @@ class Reservation extends Equatable {
   /// Human-quotable booking handle (e.g. `HZ-3F7K9Q2A`), generated server-side.
   final String? confirmationCode;
 
+  /// Staff/admin profile id that marked this reservation paid in person
+  /// (BE-702). `null` unless a manual payment was recorded.
+  final String? paidBy;
+
+  /// When the in-person payment was recorded (BE-702). `null` unless paid.
+  final DateTime? paidAt;
+
   /// Encodes this `Reservation` to a snake_case JSON map.
   Map<String, dynamic> toJson() => _$ReservationToJson(this);
 
@@ -80,6 +89,8 @@ class Reservation extends Equatable {
         checkOut,
         holdExpiresAt,
         confirmationCode,
+        paidBy,
+        paidAt,
       ];
 }
 

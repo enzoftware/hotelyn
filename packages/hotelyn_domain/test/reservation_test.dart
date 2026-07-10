@@ -48,6 +48,41 @@ void main() {
       expect(reservation.confirmationCode, isNull);
     });
 
+    test('maps a paid (confirmed) reservation row with audit fields', () {
+      final reservation = Reservation.fromJson(const {
+        'id': 'res-3',
+        'hotel_id': 'h1',
+        'room_id': 'r1',
+        'guest_id': 'g1',
+        'status': 'confirmed',
+        'check_in': '2026-09-01',
+        'check_out': '2026-09-03',
+        'hold_expires_at': null,
+        'confirmation_code': 'HZ-3F7K9Q2A',
+        'paid_by': 'staff-1',
+        'paid_at': '2026-09-01T10:30:00Z',
+      });
+
+      expect(reservation.status, ReservationStatus.confirmed);
+      expect(reservation.paidBy, 'staff-1');
+      expect(reservation.paidAt, DateTime.utc(2026, 9, 1, 10, 30));
+    });
+
+    test('tolerates null paid_by / paid_at on an unpaid reservation', () {
+      final reservation = Reservation.fromJson(const {
+        'id': 'res-4',
+        'hotel_id': 'h1',
+        'room_id': 'r1',
+        'guest_id': 'g1',
+        'status': 'held',
+        'check_in': '2026-09-01',
+        'check_out': '2026-09-03',
+      });
+
+      expect(reservation.paidBy, isNull);
+      expect(reservation.paidAt, isNull);
+    });
+
     test('decodes each reservation_status enum value', () {
       Reservation withStatus(String status) => Reservation.fromJson({
             'id': 'res',

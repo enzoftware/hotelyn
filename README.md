@@ -200,6 +200,24 @@ guards on `auth.uid()`. RLS (BE-203) remains the boundary for any direct client.
 
 Covered by pgTAP (`supabase/tests/hotel_inventory_test.sql`).
 
+### Booking confirmation & manual payment (EPIC-07)
+
+The MVP has no online payment integration: a guest pays in person and staff mark
+the reservation paid (migration `..._manual_payment.sql`). Like the other staff
+RPCs it takes the acting profile and re-checks ownership via `actor_manages_hotel`.
+
+| Piece | What it does |
+| ----- | ------------ |
+| `confirmation_code` (BE-701) | 6+ char Crockford-base32 handle (`HZ-…`, no I/L/O/U) generated inside `create_reservation_hold` and unique among reservations; the RPC retries on the astronomically rare collision. Already landed with the hold engine (EPIC-04). |
+| `mark_reservation_paid(actor, id)` | Owning staff mark a **live hold** paid: it transitions to `confirmed`, its expiry is cleared, and `paid_by`/`paid_at` are stamped for dispute resolution. Refuses (`reservation_not_payable`) anything that is not a live hold — already-confirmed, terminal, or an expired hold (BE-702). |
+
+Covered by pgTAP (`supabase/tests/manual_payment_test.sql`).
+
+> **Deferred (BE-703).** ID/age verification data capture is a documented phase-2
+> item (decision #3) and is **not** built in the MVP. Shipping to real users in
+> "hoteles de paso" jurisdictions without it is a compliance gap to close before
+> launch, not a missing feature here.
+
 > **Realtime & the REST-only rule.** The apps have no direct Supabase dependency
 > (see the architecture note at the top), so #174's dashboard subscription is a
 > follow-up in the app layer; this change lands only the DB-side enabler.
@@ -233,6 +251,7 @@ cd backend && dart_frog dev   # http://localhost:8080
 | `GET /staff/rooms` | The caller's own hotel rooms with derived status (staff). |
 | `PATCH /staff/rooms/{id}/availability` | Toggle a room's availability (staff). |
 | `POST /reservations/{id}/confirm` · `/reject` | Confirm or reject a reservation (staff). |
+| `POST /reservations/{id}/pay` | Mark a held reservation paid in person → `confirmed` (staff). |
 | `POST /auth/otp/request` · `POST /auth/otp/verify` | Guest email-OTP sign-in (BE-601). |
 | `POST /auth/login` | Staff email/password sign-in (BE-602). |
 

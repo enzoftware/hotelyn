@@ -18,6 +18,10 @@ Reservation _$ReservationFromJson(Map<String, dynamic> json) => Reservation(
           ? null
           : DateTime.parse(json['hold_expires_at'] as String),
       confirmationCode: json['confirmation_code'] as String?,
+      paidBy: json['paid_by'] as String?,
+      paidAt: json['paid_at'] == null
+          ? null
+          : DateTime.parse(json['paid_at'] as String),
     );
 
 Map<String, dynamic> _$ReservationToJson(Reservation instance) =>
@@ -31,6 +35,8 @@ Map<String, dynamic> _$ReservationToJson(Reservation instance) =>
       'check_out': _dateToJson(instance.checkOut),
       'hold_expires_at': instance.holdExpiresAt?.toIso8601String(),
       'confirmation_code': instance.confirmationCode,
+      'paid_by': instance.paidBy,
+      'paid_at': instance.paidAt?.toIso8601String(),
     };
 
 const _$ReservationStatusEnumMap = {

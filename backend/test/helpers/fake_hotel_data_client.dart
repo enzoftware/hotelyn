@@ -108,7 +108,32 @@ class FakeHotelDataClient implements HotelDataClient {
     return _reservation(reservationId, ReservationStatus.rejected);
   }
 
-  Reservation _reservation(String id, ReservationStatus status) => Reservation(
+  @override
+  Future<Reservation> markReservationPaid({
+    required String actorId,
+    required String reservationId,
+  }) async {
+    if (throwRpc != null) throw throwRpc!;
+    if (throwGeneric != null) throw throwGeneric!;
+    lastActorId = actorId;
+    lastReservationId = reservationId;
+    // A paid reservation is confirmed and carries audit metadata, so route
+    // tests can assert the serialized paid_by/paid_at survive the round-trip.
+    return _reservation(
+      reservationId,
+      ReservationStatus.confirmed,
+      paidBy: actorId,
+      paidAt: DateTime.utc(2026, 9, 1, 10, 30),
+    );
+  }
+
+  Reservation _reservation(
+    String id,
+    ReservationStatus status, {
+    String? paidBy,
+    DateTime? paidAt,
+  }) =>
+      Reservation(
         id: id,
         hotelId: 'h1',
         roomId: 'r1',
@@ -116,5 +141,7 @@ class FakeHotelDataClient implements HotelDataClient {
         status: status,
         checkIn: DateTime.utc(2026, 9),
         checkOut: DateTime.utc(2026, 9, 3),
+        paidBy: paidBy,
+        paidAt: paidAt,
       );
 }
