@@ -29,8 +29,13 @@
 -- preserved (ON DELETE SET NULL) even if that staff member is later removed —
 -- the audit fact (a payment happened at paid_at) survives the staff account.
 alter table public.reservations
-  add column paid_by uuid references public.profiles (id) on delete set null,
+  add column paid_by uuid,
   add column paid_at timestamptz;
+
+alter table public.reservations
+  add constraint reservations_paid_by_fkey
+  foreign key (paid_by) references public.profiles (id)
+  on delete set null not valid;
 
 comment on column public.reservations.paid_by is
   'Staff/admin profile that marked this reservation paid in person (BE-702). '
