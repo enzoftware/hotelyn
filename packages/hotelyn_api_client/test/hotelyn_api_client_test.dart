@@ -357,5 +357,138 @@ void main() {
         expect(reservation.status, ReservationStatus.rejected);
       });
     });
+
+    group('auth', () {
+      // A client whose mock returns a raw (status, body) — lets a test drive an
+      // empty-body 202 or a custom error envelope.
+      HotelynApiClient rawClient(
+        int statusCode,
+        String body, {
+        void Function(http.Request request)? onRequest,
+      }) {
+        final mock = MockClient((request) async {
+          onRequest?.call(request);
+          return http.Response(body, statusCode);
+        });
+        return HotelynApiClient(
+          baseUrl: 'http://127.0.0.1:8080',
+          httpClient: mock,
+        );
+      }
+
+      const sessionRow = {
+        'access_token': 'access-123',
+        'refresh_token': 'refresh-456',
+        'user_id': 'user-1',
+        'expires_in': 3600,
+        'token_type': 'bearer',
+      };
+
+      test('requestEmailOtp POSTs the email and tolerates a 202 no-body',
+          () async {
+        late http.Request captured;
+        final client = rawClient(202, '', onRequest: (r) => captured = r);
+
+        await client.requestEmailOtp(email: 'guest@hotelyn.test');
+
+        expect(captured.method, 'POST');
+        expect(captured.url.path, '/auth/otp/request');
+        expect(jsonDecode(captured.body), {'email': 'guest@hotelyn.test'});
+      });
+
+      test('requestEmailOtp maps a 429 to AuthApiException with retry-after',
+          () async {
+        final client = rawClient(
+          429,
+          jsonEncode({
+            'error': 'over_email_send_rate_limit',
+            'retry_after_seconds': 30,
+          }),
+        );
+
+        await expectLater(
+          client.requestEmailOtp(email: 'guest@hotelyn.test'),
+          throwsA(
+            isA<AuthApiException>()
+                .having((e) => e.code, 'code', 'over_email_send_rate_limit')
+                .having((e) => e.retryAfterSeconds, 'retryAfter', 30)
+                // The HTTP status is preserved on the exception.
+                .having((e) => e.statusCode, 'statusCode', 429),
+          ),
+        );
+      });
+
+      test('verifyEmailOtp returns the session', () async {
+        late http.Request captured;
+        final client = rawClient(
+          200,
+          jsonEncode(sessionRow),
+          onRequest: (r) => captured = r,
+        );
+
+        final session = await client.verifyEmailOtp(
+          email: 'guest@hotelyn.test',
+          token: '123456',
+        );
+
+        expect(captured.url.path, '/auth/otp/verify');
+        expect(
+          jsonDecode(captured.body),
+          {'email': 'guest@hotelyn.test', 'token': '123456'},
+        );
+        expect(session.accessToken, 'access-123');
+        expect(session.userId, 'user-1');
+      });
+
+      test('verifyEmailOtp maps a 401 to AuthApiException(otp_expired)',
+          () async {
+        final client = rawClient(401, jsonEncode({'error': 'otp_expired'}));
+
+        await expectLater(
+          client.verifyEmailOtp(email: 'guest@hotelyn.test', token: '000000'),
+          throwsA(
+            isA<AuthApiException>()
+                .having((e) => e.code, 'code', 'otp_expired'),
+          ),
+        );
+      });
+
+      test('signInWithPassword returns the session', () async {
+        late http.Request captured;
+        final client = rawClient(
+          200,
+          jsonEncode(sessionRow),
+          onRequest: (r) => captured = r,
+        );
+
+        final session = await client.signInWithPassword(
+          email: 'staff@hotelyn.test',
+          password: 'password123',
+        );
+
+        expect(captured.url.path, '/auth/login');
+        expect(
+          jsonDecode(captured.body),
+          {'email': 'staff@hotelyn.test', 'password': 'password123'},
+        );
+        expect(session.userId, 'user-1');
+      });
+
+      test('signInWithPassword maps a 401 to invalid_credentials', () async {
+        final client =
+            rawClient(401, jsonEncode({'error': 'invalid_credentials'}));
+
+        await expectLater(
+          client.signInWithPassword(
+            email: 'staff@hotelyn.test',
+            password: 'wrong',
+          ),
+          throwsA(
+            isA<AuthApiException>()
+                .having((e) => e.code, 'code', 'invalid_credentials'),
+          ),
+        );
+      });
+    });
   });
 }

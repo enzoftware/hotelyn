@@ -233,6 +233,8 @@ cd backend && dart_frog dev   # http://localhost:8080
 | `GET /staff/rooms` | The caller's own hotel rooms with derived status (staff). |
 | `PATCH /staff/rooms/{id}/availability` | Toggle a room's availability (staff). |
 | `POST /reservations/{id}/confirm` · `/reject` | Confirm or reject a reservation (staff). |
+| `POST /auth/otp/request` · `POST /auth/otp/verify` | Guest email-OTP sign-in (BE-601). |
+| `POST /auth/login` | Staff email/password sign-in (BE-602). |
 
 ```bash
 curl 'http://localhost:8080/hotels/nearby?lat=-12.11&lng=-77.03&radiusKm=200'
@@ -241,6 +243,33 @@ curl 'http://localhost:8080/hotels/nearby?lat=-12.11&lng=-77.03&radiusKm=200'
 Responses are JSON arrays with snake_case keys (e.g. `distance_km`), matching the
 `hotelyn_domain` `json_serializable` models. A missing/invalid query parameter
 returns `400`; a data-layer failure returns `500` (internal detail not leaked).
+
+### Authentication (EPIC-06)
+
+Auth also goes through the backend — the apps never call Supabase Auth (GoTrue)
+directly. The backend wraps GoTrue with the **anon** key (a public, signed-out
+flow; the service-role key would bypass rate limits) using the **implicit** flow
+(the server is stateless, so PKCE's code-verifier storage doesn't apply). The
+data-layer RPCs still use the service-role key — the two clients are separate.
+
+| Flow | Endpoint(s) | Notes |
+| ---- | ----------- | ----- |
+| Guest email OTP (BE-601) | `POST /auth/otp/request` → `202`, then `POST /auth/otp/verify` → session | A brand-new address is created on verify (no signup step). A cooldown yields `429` with `retry_after_seconds`; a bad/expired code yields `401 { "error": "otp_expired" }`. |
+| Staff password (BE-602) | `POST /auth/login` → session | Staff are **invite-only** (Admin API / dashboard) — there is no signup route. Wrong credentials yield `401 { "error": "invalid_credentials" }`. |
+
+A successful verify/login returns `{ access_token, refresh_token, user_id,
+expires_in, token_type }` (the `AuthSession` the app persists). The backend needs
+`SUPABASE_ANON_KEY` in addition to `SUPABASE_SERVICE_ROLE_KEY` (see
+`backend/.env.example`).
+
+> **Known caveat — email recycling / shared mailboxes.** Identity is an email
+> address, so a recycled address or shared inbox could let a later holder receive
+> an OTP for a prior account. Accepted MVP trade-off; ownership-re-proving account
+> recovery is a tracked follow-up (see `supabase/config.toml`).
+
+Tenant isolation (staff cannot reach another hotel's data) is proven by
+`supabase/tests/rls_test.sql` (BE-603), which runs in CI on every PR that touches
+`supabase/**`.
 
 ### Email testing (local)
 

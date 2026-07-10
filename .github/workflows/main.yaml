@@ -27,3 +27,37 @@ jobs:
     with:
       flutter_channel: stable
       working_directory: apps/hotelyn_dashboard
+
+  # BE-603: proves RLS tenant isolation (and the other DB behaviours) on every PR
+  # that touches migrations, policies, seed, or the pgTAP tests. The path filter
+  # keeps it a no-op for app-only PRs while guaranteeing coverage when the schema
+  # or policies change — the exact condition the ticket requires.
+  db-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # This job only reads the checkout to run the pgTAP suite; it never
+          # pushes. Keep the GITHUB_TOKEN out of the local git config.
+          persist-credentials: false
+
+      - id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            supabase:
+              - 'supabase/**'
+
+      - if: steps.changes.outputs.supabase == 'true'
+        uses: supabase/setup-cli@v1
+        with:
+          # Pinned (not `latest`) so an unrelated CLI release can't turn a green
+          # PR red between runs; bump deliberately.
+          version: 2.109.1
+
+      - name: Start Supabase and run the pgTAP suite
+        if: steps.changes.outputs.supabase == 'true'
+        run: |
+          supabase start
+          supabase test db

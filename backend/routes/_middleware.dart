@@ -6,6 +6,9 @@ import 'package:supabase/supabase.dart';
 
 HotelDataClient? _dataClient;
 
+String _supabaseUrl() =>
+    Platform.environment['SUPABASE_URL'] ?? 'http://127.0.0.1:54321';
+
 /// Builds the Supabase-backed data client from the environment, once.
 ///
 /// The server talks to Supabase with the service-role key; that key never
@@ -22,15 +25,45 @@ HotelDataClient _resolveDataClient() {
     );
   }
   return _dataClient ??= SupabaseHotelDataClient(
-    SupabaseClient(
-      Platform.environment['SUPABASE_URL'] ?? 'http://127.0.0.1:54321',
-      serviceRoleKey,
+    SupabaseClient(_supabaseUrl(), serviceRoleKey),
+  );
+}
+
+/// Builds a fresh Supabase Auth client from the environment for each request.
+///
+/// A new [GoTrueClient] per request keeps auth state isolated: GoTrue caches
+/// the most recent session on the instance, so a single process-wide client
+/// could leak one caller's session into a concurrent request. The client is
+/// cheap (no connections held), so per-request construction is the default.
+///
+/// Auth runs with the ANON key (a public, signed-out flow), never the
+/// service-role key — the service role would bypass GoTrue's rate limits and
+/// user checks. Required explicitly for the same fail-fast reason as above.
+///
+/// The GoTrue client uses the IMPLICIT flow: this server is stateless and has
+/// no async storage, and PKCE would try to persist a code verifier (and crash
+/// with a null-check). We only need GoTrue to send/verify codes and return
+/// tokens, not to hold session state, so implicit suits the server side.
+AuthClient _resolveAuthClient() {
+  final anonKey = Platform.environment['SUPABASE_ANON_KEY'];
+  if (anonKey == null || anonKey.isEmpty) {
+    throw StateError(
+      'SUPABASE_ANON_KEY must be set to a valid anon key '
+      '(see `supabase status`).',
+    );
+  }
+  return SupabaseAuthClient(
+    GoTrueClient(
+      url: '${_supabaseUrl()}/auth/v1',
+      headers: {'apikey': anonKey, 'Authorization': 'Bearer $anonKey'},
+      autoRefreshToken: false,
+      flowType: AuthFlowType.implicit,
     ),
   );
 }
 
 Handler middleware(Handler handler) {
-  return handler.use(
-    provider<HotelDataClient>((_) => _resolveDataClient()),
-  );
+  return handler
+      .use(provider<HotelDataClient>((_) => _resolveDataClient()))
+      .use(provider<AuthClient>((_) => _resolveAuthClient()));
 }

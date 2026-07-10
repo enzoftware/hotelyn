@@ -1,6 +1,7 @@
 /// Dart Frog REST server for Hotelyn.
 library;
 
+export 'src/data/auth_client.dart';
 export 'src/data/hotel_data_client.dart';
 export 'src/http/auth.dart';
 export 'src/http/hotel_search_handler.dart';

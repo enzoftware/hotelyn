@@ -33,3 +33,28 @@ class RoomAlreadyHeldException extends ApiException {
   @override
   String toString() => 'RoomAlreadyHeldException: $message';
 }
+
+/// Thrown by the auth methods (`requestEmailOtp`, `verifyEmailOtp`,
+/// `signInWithPassword`) when authentication fails.
+///
+/// [code] is the server's stable error token — the caller maps it to an
+/// actionable, localizable message (e.g. `otp_expired` → "That code has
+/// expired", `invalid_credentials` → "Wrong email or password"). For a
+/// rate-limit code, [retryAfterSeconds] carries the remaining cooldown when the
+/// server provided it.
+class AuthApiException extends ApiException {
+  const AuthApiException(
+    this.code, {
+    this.retryAfterSeconds,
+    super.statusCode,
+  }) : super('Authentication failed: $code');
+
+  /// Stable machine-readable error token (snake_case).
+  final String code;
+
+  /// Seconds to wait before retrying, for a rate-limit [code]; else `null`.
+  final int? retryAfterSeconds;
+
+  @override
+  String toString() => 'AuthApiException($code)';
+}

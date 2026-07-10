@@ -135,6 +135,63 @@ class HotelynApiClient {
     return Reservation.fromJson(json);
   }
 
+  /// Requests an email OTP for [email] (guest sign-in, BE-601). Completes when
+  /// the code is on its way. Throws [AuthApiException] with `over_*_rate_limit`
+  /// (and `retryAfterSeconds` when known) if the cooldown is in effect.
+  Future<void> requestEmailOtp({required String email}) async {
+    await _sendJson(
+      'POST',
+      '/auth/otp/request',
+      body: {'email': email},
+      expectBody: false,
+      onError: _asAuthException,
+    );
+  }
+
+  /// Verifies the email OTP [token] for [email] and returns the [AuthSession]
+  /// (BE-601). Throws [AuthApiException] `otp_expired` for a wrong/expired code.
+  Future<AuthSession> verifyEmailOtp({
+    required String email,
+    required String token,
+  }) async {
+    final json = await _sendJson(
+      'POST',
+      '/auth/otp/verify',
+      body: {'email': email, 'token': token},
+      onError: _asAuthException,
+    );
+    return AuthSession.fromJson(json);
+  }
+
+  /// Signs a staff member in with [email] + [password] (BE-602), returning the
+  /// [AuthSession]. Throws [AuthApiException] `invalid_credentials` if wrong.
+  Future<AuthSession> signInWithPassword({
+    required String email,
+    required String password,
+  }) async {
+    final json = await _sendJson(
+      'POST',
+      '/auth/login',
+      body: {'email': email, 'password': password},
+      onError: _asAuthException,
+    );
+    return AuthSession.fromJson(json);
+  }
+
+  /// Turns a non-2xx auth response into a typed [AuthApiException], reading the
+  /// server's `error` code and optional `retry_after_seconds`.
+  Exception _asAuthException(int statusCode, Map<String, dynamic>? body) {
+    final code = body?['error'] as String? ?? 'auth_error';
+    // JSON numbers decode as double when they carry a fraction; cast through
+    // num (like the generated fromJson) so a value of e.g. 30.0 doesn't throw.
+    final retryAfter = (body?['retry_after_seconds'] as num?)?.toInt();
+    return AuthApiException(
+      code,
+      retryAfterSeconds: retryAfter,
+      statusCode: statusCode,
+    );
+  }
+
   /// Shared plumbing for the two radius searches, which share params and shape.
   Future<List<Hotel>> _getHotels(
     String path, {
@@ -202,11 +259,17 @@ class HotelynApiClient {
   ///
   /// [on409] lets a caller substitute a typed exception for a `409 Conflict`,
   /// receiving the server-provided message (or `null` when it sent none).
+  /// [onError] lets a caller map ANY non-2xx to a typed exception, receiving
+  /// the status and the decoded JSON body (`null` when it was not an object).
+  /// [expectBody] `false` skips decoding for empty success responses (e.g.
+  /// `202 Accepted`), returning an empty map.
   Future<Map<String, dynamic>> _sendJson(
     String method,
     String path, {
     Map<String, dynamic>? body,
     Exception Function(String? message)? on409,
+    Exception Function(int statusCode, Map<String, dynamic>? body)? onError,
+    bool expectBody = true,
   }) async {
     final uri = _baseUrl.replace(path: path);
     final request = http.Request(method, uri)
@@ -232,11 +295,16 @@ class HotelynApiClient {
     }
 
     if (response.statusCode < 200 || response.statusCode >= 300) {
+      if (onError != null) {
+        throw onError(response.statusCode, _decodeObjectOrNull(response.body));
+      }
       throw ApiException(
         _extractError(response.body) ?? 'Request to $path failed.',
         statusCode: response.statusCode,
       );
     }
+
+    if (!expectBody) return const {};
 
     final dynamic decoded;
     try {
@@ -248,6 +316,16 @@ class HotelynApiClient {
       throw ApiException('Expected a JSON object from $path.');
     }
     return decoded;
+  }
+
+  /// Decodes a JSON object body, or `null` when it is absent or not an object.
+  Map<String, dynamic>? _decodeObjectOrNull(String body) {
+    try {
+      final decoded = jsonDecode(body);
+      return decoded is Map<String, dynamic> ? decoded : null;
+    } on FormatException {
+      return null;
+    }
   }
 
   /// Formats a [DateTime] as a bare `YYYY-MM-DD` date (the API date contract).
