@@ -182,7 +182,9 @@ class HotelynApiClient {
   /// server's `error` code and optional `retry_after_seconds`.
   Exception _asAuthException(int statusCode, Map<String, dynamic>? body) {
     final code = body?['error'] as String? ?? 'auth_error';
-    final retryAfter = body?['retry_after_seconds'] as int?;
+    // JSON numbers decode as double when they carry a fraction; cast through
+    // num (like the generated fromJson) so a value of e.g. 30.0 doesn't throw.
+    final retryAfter = (body?['retry_after_seconds'] as num?)?.toInt();
     return AuthApiException(
       code,
       retryAfterSeconds: retryAfter,
