@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
+import 'package:hotelyn_server/src/data/auth_client.dart';
 import 'package:hotelyn_server/src/data/hotel_data_client.dart';
 import 'package:hotelyn_server/src/http/query_params.dart';
 
@@ -37,10 +38,72 @@ Future<Response> staffAction(
   } on RpcException catch (error) {
     return rpcErrorResponse(error);
   } on Object catch (error, stackTrace) {
-    // TODO: replace with structured logger when available
-    print('Unexpected error in staffAction: $error\n$stackTrace');
+    // Surface unexpected failures to the server log (stderr) so they reach
+    // monitoring, while the client only ever sees a generic 500.
+    stderr.writeln('Unexpected error in staffAction: $error\n$stackTrace');
     return internalError();
   }
+}
+
+/// Runs an auth-route [action] (identified by [label] for logs) and maps the
+/// common failures — [AuthFailure] → its auth status (via
+/// [authFailureResponse]), anything else → `500` (logged to stderr so 5xx are
+/// diagnosable). Centralizes the try/catch the three auth routes share.
+Future<Response> authAction(
+  String label,
+  Future<Response> Function() action,
+) async {
+  try {
+    return await action();
+  } on AuthFailure catch (failure) {
+    return authFailureResponse(failure);
+  } on Object catch (error, stackTrace) {
+    stderr.writeln('Unexpected error in $label: $error\n$stackTrace');
+    return internalError();
+  }
+}
+
+/// Parses the request JSON body and pulls out [requiredStringFields] as
+/// trimmed, non-empty strings. Returns the values keyed by field name on
+/// success, or a `400` [Response] describing what was wrong — the single place
+/// the auth routes validate their bodies.
+Future<Object> parseJsonBody(
+  RequestContext context, {
+  required List<String> requiredStringFields,
+  List<String> rawStringFields = const [],
+}) async {
+  final dynamic decoded;
+  try {
+    decoded = jsonDecode(await context.request.body());
+  } on FormatException {
+    return badRequest('Request body was not valid JSON.');
+  }
+  if (decoded is! Map<String, dynamic>) {
+    return badRequest('Body must be a JSON object.');
+  }
+
+  final values = <String, String>{};
+  for (final field in requiredStringFields) {
+    final value = decoded[field];
+    if (value is! String) {
+      return badRequest('"$field" is required and must be a string.');
+    }
+    final trimmed = value.trim();
+    if (trimmed.isEmpty) {
+      return badRequest('"$field" must not be empty.');
+    }
+    values[field] = trimmed;
+  }
+  // Fields kept verbatim (e.g. a password, which may legitimately have spaces),
+  // still required and non-empty but not trimmed.
+  for (final field in rawStringFields) {
+    final value = decoded[field];
+    if (value is! String || value.isEmpty) {
+      return badRequest('"$field" is required and must not be empty.');
+    }
+    values[field] = value;
+  }
+  return values;
 }
 
 /// Extracts the acting user's id (the JWT `sub` claim) from the request's
@@ -143,4 +206,42 @@ Response rpcErrorResponse(RpcException error) {
     default:
       return internalError();
   }
+}
+
+/// Maps an [AuthFailure] (from the auth client) to an HTTP response with a
+/// stable `error` code the client turns into an actionable message.
+///
+///   * rate limit → `429` with `retry_after_seconds` so the UI can show the
+///     remaining cooldown (BE-601);
+///   * bad/expired code or wrong password → `401`;
+///   * anything unrecognized → `401` (a failed auth attempt, not a server bug).
+Response authFailureResponse(AuthFailure failure) {
+  // Prefer the upstream status when GoTrue provided it; fall back to the code
+  // for older responses that omit a status.
+  final isRateLimit = failure.statusCode == HttpStatus.tooManyRequests ||
+      failure.code.contains('rate_limit');
+
+  if (isRateLimit) {
+    return Response.json(
+      statusCode: HttpStatus.tooManyRequests,
+      body: {
+        'error': failure.code,
+        if (failure.retryAfterSeconds != null)
+          'retry_after_seconds': failure.retryAfterSeconds,
+        'errors': [
+          {'message': 'Too many attempts. Please wait before trying again.'},
+        ],
+      },
+    );
+  }
+
+  return Response.json(
+    statusCode: HttpStatus.unauthorized,
+    body: {
+      'error': failure.code,
+      'errors': [
+        {'message': 'Authentication failed. Check your code or credentials.'},
+      ],
+    },
+  );
 }

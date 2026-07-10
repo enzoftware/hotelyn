@@ -222,6 +222,19 @@ web3 = 30
 
 [auth.email]
 # Allow/disallow new user signups via email to your project.
+#
+# Kept TRUE because guest sign-in is passwordless email OTP (BE-601): a brand-new
+# address must be created when its first code is verified (shouldCreateUser),
+# with no separate signup step. Staff (BE-602) are DIFFERENT — invite-only: their
+# accounts are provisioned out-of-band via the Admin API / dashboard, and the
+# backend exposes NO staff-signup route (only POST /auth/login). So this flag
+# governs guest self-service only; it does not open a staff signup path.
+#
+# KNOWN CAVEAT — email recycling / shared mailboxes: because identity is an email
+# address, a recycled address (a mailbox reassigned to a new person) or a shared
+# team inbox could let a later holder receive an OTP for the prior account. This
+# is an accepted MVP trade-off; account-recovery / email-change verification that
+# re-proves ownership is future work (tracked as a follow-up).
 enable_signup = true
 # If enabled, a user will be required to confirm any email change on both the old, and new email
 # addresses. If disabled, only the new email is required to confirm.

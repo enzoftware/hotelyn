@@ -12,7 +12,7 @@
 
 begin;
 
-select plan(14);
+select plan(17);
 
 -- ---------------------------------------------------------------------------
 -- Fixtures (Hotel A = staff's own hotel, Hotel B = a foreign hotel)
@@ -133,6 +133,46 @@ select is(
   (select count(*)::int from upd),
   1,
   'Hotel A staff CAN update their own hotel room'
+);
+
+-- Boundary #6: staff UPDATE of a Hotel B *reservation* affects ZERO rows. This
+-- is the table the EPIC-05 confirm/reject flow writes, so tenant isolation on
+-- reservation writes must hold directly, not only via the service-role RPCs.
+with upd as (
+  update public.reservations set status = 'confirmed'
+   where id = '30000000-0000-0000-0000-0000000000b1' -- Hotel B fixture
+  returning 1
+)
+select is(
+  (select count(*)::int from upd),
+  0,
+  'Hotel A staff UPDATE of a Hotel B reservation is rejected (0 rows)'
+);
+
+-- Boundary #7: staff cannot DELETE a reservation at all — DELETE is not granted
+-- to `authenticated` on reservations (only select/insert/update), so a delete is
+-- a hard privilege error. Reservations are terminated by status transition
+-- (cancel/reject), never physically removed by a client.
+select throws_ok(
+  $$delete from public.reservations
+     where id = '30000000-0000-0000-0000-0000000000b1'$$,
+  '42501',
+  NULL,
+  'Staff DELETE of a reservation is rejected (no delete grant)'
+);
+
+-- Staff CAN update their OWN hotel's reservation (the confirm/reject surface).
+-- Transition to 'rejected' (an inactive status) so this does not occupy Room
+-- A1's single active slot — a later test inserts the guest's own held on A1.
+with upd as (
+  update public.reservations set status = 'rejected'
+   where id = '30000000-0000-0000-0000-0000000000b2' -- Hotel A fixture
+  returning 1
+)
+select is(
+  (select count(*)::int from upd),
+  1,
+  'Hotel A staff CAN update their own hotel reservation'
 );
 
 -- ---------------------------------------------------------------------------
