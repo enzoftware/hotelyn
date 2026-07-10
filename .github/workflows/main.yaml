@@ -37,6 +37,10 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          # This job only reads the checkout to run the pgTAP suite; it never
+          # pushes. Keep the GITHUB_TOKEN out of the local git config.
+          persist-credentials: false
 
       - id: changes
         uses: dorny/paths-filter@v3
