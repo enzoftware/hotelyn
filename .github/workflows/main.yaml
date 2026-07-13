@@ -50,7 +50,7 @@ jobs:
               - 'supabase/**'
 
       - if: steps.changes.outputs.supabase == 'true'
-        uses: supabase/setup-cli@v1
+        uses: supabase/setup-cli@v3
         with:
           # Pinned (not `latest`) so an unrelated CLI release can't turn a green
           # PR red between runs; bump deliberately.
