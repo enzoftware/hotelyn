@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # This job only reads the checkout to run the pgTAP suite; it never
           # pushes. Keep the GITHUB_TOKEN out of the local git config.
