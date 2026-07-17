@@ -25,9 +25,18 @@ called before every request to obtain the Supabase JWT, which is attached as a
 `Bearer` token in the `Authorization` header; return `null` when signed out.
 
 Non-2xx responses throw an `ApiException` carrying the HTTP `statusCode` and the
-server-provided message when one is present.
+server-provided message when one is present. Two typed subtypes let callers
+react to specific failures without string-matching:
+
+- `RoomAlreadyHeldException` — a `409` from `createReservationHold` (the room was
+  grabbed first). Still an `ApiException`, so a generic `catch` handles it too.
+- `AuthApiException` — an auth failure carrying the server's stable `code`
+  (e.g. `otp_expired`, `invalid_credentials`) and, for rate limits,
+  `retryAfterSeconds`.
 
 ## Methods
+
+### Discovery
 
 | Method | Endpoint |
 | --- | --- |
@@ -35,8 +44,33 @@ server-provided message when one is present.
 | `getRecommendedHotels({lat, lng, radiusKm})` | `GET /hotels/recommended` |
 | `getRooms({hotelId})` | `GET /hotels/{id}/rooms` |
 
-Auth, reservation, and messaging methods are added as their endpoints land
-(see issues FE-2002, FE-2004).
+### Reservations
+
+| Method | Endpoint |
+| --- | --- |
+| `createReservationHold({hotelId, roomId, checkIn, checkOut})` | `POST /hotels/{id}/holds` |
+| `confirmReservation({reservationId})` | `POST /reservations/{id}/confirm` |
+| `rejectReservation({reservationId})` | `POST /reservations/{id}/reject` |
+
+### Staff inventory
+
+| Method | Endpoint |
+| --- | --- |
+| `getStaffRooms()` | `GET /staff/rooms` |
+| `setRoomAvailability({roomId, isAvailable})` | `PATCH /staff/rooms/{id}/availability` |
+
+`getStaffRooms` is scoped to the acting staff member's hotel via the caller's
+token — there is no hotel parameter.
+
+### Auth
+
+| Method | Endpoint |
+| --- | --- |
+| `requestEmailOtp({email})` | `POST /auth/otp/request` |
+| `verifyEmailOtp({email, token})` | `POST /auth/otp/verify` |
+| `signInWithPassword({email, password})` | `POST /auth/login` |
+
+Call `close()` to release the underlying HTTP client when the client is disposed.
 
 ## Testing
 
