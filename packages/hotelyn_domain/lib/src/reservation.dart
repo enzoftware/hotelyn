@@ -28,7 +28,7 @@ enum ReservationStatus {
 /// (`room_id`, `hold_expires_at`, `confirmation_code`, …).
 @JsonSerializable(fieldRename: FieldRename.snake)
 class Reservation extends Equatable {
-  const Reservation({
+  Reservation({
     required this.id,
     required this.hotelId,
     required this.roomId,
@@ -40,7 +40,26 @@ class Reservation extends Equatable {
     this.confirmationCode,
     this.paidBy,
     this.paidAt,
-  });
+  }) {
+    // The manual-payment audit fields are written together by
+    // mark_reservation_paid (BE-702): a payment stamps *both* who took it and
+    // when. Neither alone is a coherent record, so reject a row that carries
+    // one without the other — it would let audit code read a payment that has
+    // no actor, or an actor with no timestamp.
+    //
+    // A `confirmed` reservation may legitimately have neither: staff
+    // confirm_reservation (BE-503) is a distinct action from taking payment and
+    // does not set paid_at.
+    //
+    // This is an unconditional throw, not an `assert`: the entity decodes
+    // backend JSON and the guard must hold in release builds too, where asserts
+    // are stripped.
+    if ((paidBy == null) != (paidAt == null)) {
+      throw ArgumentError(
+        'paidBy and paidAt must be set together (both or neither)',
+      );
+    }
+  }
 
   /// Decodes a `Reservation` from a REST/RPC JSON row.
   factory Reservation.fromJson(Map<String, dynamic> json) =>
