@@ -159,4 +159,75 @@ void main() {
       expect(a, equals(b));
     });
   });
+
+  group('Reservation payment-audit invariant', () {
+    // The manual-payment audit fields (paid_by/paid_at) are written together by
+    // mark_reservation_paid (BE-702); a row carrying one without the other is
+    // an incoherent payment record and is rejected at construction.
+    Map<String, dynamic> row({String? paidBy, String? paidAt}) => {
+          'id': 'res-1',
+          'hotel_id': 'h1',
+          'room_id': 'r1',
+          'guest_id': 'g1',
+          'status': 'confirmed',
+          'check_in': '2026-09-01',
+          'check_out': '2026-09-03',
+          if (paidBy != null) 'paid_by': paidBy,
+          if (paidAt != null) 'paid_at': paidAt,
+        };
+
+    test('rejects paid_by without paid_at (via fromJson)', () {
+      expect(
+        () => Reservation.fromJson(row(paidBy: 'staff-1')),
+        throwsArgumentError,
+      );
+    });
+
+    test('rejects paid_at without paid_by (via fromJson)', () {
+      expect(
+        () => Reservation.fromJson(row(paidAt: '2026-09-01T10:30:00Z')),
+        throwsArgumentError,
+      );
+    });
+
+    test('rejects a directly-constructed half-stamped payment', () {
+      // A runtime throw (not an assert), so it also fires in release builds.
+      expect(
+        () => Reservation(
+          id: 'res-1',
+          hotelId: 'h1',
+          roomId: 'r1',
+          guestId: 'g1',
+          status: ReservationStatus.confirmed,
+          checkIn: DateTime.utc(2026, 9),
+          checkOut: DateTime.utc(2026, 9, 3),
+          paidBy: 'staff-1',
+        ),
+        throwsArgumentError,
+      );
+    });
+
+    test('accepts a fully-stamped payment (both fields set)', () {
+      final reservation = Reservation.fromJson(
+        row(paidBy: 'staff-1', paidAt: '2026-09-01T10:30:00Z'),
+      );
+
+      expect(reservation.paidBy, 'staff-1');
+      expect(reservation.paidAt, DateTime.utc(2026, 9, 1, 10, 30));
+    });
+
+    test('accepts an unpaid reservation (neither field set)', () {
+      expect(() => Reservation.fromJson(row()), returnsNormally);
+    });
+
+    test('allows a confirmed reservation with no payment stamp (BE-503)', () {
+      // Staff confirm_reservation transitions a hold to confirmed without
+      // taking payment, so confirmed + no paid_by/paid_at is a valid state.
+      final reservation = Reservation.fromJson(row());
+
+      expect(reservation.status, ReservationStatus.confirmed);
+      expect(reservation.paidBy, isNull);
+      expect(reservation.paidAt, isNull);
+    });
+  });
 }
