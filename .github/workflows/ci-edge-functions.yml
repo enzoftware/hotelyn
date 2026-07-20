@@ -31,6 +31,9 @@ defaults:
 jobs:
   deno:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 10
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
