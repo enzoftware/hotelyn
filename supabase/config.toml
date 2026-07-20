@@ -448,3 +448,17 @@ enabled = true
 # declarative_schema_path = "./database"
 # JSON string passed through to pg-delta SQL formatting.
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":80,\"commaStyle\":\"trailing\"}"
+
+# INFRA-901: placeholder webhook. External providers can't present a Supabase
+# JWT, so verify_jwt is off; authenticate via a provider signing secret inside
+# the handler instead. The import map is the shared workspace deno.json.
+[functions.webhook-placeholder]
+enabled = true
+verify_jwt = false
+import_map = "./functions/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/webhook-placeholder/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/webhook-placeholder/*.html" ]
