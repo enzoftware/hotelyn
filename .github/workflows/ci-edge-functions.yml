@@ -1,0 +1,61 @@
+name: ci-edge-functions
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# INFRA-901: Edge Functions (Deno/TS) get their own isolated CI, entirely
+# separate from the Dart/Melos pipeline. The path filter keeps this workflow a
+# no-op unless something under `supabase/functions/` changes, so webhook code
+# can evolve without entangling — or being blocked by — the Dart side.
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "supabase/functions/**"
+      - "supabase/config.toml"
+      - ".github/workflows/ci-edge-functions.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "supabase/functions/**"
+      - "supabase/config.toml"
+      - ".github/workflows/ci-edge-functions.yml"
+
+defaults:
+  run:
+    working-directory: supabase/functions
+
+jobs:
+  deno:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # This job only reads the checkout to lint and test; it never pushes.
+          # Keep the GITHUB_TOKEN out of the local git config.
+          persist-credentials: false
+
+      - uses: denoland/setup-deno@v2
+        with:
+          # Pinned (not a floating range) so an unrelated Deno release can't turn
+          # a green PR red between runs; bump deliberately.
+          deno-version: "2.7.3"
+
+      - name: Lint
+        run: deno lint
+
+      - name: Format check
+        run: deno fmt --check
+
+      # --frozen fails the run if deno.lock is missing or out of date, so the
+      # committed lockfile is the single source of truth for dependency
+      # versions and integrity hashes — the same commit can't resolve to
+      # different dependency code between runs.
+      - name: Test
+        run: deno test --frozen --allow-env
