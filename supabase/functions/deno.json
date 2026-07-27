@@ -1,0 +1,16 @@
+{
+  "lint": {
+    "rules": {
+      "tags": ["recommended"]
+    }
+  },
+  "fmt": {
+    "lineWidth": 100,
+    "semiColons": true,
+    "singleQuote": false,
+    "exclude": ["**/*.md"]
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@^1"
+  }
+}
