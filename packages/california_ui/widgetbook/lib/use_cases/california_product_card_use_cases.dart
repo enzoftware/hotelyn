@@ -112,7 +112,8 @@ Widget buildCaliforniaProductCardSmallUseCase(BuildContext context) {
       label: 'reviewCount',
       initialValue: 84,
     ),
-    reviewCountLabel: (count) => '($count Reviews)',
+    reviewCountLabel: (count) =>
+        '($count ${count == 1 ? 'Review' : 'Reviews'})',
     onTap: () {},
   );
 }
@@ -150,7 +151,8 @@ Widget buildCaliforniaProductCardAllSizesUseCase(BuildContext context) {
           pricePeriodLabel: ' / Night',
           rating: 4.2,
           reviewCount: 84,
-          reviewCountLabel: (count) => '($count Reviews)',
+          reviewCountLabel: (count) =>
+        '($count ${count == 1 ? 'Review' : 'Reviews'})',
         ),
       ],
     ),

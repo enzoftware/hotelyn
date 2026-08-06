@@ -135,5 +135,19 @@ void main() {
 
       expect(find.byIcon(CupertinoIcons.star_fill), findsNothing);
     });
+
+    test('asserts when reviewCount is provided without reviewCountLabel', () {
+      expect(
+        () => CaliforniaProductCard.small(
+          image: testImage,
+          title: 'Hyatt Washington Hotel',
+          location: 'Purwokerto, Glempang',
+          pricePerNight: r'$38',
+          pricePeriodLabel: ' / Night',
+          reviewCount: 84,
+        ),
+        throwsAssertionError,
+      );
+    });
   });
 }

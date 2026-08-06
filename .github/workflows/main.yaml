@@ -21,8 +21,9 @@ jobs:
     with:
       flutter_channel: stable
       working_directory: apps/hotelyn_app
-      # TODO: restore to 100 once coverage is back up; lowered to 1 to
-      # unblock CI on just having the test suite run/pass.
+      # TEMPORARY (requested 2026-08-06): lowered from the 100 default to
+      # just validate the test suite runs/passes. Must be restored to a
+      # measured real baseline — do not leave at 1 long-term.
       min_coverage: 1
 
   build-dashboard:
@@ -30,8 +31,9 @@ jobs:
     with:
       flutter_channel: stable
       working_directory: apps/hotelyn_dashboard
-      # TODO: restore to 100 once coverage is back up; lowered to 1 to
-      # unblock CI on just having the test suite run/pass.
+      # TEMPORARY (requested 2026-08-06): lowered from the 100 default to
+      # just validate the test suite runs/passes. Must be restored to a
+      # measured real baseline — do not leave at 1 long-term.
       min_coverage: 1
 
   # BE-603: proves RLS tenant isolation (and the other DB behaviours) on every PR

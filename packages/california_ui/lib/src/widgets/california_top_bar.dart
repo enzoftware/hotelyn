@@ -140,7 +140,8 @@ class CaliforniaTopBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? trailing;
 
   /// Called when the back button is tapped. Omit to render the back button
-  /// inert (visible, but not tappable and excluded from semantics/focus).
+  /// disabled: visible and still announced by assistive technology (with
+  /// `enabled: false`), but not tappable.
   final VoidCallback? onBack;
 
   /// Localized accessibility label for the back button. Supply an
@@ -148,8 +149,8 @@ class CaliforniaTopBar extends StatelessWidget implements PreferredSizeWidget {
   final String? backButtonLabel;
 
   /// Called when the overflow ("more") button is tapped. Omit to render
-  /// the button inert (visible, but not tappable and excluded from
-  /// semantics/focus).
+  /// the button disabled: visible and still announced by assistive
+  /// technology (with `enabled: false`), but not tappable.
   final VoidCallback? onMenuTap;
 
   /// Localized accessibility label for the overflow ("more") button.

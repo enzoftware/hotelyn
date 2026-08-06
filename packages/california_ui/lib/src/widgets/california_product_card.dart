@@ -95,7 +95,11 @@ class CaliforniaProductCard extends StatelessWidget {
     this.onTap,
   }) : _size = _CaliforniaProductCardSize.small,
        facilities = const [],
-       priceSuffix = null;
+       priceSuffix = null,
+       assert(
+         reviewCount == null || reviewCountLabel != null,
+         'reviewCountLabel is required whenever reviewCount is provided.',
+       );
 
   final _CaliforniaProductCardSize _size;
 
