@@ -9,12 +9,13 @@ workspace:
   - apps/hotelyn_dashboard
   - packages/hotelyn_api_client
   - packages/hotelyn_domain
-  - packages/hotelyn_ui
+  - packages/california_ui
+  - packages/california_ui/widgetbook
   - backend
 
 dev_dependencies:
   melos: ^7.3.0
-  very_good_analysis: ^10.0.0
+  very_good_analysis: ^10.3.0
 
 melos:
   name: hotelyn
@@ -45,6 +46,8 @@ melos:
     build:
       run: flutter pub run build_runner build --delete-conflicting-outputs
       description: Run code generation across all packages
+      exec:
+        concurrency: 1
       packageFilters:
         dependsOn:
           - build_runner
@@ -57,3 +60,25 @@ melos:
       packageFilters:
         dirExists:
           - lib
+
+    widgetbook:generate:
+      run: dart run build_runner build --delete-conflicting-outputs
+      description: Generate the california_ui Widgetbook's directories.g.dart
+      exec:
+        concurrency: 1
+      packageFilters:
+        scope:
+          - california_ui_widgetbook
+
+    widgetbook:
+      run: >-
+        dart run build_runner build --delete-conflicting-outputs &&
+        flutter run -d chrome
+      description: >-
+        Generate directories.g.dart and launch the california_ui Widgetbook
+        catalog in Chrome
+      exec:
+        concurrency: 1
+      packageFilters:
+        scope:
+          - california_ui_widgetbook

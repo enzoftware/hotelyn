@@ -30,7 +30,7 @@ class IntroView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.select((IntroBloc bloc) => bloc.state);
+    final state = context.select<IntroBloc, IntroState>((bloc) => bloc.state);
 
     return switch (state) {
       IntroCarousel() => const IntroCarouselPage(),
@@ -67,8 +67,8 @@ class IntroCarouselPage extends StatelessWidget {
       ),
     ];
 
-    final state =
-        context.select((IntroBloc bloc) => bloc.state) as IntroCarousel;
+    final state = context.select<IntroBloc, IntroState>((bloc) => bloc.state)
+        as IntroCarousel;
 
     return Column(
       children: [
@@ -143,8 +143,8 @@ class IntroPrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state =
-        context.select((IntroBloc bloc) => bloc.state) as IntroCarousel;
+    final state = context.select<IntroBloc, IntroState>((bloc) => bloc.state)
+        as IntroCarousel;
     final message = state.isLastItem ? 'Get Started' : 'Continue';
     return HotelynButton(
       onPressed: () {
