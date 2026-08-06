@@ -25,7 +25,7 @@ void main() {
 
     testWidgets(
       'App launches successfully',
-      (WidgetTester tester) async {
+      (tester) async {
         await tester.pumpWidget(
           HotelynApp(
             preferenceRepository: preferenceRepository,

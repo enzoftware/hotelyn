@@ -1,4 +1,8 @@
-include: package:very_good_analysis/analysis_options.10.0.0.yaml
+include: package:very_good_analysis/analysis_options.10.3.0.yaml
 linter:
   rules:
     public_member_api_docs: false
+    # Dart Frog's `routes/` tree lives outside `lib/`, so route handlers
+    # are unreachable via `package:` imports — relative imports from
+    # `test/` are the only option.
+    simple_directive_paths: false

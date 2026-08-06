@@ -78,7 +78,7 @@ class HotelynApiClient {
         'check_out': _asDate(checkOut),
       },
       // A 409 means the room was grabbed first: surface the typed variant.
-      on409: (String? message) => message == null
+      on409: (message) => message == null
           ? const RoomAlreadyHeldException()
           : RoomAlreadyHeldException(message),
     );
