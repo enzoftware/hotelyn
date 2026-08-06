@@ -16,7 +16,7 @@ hotelyn/
 ├── packages/
 │   ├── hotelyn_api_client/ ← REST client (package:http) over the Dart Frog API
 │   ├── hotelyn_domain/     ← domain entities (json_serializable) & interfaces
-│   └── hotelyn_ui/         ← shared widget library & design system
+│   └── california_ui/      ← shared widget library & design system
 ├── backend/                ← Dart Frog REST server (talks to Supabase)
 └── supabase/               ← local Supabase stack config + migrations
 ```

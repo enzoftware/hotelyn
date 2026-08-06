@@ -1,0 +1,29 @@
+name: california_ui_widgetbook
+description: "Widgetbook catalog for the california_ui design system."
+publish_to: 'none'
+version: 0.1.0+1
+
+resolution: workspace
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  california_ui:
+    path: ../
+  flutter:
+    sdk: flutter
+  widgetbook: ^3.25.0
+  widgetbook_annotation: ^3.11.0
+
+dev_dependencies:
+  # Pinned to build_runner's last analyzer<13.0.0-compatible release; see #225
+  # (same constraint chain as the `test` package pin).
+  build_runner: 2.15.1
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.0.0
+  widgetbook_generator: ^3.24.0
+
+flutter:
+  uses-material-design: true

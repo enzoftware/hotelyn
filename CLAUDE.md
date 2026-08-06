@@ -30,6 +30,9 @@ flutter pub run build_runner build --delete-conflicting-outputs
 
 # Scaffold a new feature (Mason)
 mason make feature_brick
+
+# Launch the california_ui Widgetbook catalog (from repo root)
+melos run widgetbook
 ```
 
 CI runs on the `stable` Flutter channel via [VeryGoodOpenSource/very_good_workflows](https://github.com/VeryGoodOpenSource/very_good_workflows). PRs require semantic titles.
@@ -91,7 +94,8 @@ hotelyn/
 ├── packages/
 │   ├── hotelyn_api_client/ # REST client (package:http) over the Dart Frog API
 │   ├── hotelyn_domain/     # Domain entities (json_serializable) & interfaces
-│   └── hotelyn_ui/         # Shared widget library
+│   └── california_ui/      # Shared widget library
+│       └── widgetbook/     # Interactive component catalog (melos run widgetbook)
 └── backend/                # Dart Frog REST API (talks to Supabase)
 ```
 
