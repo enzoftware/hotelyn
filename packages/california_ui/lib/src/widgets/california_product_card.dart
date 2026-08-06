@@ -33,6 +33,7 @@ class CaliforniaProductFacility {
 ///   title: hotel.name,
 ///   location: hotel.city,
 ///   pricePerNight: hotel.formattedPrice,
+///   pricePeriodLabel: context.l10n.perNight,
 ///   rating: hotel.rating,
 ///   facilities: [
 ///     CaliforniaProductFacility(
@@ -52,13 +53,15 @@ class CaliforniaProductCard extends StatelessWidget {
     required this.title,
     required this.location,
     required this.pricePerNight,
+    required this.pricePeriodLabel,
     super.key,
     this.rating,
     this.facilities = const [],
     this.onTap,
   }) : _size = _CaliforniaProductCardSize.large,
        priceSuffix = null,
-       reviewCount = null;
+       reviewCount = null,
+       reviewCountLabel = null;
 
   /// Creates a medium product card: a squarer image with a price badge,
   /// title/location, and a facilities row. Sized for a horizontal list.
@@ -73,7 +76,9 @@ class CaliforniaProductCard extends StatelessWidget {
     this.onTap,
   }) : _size = _CaliforniaProductCardSize.medium,
        rating = null,
-       reviewCount = null;
+       reviewCount = null,
+       reviewCountLabel = null,
+       pricePeriodLabel = null;
 
   /// Creates a small product card: a compact horizontal row with a
   /// thumbnail, title/location, price, and a review count.
@@ -82,9 +87,11 @@ class CaliforniaProductCard extends StatelessWidget {
     required this.title,
     required this.location,
     required this.pricePerNight,
+    required this.pricePeriodLabel,
     super.key,
     this.rating,
     this.reviewCount,
+    this.reviewCountLabel,
     this.onTap,
   }) : _size = _CaliforniaProductCardSize.small,
        facilities = const [],
@@ -106,6 +113,11 @@ class CaliforniaProductCard extends StatelessWidget {
   /// Already-formatted price string, e.g. `"$46"`.
   final String pricePerNight;
 
+  /// Localized label for the price period, shown after [pricePerNight]
+  /// (e.g. `"Per Night"` on [CaliforniaProductCard.large], `" / Night"` on
+  /// [CaliforniaProductCard.small]). Supply an already-localized string.
+  final String? pricePeriodLabel;
+
   /// Suffix appended after [pricePerNight] in the medium card's price
   /// badge, e.g. `"/Night"`.
   final String? priceSuffix;
@@ -117,6 +129,11 @@ class CaliforniaProductCard extends StatelessWidget {
   /// Review count, shown next to [rating] on
   /// [CaliforniaProductCard.small] when non-null.
   final int? reviewCount;
+
+  /// Builds the localized, pluralized display text for [reviewCount] (e.g.
+  /// `(84 Reviews)`). Required on [CaliforniaProductCard.small] whenever
+  /// [reviewCount] is non-null; the caller owns pluralization rules.
+  final String Function(int count)? reviewCountLabel;
 
   /// Facility/amenity chips shown on [CaliforniaProductCard.large] and
   /// [CaliforniaProductCard.medium].
@@ -244,7 +261,7 @@ class _CaliforniaLargeProductCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Per Night',
+                          card.pricePeriodLabel ?? '',
                           style: CaliforniaTypography.p12Regular.copyWith(
                             color: CaliforniaColors.textSecondary,
                           ),
@@ -328,6 +345,12 @@ class _CaliforniaSmallProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final reviewCount = card.reviewCount;
+    final reviewCountLabel = card.reviewCountLabel;
+    final reviewLabel = reviewCount != null && reviewCountLabel != null
+        ? ' ${reviewCountLabel(reviewCount)}'
+        : null;
+
     return SizedBox(
       width: 327,
       height: 96,
@@ -378,13 +401,14 @@ class _CaliforniaSmallProductCard extends StatelessWidget {
                               color: CaliforniaColors.textBrand,
                             ),
                             children: [
-                              TextSpan(
-                                text: ' / Night',
-                                style: CaliforniaTypography.p12Regular
-                                    .copyWith(
-                                      color: CaliforniaColors.textSecondary,
-                                    ),
-                              ),
+                              if (card.pricePeriodLabel != null)
+                                TextSpan(
+                                  text: card.pricePeriodLabel,
+                                  style: CaliforniaTypography.p12Regular
+                                      .copyWith(
+                                        color: CaliforniaColors.textSecondary,
+                                      ),
+                                ),
                             ],
                           ),
                           maxLines: 1,
@@ -408,9 +432,9 @@ class _CaliforniaSmallProductCard extends StatelessWidget {
                                     color: CaliforniaColors.textPrimary,
                                   ),
                               children: [
-                                if (card.reviewCount != null)
+                                if (reviewLabel != null)
                                   TextSpan(
-                                    text: ' (${card.reviewCount} Reviews)',
+                                    text: reviewLabel,
                                     style: CaliforniaTypography.p12Regular,
                                   ),
                               ],

@@ -128,6 +128,7 @@ class _CaliforniaNavigationBarTile extends StatelessWidget {
       child: Semantics(
         selected: selected,
         button: true,
+        enabled: onTap != null,
         label: item.label,
         child: Column(
           mainAxisSize: MainAxisSize.min,

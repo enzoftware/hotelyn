@@ -15,6 +15,7 @@ Widget buildCaliforniaColorsUseCase(BuildContext context) {
     'textPrimary': CaliforniaColors.textPrimary,
     'textSecondary': CaliforniaColors.textSecondary,
     'textTertiary': CaliforniaColors.textTertiary,
+    'textOnBrand': CaliforniaColors.textOnBrand,
     'textBrand': CaliforniaColors.textBrand,
     'brandPrimary': CaliforniaColors.brandPrimary,
     'brandSecondary': CaliforniaColors.brandSecondary,
@@ -23,9 +24,16 @@ Widget buildCaliforniaColorsUseCase(BuildContext context) {
     'borderFocused': CaliforniaColors.borderFocused,
     'divider': CaliforniaColors.divider,
     'disabled': CaliforniaColors.disabled,
+    'disabledOn': CaliforniaColors.disabledOn,
     'success': CaliforniaColors.success,
+    'successMuted': CaliforniaColors.successMuted,
     'warning': CaliforniaColors.warning,
+    'warningMuted': CaliforniaColors.warningMuted,
     'error': CaliforniaColors.error,
+    'errorMuted': CaliforniaColors.errorMuted,
+    'surfacePrimaryDark': CaliforniaColors.surfacePrimaryDark,
+    'surfaceElevatedDark': CaliforniaColors.surfaceElevatedDark,
+    'borderDefaultDark': CaliforniaColors.borderDefaultDark,
   };
 
   return GridView.count(

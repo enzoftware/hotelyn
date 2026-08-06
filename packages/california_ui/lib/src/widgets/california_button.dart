@@ -108,29 +108,37 @@ class CaliforniaButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Semantics(
-        button: true,
-        enabled: !_isDisabled,
-        label: label,
-        child: Container(
-          width: _width,
-          height: 54,
-          alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(
-            vertical: CaliforniaSpacing.xxxl,
-          ),
-          decoration: BoxDecoration(
-            color: _backgroundColor,
-            borderRadius: BorderRadius.circular(_borderRadius),
-          ),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: _textStyle,
+    return FocusableActionDetector(
+      enabled: !_isDisabled,
+      actions: <Type, Action<Intent>>{
+        ActivateIntent: CallbackAction<Intent>(
+          onInvoke: (intent) => onPressed?.call(),
+        ),
+      },
+      child: GestureDetector(
+        onTap: onPressed,
+        child: Semantics(
+          button: true,
+          enabled: !_isDisabled,
+          label: label,
+          child: Container(
+            width: _width,
+            height: 54,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(
+              vertical: CaliforniaSpacing.xxxl,
+            ),
+            decoration: BoxDecoration(
+              color: _backgroundColor,
+              borderRadius: BorderRadius.circular(_borderRadius),
+            ),
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: _textStyle,
+            ),
           ),
         ),
       ),

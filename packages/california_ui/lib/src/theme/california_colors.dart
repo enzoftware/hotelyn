@@ -18,6 +18,9 @@ abstract final class CaliforniaPalette {
   // Black — light-mode ink scale.
   static const Color black01 = Color(0xFF151B33);
   static const Color black02 = Color(0xFF636777);
+
+  /// A step lighter than [black02], still ≥4.5:1 contrast on white.
+  static const Color black02Light = Color(0xFF6B6F80);
   static const Color black03 = Color(0xFF8A8D99);
 
   // White.
@@ -84,11 +87,14 @@ abstract final class CaliforniaColors {
   /// Primary text color (headings, body copy).
   static const Color textPrimary = CaliforniaPalette.black01;
 
-  /// Secondary text color (captions, timestamps, placeholders).
-  static const Color textSecondary = CaliforniaPalette.grey01;
+  /// Secondary text color (captions, timestamps, placeholders). Meets the
+  /// 4.5:1 contrast ratio for normal text on [surfacePrimary]/
+  /// [surfaceElevated] (~5.6:1).
+  static const Color textSecondary = CaliforniaPalette.black02;
 
-  /// Tertiary text color, one step quieter than [textSecondary].
-  static const Color textTertiary = CaliforniaPalette.black03;
+  /// Tertiary text color, one step lighter than [textSecondary] while
+  /// still meeting the 4.5:1 contrast ratio on white surfaces (~5.0:1).
+  static const Color textTertiary = CaliforniaPalette.black02Light;
 
   /// Text color for content rendered over a solid brand/dark background.
   static const Color textOnBrand = CaliforniaPalette.white01;

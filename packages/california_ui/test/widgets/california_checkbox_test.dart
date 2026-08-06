@@ -71,14 +71,14 @@ void main() {
         ),
       );
 
-      final semantics = tester.widget<Semantics>(
-        find
-            .descendant(
+      final semantics = tester
+          .widgetList<Semantics>(
+            find.descendant(
               of: find.byType(CaliforniaCheckbox),
               matching: find.byType(Semantics),
-            )
-            .first,
-      );
+            ),
+          )
+          .firstWhere((widget) => widget.properties.checked != null);
       expect(semantics.properties.checked, isTrue);
     });
   });

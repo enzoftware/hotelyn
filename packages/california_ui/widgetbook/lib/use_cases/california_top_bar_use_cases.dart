@@ -9,6 +9,8 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart'
 Widget buildCaliforniaTopBarGeneralUseCase(BuildContext context) {
   return CaliforniaTopBar.general(
     title: context.knobs.string(label: 'title', initialValue: 'Page Title'),
+    backButtonLabel: 'Back',
+    menuButtonLabel: 'More options',
     onBack: context.knobs.boolean(label: 'with onBack', initialValue: true)
         ? () {}
         : null,
@@ -23,6 +25,7 @@ Widget buildCaliforniaTopBarGeneralUseCase(BuildContext context) {
 Widget buildCaliforniaTopBarMainScreenUseCase(BuildContext context) {
   return CaliforniaTopBar.mainScreen(
     title: context.knobs.string(label: 'title', initialValue: 'Search'),
+    notificationsButtonLabel: 'Notifications',
     hasUnreadNotifications: context.knobs.boolean(
       label: 'hasUnreadNotifications',
       initialValue: true,
@@ -38,6 +41,8 @@ Widget buildCaliforniaTopBarSearchByMapUseCase(BuildContext context) {
       label: 'title',
       initialValue: 'Purwokerto',
     ),
+    backButtonLabel: 'Back',
+    searchButtonLabel: 'Search',
     onBack: () {},
     onSearchTap: () {},
   );
@@ -48,6 +53,7 @@ Widget buildCaliforniaTopBarDetailProductUseCase(BuildContext context) {
   return ColoredBox(
     color: CaliforniaColors.textPrimary,
     child: CaliforniaTopBar.detailProduct(
+      backButtonLabel: 'Back',
       onBack: () {},
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
@@ -72,6 +78,8 @@ Widget buildCaliforniaTopBarDetailProductUseCase(BuildContext context) {
 @widgetbook.UseCase(name: 'Message', type: CaliforniaTopBar)
 Widget buildCaliforniaTopBarMessageUseCase(BuildContext context) {
   return CaliforniaTopBar.message(
+    backButtonLabel: 'Back',
+    menuButtonLabel: 'More options',
     onBack: () {},
     onMenuTap: () {},
     leading: Row(

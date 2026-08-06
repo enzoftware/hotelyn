@@ -53,29 +53,37 @@ class CaliforniaCheckbox extends StatelessWidget {
   Widget build(BuildContext context) {
     final box = _CaliforniaCheckboxBox(value: value, disabled: _isDisabled);
 
-    return GestureDetector(
-      onTap: _isDisabled ? null : () => onChanged!(!value),
-      child: Semantics(
-        checked: value,
-        enabled: !_isDisabled,
-        label: label,
-        child: label == null
-            ? box
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  box,
-                  const SizedBox(width: CaliforniaSpacing.sm),
-                  Text(
-                    label!,
-                    style: CaliforniaTypography.p14Regular.copyWith(
-                      color: _isDisabled
-                          ? CaliforniaColors.textSecondary
-                          : CaliforniaColors.textPrimary,
+    return FocusableActionDetector(
+      enabled: !_isDisabled,
+      actions: <Type, Action<Intent>>{
+        ActivateIntent: CallbackAction<Intent>(
+          onInvoke: (intent) => onChanged?.call(!value),
+        ),
+      },
+      child: GestureDetector(
+        onTap: _isDisabled ? null : () => onChanged!(!value),
+        child: Semantics(
+          checked: value,
+          enabled: !_isDisabled,
+          label: label,
+          child: label == null
+              ? box
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    box,
+                    const SizedBox(width: CaliforniaSpacing.sm),
+                    Text(
+                      label!,
+                      style: CaliforniaTypography.p14Regular.copyWith(
+                        color: _isDisabled
+                            ? CaliforniaColors.textSecondary
+                            : CaliforniaColors.textPrimary,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+        ),
       ),
     );
   }

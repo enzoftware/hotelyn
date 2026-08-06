@@ -1,11 +1,11 @@
 {
-    "name": "widgetbook",
-    "short_name": "widgetbook",
+    "name": "California UI Widgetbook",
+    "short_name": "California UI",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Widgetbook catalog for the California UI design system",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

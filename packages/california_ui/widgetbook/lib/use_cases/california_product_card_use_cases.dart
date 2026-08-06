@@ -34,6 +34,10 @@ Widget buildCaliforniaProductCardLargeUseCase(BuildContext context) {
       label: 'pricePerNight',
       initialValue: r'$46',
     ),
+    pricePeriodLabel: context.knobs.string(
+      label: 'pricePeriodLabel',
+      initialValue: 'Per Night',
+    ),
     rating: context.knobs.doubleOrNull.slider(
       label: 'rating',
       initialValue: 4.6,
@@ -95,6 +99,10 @@ Widget buildCaliforniaProductCardSmallUseCase(BuildContext context) {
       label: 'pricePerNight',
       initialValue: r'$38',
     ),
+    pricePeriodLabel: context.knobs.string(
+      label: 'pricePeriodLabel',
+      initialValue: ' / Night',
+    ),
     rating: context.knobs.doubleOrNull.slider(
       label: 'rating',
       initialValue: 4.2,
@@ -104,6 +112,7 @@ Widget buildCaliforniaProductCardSmallUseCase(BuildContext context) {
       label: 'reviewCount',
       initialValue: 84,
     ),
+    reviewCountLabel: (count) => '($count Reviews)',
     onTap: () {},
   );
 }
@@ -121,6 +130,7 @@ Widget buildCaliforniaProductCardAllSizesUseCase(BuildContext context) {
           title: 'Diamond Heart Hotel',
           location: 'Purwokerto, Karang Lewas',
           pricePerNight: r'$46',
+          pricePeriodLabel: 'Per Night',
           rating: 4.6,
           facilities: _facilities,
         ),
@@ -132,13 +142,15 @@ Widget buildCaliforniaProductCardAllSizesUseCase(BuildContext context) {
           priceSuffix: '/Night',
           facilities: _facilities.take(2).toList(),
         ),
-        const CaliforniaProductCard.small(
-          image: NetworkImage(_placeholderImageUrl),
+        CaliforniaProductCard.small(
+          image: const NetworkImage(_placeholderImageUrl),
           title: 'Hyatt Washington Hotel',
           location: 'Purwokerto, Glempang',
           pricePerNight: r'$38',
+          pricePeriodLabel: ' / Night',
           rating: 4.2,
           reviewCount: 84,
+          reviewCountLabel: (count) => '($count Reviews)',
         ),
       ],
     ),

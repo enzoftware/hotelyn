@@ -16,6 +16,8 @@ void main() {
       await tester.pumpApp(
         CaliforniaTopBar.general(
           title: 'Settings',
+          backButtonLabel: 'Back',
+          menuButtonLabel: 'More options',
           onBack: () => backTapped = true,
           onMenuTap: () => menuTapped = true,
         ),
@@ -38,12 +40,28 @@ void main() {
       await tester.pumpApp(
         const CaliforniaTopBar.mainScreen(
           title: 'Search',
+          notificationsButtonLabel: 'Notifications',
           hasUnreadNotifications: true,
         ),
       );
 
       expect(find.text('Search'), findsOneWidget);
       expect(find.byIcon(CupertinoIcons.bell), findsOneWidget);
+
+      final semantics = tester.getSemantics(find.byIcon(CupertinoIcons.bell));
+      expect(semantics.label, 'Notifications');
+
+      final unreadBadgeFinder = find.descendant(
+        of: find.byType(CaliforniaTopBar),
+        matching: find.byWidgetPredicate(
+          (widget) =>
+              widget is Container &&
+              widget.decoration is BoxDecoration &&
+              (widget.decoration! as BoxDecoration).color ==
+                  CaliforniaColors.error,
+        ),
+      );
+      expect(unreadBadgeFinder, findsOneWidget);
     });
 
     testWidgets('calls onNotificationsTap when the bell is tapped', (
@@ -53,6 +71,7 @@ void main() {
       await tester.pumpApp(
         CaliforniaTopBar.mainScreen(
           title: 'Search',
+          notificationsButtonLabel: 'Notifications',
           onNotificationsTap: () => tapped = true,
         ),
       );
@@ -69,6 +88,7 @@ void main() {
       await tester.pumpApp(
         CaliforniaTopBar.searchByMap(
           title: 'Purwokerto',
+          backButtonLabel: 'Back',
           onSearchTap: () => tapped = true,
         ),
       );
@@ -86,6 +106,7 @@ void main() {
       var backTapped = false;
       await tester.pumpApp(
         CaliforniaTopBar.detailProduct(
+          backButtonLabel: 'Back',
           onBack: () => backTapped = true,
           trailing: const Icon(CupertinoIcons.heart),
         ),
@@ -101,7 +122,11 @@ void main() {
   group('CaliforniaTopBar.message', () {
     testWidgets('renders the leading widget', (tester) async {
       await tester.pumpApp(
-        const CaliforniaTopBar.message(leading: Text('Kim Hayo')),
+        const CaliforniaTopBar.message(
+          leading: Text('Kim Hayo'),
+          backButtonLabel: 'Back',
+          menuButtonLabel: 'More options',
+        ),
       );
 
       expect(find.text('Kim Hayo'), findsOneWidget);

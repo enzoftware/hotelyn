@@ -54,8 +54,9 @@ Widget buildCaliforniaButtonAllVariantsUseCase(BuildContext context) {
                 size: size,
                 onPressed: () {},
               ),
-              const CaliforniaButton.primary(
+              CaliforniaButton.primary(
                 label: 'Disabled',
+                size: size,
                 onPressed: null,
               ),
               CaliforniaButton.ghost(

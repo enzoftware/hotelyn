@@ -119,6 +119,16 @@ class _CaliforniaInputFieldState extends State<CaliforniaInputField> {
   void initState() {
     super.initState();
     _focusNode.addListener(_handleFocusChange);
+    widget.controller?.addListener(_handleControllerChange);
+  }
+
+  @override
+  void didUpdateWidget(CaliforniaInputField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller?.removeListener(_handleControllerChange);
+      widget.controller?.addListener(_handleControllerChange);
+    }
   }
 
   @override
@@ -126,11 +136,16 @@ class _CaliforniaInputFieldState extends State<CaliforniaInputField> {
     _focusNode
       ..removeListener(_handleFocusChange)
       ..dispose();
+    widget.controller?.removeListener(_handleControllerChange);
     super.dispose();
   }
 
   void _handleFocusChange() {
     setState(() => _hasFocus = _focusNode.hasFocus);
+  }
+
+  void _handleControllerChange() {
+    setState(() {});
   }
 
   bool get _isFilled => widget.isSelector
@@ -201,9 +216,17 @@ class _CaliforniaInputFieldState extends State<CaliforniaInputField> {
 
     if (!widget.isSelector) return field;
 
-    return GestureDetector(
-      onTap: widget.enabled ? widget.onTap : null,
-      child: field,
+    return FocusableActionDetector(
+      enabled: widget.enabled,
+      actions: <Type, Action<Intent>>{
+        ActivateIntent: CallbackAction<Intent>(
+          onInvoke: (intent) => widget.enabled ? widget.onTap?.call() : null,
+        ),
+      },
+      child: GestureDetector(
+        onTap: widget.enabled ? widget.onTap : null,
+        child: field,
+      ),
     );
   }
 

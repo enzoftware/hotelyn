@@ -16,6 +16,7 @@ void main() {
           title: 'Diamond Heart Hotel',
           location: 'Purwokerto, Karang Lewas',
           pricePerNight: r'$46',
+          pricePeriodLabel: 'Per Night',
           rating: 4.6,
         ),
       );
@@ -23,6 +24,7 @@ void main() {
       expect(find.text('Diamond Heart Hotel'), findsOneWidget);
       expect(find.text('Purwokerto, Karang Lewas'), findsOneWidget);
       expect(find.text(r'$46'), findsOneWidget);
+      expect(find.text('Per Night'), findsOneWidget);
       expect(find.text('4.6'), findsOneWidget);
     });
 
@@ -33,6 +35,7 @@ void main() {
           title: 'Diamond Heart Hotel',
           location: 'Purwokerto, Karang Lewas',
           pricePerNight: r'$46',
+          pricePeriodLabel: 'Per Night',
           facilities: const [
             CaliforniaProductFacility(
               icon: CupertinoIcons.bed_double,
@@ -58,6 +61,7 @@ void main() {
           title: 'Diamond Heart Hotel',
           location: 'Purwokerto, Karang Lewas',
           pricePerNight: r'$46',
+          pricePeriodLabel: 'Per Night',
           onTap: () => tapped = true,
         ),
       );
@@ -69,7 +73,9 @@ void main() {
   });
 
   group('CaliforniaProductCard.medium', () {
-    testWidgets('renders title, location, and price suffix', (tester) async {
+    testWidgets('renders title, location, price, and price suffix', (
+      tester,
+    ) async {
       await tester.pumpApp(
         CaliforniaProductCard.medium(
           image: testImage,
@@ -85,6 +91,8 @@ void main() {
         find.text('Purwokerto, Street No 31, Central Java'),
         findsOneWidget,
       );
+      expect(find.textContaining(r'$46'), findsOneWidget);
+      expect(find.textContaining('/Night'), findsOneWidget);
     });
   });
 
@@ -98,14 +106,18 @@ void main() {
           title: 'Hyatt Washington Hotel',
           location: 'Purwokerto, Glempang',
           pricePerNight: r'$38',
+          pricePeriodLabel: ' / Night',
           rating: 4.2,
           reviewCount: 84,
+          reviewCountLabel: (count) => '($count Reviews)',
         ),
       );
 
       expect(find.text('Hyatt Washington Hotel'), findsOneWidget);
       expect(find.text('Purwokerto, Glempang'), findsOneWidget);
+      expect(find.textContaining(r'$38'), findsOneWidget);
       expect(find.textContaining('4.2'), findsOneWidget);
+      expect(find.textContaining('(84 Reviews)'), findsOneWidget);
     });
 
     testWidgets('omits rating icon when rating is not provided', (
@@ -117,6 +129,7 @@ void main() {
           title: 'Hyatt Washington Hotel',
           location: 'Purwokerto, Glempang',
           pricePerNight: r'$38',
+          pricePeriodLabel: ' / Night',
         ),
       );
 
