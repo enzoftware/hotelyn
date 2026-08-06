@@ -40,7 +40,7 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder:
                 _california_ui_widgetbook_use_cases_california_theme_use_cases
                     .buildCaliforniaColorsUseCase,
-          )
+          ),
         ],
       ),
       _widgetbook.WidgetbookComponent(
@@ -51,7 +51,7 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder:
                 _california_ui_widgetbook_use_cases_california_theme_use_cases
                     .buildCaliforniaSpacingUseCase,
-          )
+          ),
         ],
       ),
       _widgetbook.WidgetbookComponent(
@@ -62,7 +62,7 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder:
                 _california_ui_widgetbook_use_cases_california_theme_use_cases
                     .buildCaliforniaTypographyUseCase,
-          )
+          ),
         ],
       ),
     ],
@@ -141,7 +141,7 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder:
                 _california_ui_widgetbook_use_cases_california_navigation_bar_use_cases
                     .buildCaliforniaNavigationBarInteractiveUseCase,
-          )
+          ),
         ],
       ),
       _widgetbook.WidgetbookComponent(
