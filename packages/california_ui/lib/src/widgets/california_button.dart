@@ -48,6 +48,8 @@ class CaliforniaButton extends StatelessWidget {
     required this.onPressed,
     super.key,
     this.size = CaliforniaButtonSize.large,
+    this.width,
+    this.height,
   }) : _isGhost = false;
 
   /// Creates a transparent button with a brand-colored label, for
@@ -57,6 +59,8 @@ class CaliforniaButton extends StatelessWidget {
     required this.onPressed,
     super.key,
     this.size = CaliforniaButtonSize.large,
+    this.width,
+    this.height,
   }) : _isGhost = true;
 
   /// Button label. Supply an already-localized string.
@@ -68,6 +72,12 @@ class CaliforniaButton extends StatelessWidget {
 
   /// The button's width/height/font-size variant.
   final CaliforniaButtonSize size;
+
+  /// Optional explicit width override.
+  final double? width;
+
+  /// Optional explicit height override.
+  final double? height;
 
   final bool _isGhost;
 
@@ -122,11 +132,12 @@ class CaliforniaButton extends StatelessWidget {
           enabled: !_isDisabled,
           label: label,
           child: Container(
-            width: _width,
-            height: 54,
+            width: width ?? _width,
+            height: height ?? 54,
             alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(
-              vertical: CaliforniaSpacing.xxxl,
+            padding: EdgeInsets.symmetric(
+              vertical: height != null ? 0 : CaliforniaSpacing.xxxl,
+              horizontal: CaliforniaSpacing.sm,
             ),
             decoration: BoxDecoration(
               color: _backgroundColor,
