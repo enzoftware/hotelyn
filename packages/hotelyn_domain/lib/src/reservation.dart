@@ -99,18 +99,18 @@ class Reservation extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        hotelId,
-        roomId,
-        guestId,
-        status,
-        checkIn,
-        checkOut,
-        holdExpiresAt,
-        confirmationCode,
-        paidBy,
-        paidAt,
-      ];
+    id,
+    hotelId,
+    roomId,
+    guestId,
+    status,
+    checkIn,
+    checkOut,
+    holdExpiresAt,
+    confirmationCode,
+    paidBy,
+    paidAt,
+  ];
 }
 
 /// Parses a bare `YYYY-MM-DD` (or a fuller timestamp) into a UTC-anchored

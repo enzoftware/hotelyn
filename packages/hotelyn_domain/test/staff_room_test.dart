@@ -5,15 +5,15 @@ import 'package:test/test.dart';
 void main() {
   group('StaffRoom.fromJson', () {
     StaffRoom withStatus(String status) => StaffRoom.fromJson({
-          'id': 'r1',
-          'hotel_id': 'h1',
-          'name': '101',
-          'room_type': 'double',
-          'capacity': 2,
-          'price_per_night': 180.0,
-          'is_available': true,
-          'status': status,
-        });
+      'id': 'r1',
+      'hotel_id': 'h1',
+      'name': '101',
+      'room_type': 'double',
+      'capacity': 2,
+      'price_per_night': 180.0,
+      'is_available': true,
+      'status': status,
+    });
 
     test('maps a full row', () {
       final room = withStatus('available');

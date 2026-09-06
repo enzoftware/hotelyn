@@ -59,13 +59,13 @@ class StaffRoom extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        hotelId,
-        name,
-        roomType,
-        capacity,
-        pricePerNight,
-        isAvailable,
-        status,
-      ];
+    id,
+    hotelId,
+    name,
+    roomType,
+    capacity,
+    pricePerNight,
+    isAvailable,
+    status,
+  ];
 }

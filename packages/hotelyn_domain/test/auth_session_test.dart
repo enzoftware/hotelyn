@@ -5,12 +5,12 @@ import 'package:test/test.dart';
 void main() {
   group('AuthSession.fromJson', () {
     AuthSession decode() => AuthSession.fromJson(const {
-          'access_token': 'access-123',
-          'refresh_token': 'refresh-456',
-          'user_id': 'user-1',
-          'expires_in': 3600,
-          'token_type': 'bearer',
-        });
+      'access_token': 'access-123',
+      'refresh_token': 'refresh-456',
+      'user_id': 'user-1',
+      'expires_in': 3600,
+      'token_type': 'bearer',
+    });
 
     test('maps the session body', () {
       final session = decode();

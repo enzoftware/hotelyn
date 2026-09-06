@@ -85,14 +85,14 @@ void main() {
 
     test('decodes each reservation_status enum value', () {
       Reservation withStatus(String status) => Reservation.fromJson({
-            'id': 'res',
-            'hotel_id': 'h1',
-            'room_id': 'r1',
-            'guest_id': 'g1',
-            'status': status,
-            'check_in': '2026-09-01',
-            'check_out': '2026-09-03',
-          });
+        'id': 'res',
+        'hotel_id': 'h1',
+        'room_id': 'r1',
+        'guest_id': 'g1',
+        'status': status,
+        'check_in': '2026-09-01',
+        'check_out': '2026-09-03',
+      });
 
       expect(withStatus('held').status, ReservationStatus.held);
       expect(withStatus('confirmed').status, ReservationStatus.confirmed);
@@ -165,16 +165,16 @@ void main() {
     // mark_reservation_paid (BE-702); a row carrying one without the other is
     // an incoherent payment record and is rejected at construction.
     Map<String, dynamic> row({String? paidBy, String? paidAt}) => {
-          'id': 'res-1',
-          'hotel_id': 'h1',
-          'room_id': 'r1',
-          'guest_id': 'g1',
-          'status': 'confirmed',
-          'check_in': '2026-09-01',
-          'check_out': '2026-09-03',
-          if (paidBy != null) 'paid_by': paidBy,
-          if (paidAt != null) 'paid_at': paidAt,
-        };
+      'id': 'res-1',
+      'hotel_id': 'h1',
+      'room_id': 'r1',
+      'guest_id': 'g1',
+      'status': 'confirmed',
+      'check_in': '2026-09-01',
+      'check_out': '2026-09-03',
+      'paid_by': ?paidBy,
+      'paid_at': ?paidAt,
+    };
 
     test('rejects paid_by without paid_at (via fromJson)', () {
       expect(

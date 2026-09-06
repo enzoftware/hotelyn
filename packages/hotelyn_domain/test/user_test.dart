@@ -52,10 +52,10 @@ void main() {
 
       test('decodes each user_role enum value', () {
         User withRole(String role, {String? hotelId}) => User.fromJson({
-              'id': 'u1',
-              'role': role,
-              if (hotelId != null) 'hotel_id': hotelId,
-            });
+          'id': 'u1',
+          'role': role,
+          'hotel_id': ?hotelId,
+        });
 
         expect(withRole('guest').role, UserRole.guest);
         expect(

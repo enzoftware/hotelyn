@@ -46,13 +46,13 @@ class ReservationHold extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        hotelId,
-        roomId,
-        guestId,
-        checkIn,
-        checkOut,
-        expiresAt,
-        confirmationCode,
-      ];
+    id,
+    hotelId,
+    roomId,
+    guestId,
+    checkIn,
+    checkOut,
+    expiresAt,
+    confirmationCode,
+  ];
 }

@@ -42,12 +42,12 @@ class AuthSession extends Equatable {
 
   @override
   List<Object?> get props => [
-        accessToken,
-        refreshToken,
-        userId,
-        expiresIn,
-        tokenType,
-      ];
+    accessToken,
+    refreshToken,
+    userId,
+    expiresIn,
+    tokenType,
+  ];
 
   // Never let Equatable's default stringify dump the tokens (it prints every
   // prop in debug builds) — a stray log/print must not leak credentials.
