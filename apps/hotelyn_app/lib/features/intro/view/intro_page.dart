@@ -56,8 +56,7 @@ class _IntroCarouselPageState extends State<IntroCarouselPage> {
     ),
     IntroItemData(
       title: 'Make a Destination Plan',
-      description:
-          'Choose the location and we have many hotel recommendations '
+      description: 'Choose the location and we have many hotel recommendations '
           'wherever you are',
       imagePath: '$rootPath/ob2.png',
     ),

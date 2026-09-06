@@ -111,14 +111,13 @@ void main() {
     );
 
     testWidgets(
-      'calls cubit.enterLocationManuallyFromPriming '
-      'when onEnterManually null',
-      (tester) async {
-        when(() => locationCubit.enterLocationManuallyFromPriming()).thenAnswer(
-          (_) async {},
-        );
+        'calls cubit.enterLocationManuallyFromPriming '
+        'when onEnterManually null', (tester) async {
+      when(() => locationCubit.enterLocationManuallyFromPriming()).thenAnswer(
+        (_) async {},
+      );
 
-        await tester.pumpWidget(buildSubject());
+      await tester.pumpWidget(buildSubject());
 
       await tester.tap(find.text('Enter Location Manually'));
       await tester.pump();

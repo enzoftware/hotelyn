@@ -58,10 +58,10 @@ class CaliforniaProductCard extends StatelessWidget {
     this.rating,
     this.facilities = const [],
     this.onTap,
-  }) : _size = _CaliforniaProductCardSize.large,
-       priceSuffix = null,
-       reviewCount = null,
-       reviewCountLabel = null;
+  })  : _size = _CaliforniaProductCardSize.large,
+        priceSuffix = null,
+        reviewCount = null,
+        reviewCountLabel = null;
 
   /// Creates a medium product card: a squarer image with a price badge,
   /// title/location, and a facilities row. Sized for a horizontal list.
@@ -74,11 +74,11 @@ class CaliforniaProductCard extends StatelessWidget {
     this.priceSuffix,
     this.facilities = const [],
     this.onTap,
-  }) : _size = _CaliforniaProductCardSize.medium,
-       rating = null,
-       reviewCount = null,
-       reviewCountLabel = null,
-       pricePeriodLabel = null;
+  })  : _size = _CaliforniaProductCardSize.medium,
+        rating = null,
+        reviewCount = null,
+        reviewCountLabel = null,
+        pricePeriodLabel = null;
 
   /// Creates a small product card: a compact horizontal row with a
   /// thumbnail, title/location, price, and a review count.
@@ -93,13 +93,13 @@ class CaliforniaProductCard extends StatelessWidget {
     this.reviewCount,
     this.reviewCountLabel,
     this.onTap,
-  }) : _size = _CaliforniaProductCardSize.small,
-       facilities = const [],
-       priceSuffix = null,
-       assert(
-         reviewCount == null || reviewCountLabel != null,
-         'reviewCountLabel is required whenever reviewCount is provided.',
-       );
+  })  : _size = _CaliforniaProductCardSize.small,
+        facilities = const [],
+        priceSuffix = null,
+        assert(
+          reviewCount == null || reviewCountLabel != null,
+          'reviewCountLabel is required whenever reviewCount is provided.',
+        );
 
   final _CaliforniaProductCardSize _size;
 
@@ -150,14 +150,14 @@ class CaliforniaProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final child = switch (_size) {
       _CaliforniaProductCardSize.large => _CaliforniaLargeProductCard(
-        this,
-      ),
+          this,
+        ),
       _CaliforniaProductCardSize.medium => _CaliforniaMediumProductCard(
-        this,
-      ),
+          this,
+        ),
       _CaliforniaProductCardSize.small => _CaliforniaSmallProductCard(
-        this,
-      ),
+          this,
+        ),
     };
 
     return GestureDetector(
@@ -240,11 +240,10 @@ class _CaliforniaLargeProductCard extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   card.location,
-                                  style: CaliforniaTypography.p12Regular
-                                      .copyWith(
-                                        color:
-                                            CaliforniaColors.textSecondary,
-                                      ),
+                                  style:
+                                      CaliforniaTypography.p12Regular.copyWith(
+                                    color: CaliforniaColors.textSecondary,
+                                  ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -408,10 +407,10 @@ class _CaliforniaSmallProductCard extends StatelessWidget {
                               if (card.pricePeriodLabel != null)
                                 TextSpan(
                                   text: card.pricePeriodLabel,
-                                  style: CaliforniaTypography.p12Regular
-                                      .copyWith(
-                                        color: CaliforniaColors.textSecondary,
-                                      ),
+                                  style:
+                                      CaliforniaTypography.p12Regular.copyWith(
+                                    color: CaliforniaColors.textSecondary,
+                                  ),
                                 ),
                             ],
                           ),
@@ -431,10 +430,9 @@ class _CaliforniaSmallProductCard extends StatelessWidget {
                           child: Text.rich(
                             TextSpan(
                               text: card.rating!.toStringAsFixed(1),
-                              style: CaliforniaTypography.p12Medium
-                                  .copyWith(
-                                    color: CaliforniaColors.textPrimary,
-                                  ),
+                              style: CaliforniaTypography.p12Medium.copyWith(
+                                color: CaliforniaColors.textPrimary,
+                              ),
                               children: [
                                 if (reviewLabel != null)
                                   TextSpan(

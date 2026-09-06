@@ -56,8 +56,7 @@ class _ManualLocationSheetState extends State<ManualLocationSheet> {
   @override
   void initState() {
     super.initState();
-    _selectedLocation =
-        widget.initialLocation ?? UserLocation.defaultFallback;
+    _selectedLocation = widget.initialLocation ?? UserLocation.defaultFallback;
     _cityController = TextEditingController(text: _selectedLocation.cityName);
   }
 
