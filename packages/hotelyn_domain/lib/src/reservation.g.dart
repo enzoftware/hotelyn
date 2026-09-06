@@ -7,22 +7,22 @@ part of 'reservation.dart';
 // **************************************************************************
 
 Reservation _$ReservationFromJson(Map<String, dynamic> json) => Reservation(
-      id: json['id'] as String,
-      hotelId: json['hotel_id'] as String,
-      roomId: json['room_id'] as String,
-      guestId: json['guest_id'] as String,
-      status: $enumDecode(_$ReservationStatusEnumMap, json['status']),
-      checkIn: _dateFromJson(json['check_in'] as String),
-      checkOut: _dateFromJson(json['check_out'] as String),
-      holdExpiresAt: json['hold_expires_at'] == null
-          ? null
-          : DateTime.parse(json['hold_expires_at'] as String),
-      confirmationCode: json['confirmation_code'] as String?,
-      paidBy: json['paid_by'] as String?,
-      paidAt: json['paid_at'] == null
-          ? null
-          : DateTime.parse(json['paid_at'] as String),
-    );
+  id: json['id'] as String,
+  hotelId: json['hotel_id'] as String,
+  roomId: json['room_id'] as String,
+  guestId: json['guest_id'] as String,
+  status: $enumDecode(_$ReservationStatusEnumMap, json['status']),
+  checkIn: _dateFromJson(json['check_in'] as String),
+  checkOut: _dateFromJson(json['check_out'] as String),
+  holdExpiresAt: json['hold_expires_at'] == null
+      ? null
+      : DateTime.parse(json['hold_expires_at'] as String),
+  confirmationCode: json['confirmation_code'] as String?,
+  paidBy: json['paid_by'] as String?,
+  paidAt: json['paid_at'] == null
+      ? null
+      : DateTime.parse(json['paid_at'] as String),
+);
 
 Map<String, dynamic> _$ReservationToJson(Reservation instance) =>
     <String, dynamic>{
