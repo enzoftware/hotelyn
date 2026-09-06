@@ -1,9 +1,8 @@
+import 'package:california_ui/california_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hotelyn/components/hotelyn_button.dart';
 import 'package:hotelyn/components/icons/hotelyn_icon.dart';
-import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/core/domain/repository/repository.dart';
 import 'package:hotelyn/features/home/home.dart';
 import 'package:hotelyn/features/login/view/login_page.dart';
@@ -16,40 +15,49 @@ class IntroWelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const HotelynIcon(),
-            const SizedBox(height: 30),
-            const Text(
-              'Welcome to Hotelyn',
-              style: HotelynTextStyle.h1,
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'If you are new here please create your account first before '
-              'book the hotel.',
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 120),
-            HotelynButton(
-              message: 'Create Account / Login',
-              onPressed: () {
-                context.read<IntroRepository>().setIntroPassed();
-                context.go(LoginPage.route);
-              },
-            ),
-            const SizedBox(height: 16),
-            HotelynButton.secondary(
-              message: 'Go To Homepage',
-              onPressed: () {
-                context.read<IntroRepository>().setIntroPassed();
-                context.go(HomePage.route);
-              },
-            ),
-          ],
+      backgroundColor: CaliforniaColors.surfacePrimary,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Spacer(),
+              const HotelynIcon(),
+              const SizedBox(height: 30),
+              const Text(
+                'Welcome to Hotelyn',
+                style: CaliforniaTypography.h1,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'If you are new here please create your account first before '
+                'book the hotel.',
+                style: CaliforniaTypography.p14Regular.copyWith(
+                  color: CaliforniaColors.textSecondary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const Spacer(),
+              CaliforniaButton.primary(
+                label: 'Create Account / Login',
+                onPressed: () {
+                  context.read<IntroRepository>().setIntroPassed();
+                  context.go(LoginPage.route);
+                },
+              ),
+              const SizedBox(height: 16),
+              CaliforniaButton.ghost(
+                label: 'Go To Homepage',
+                onPressed: () {
+                  context.read<IntroRepository>().setIntroPassed();
+                  context.go(HomePage.route);
+                },
+              ),
+              const SizedBox(height: 24),
+            ],
+          ),
         ),
       ),
     );

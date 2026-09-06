@@ -6,7 +6,7 @@ part 'intro_event.dart';
 part 'intro_state.dart';
 
 class IntroBloc extends Bloc<IntroEvent, IntroState> {
-  IntroBloc() : super(IntroCarousel()) {
+  IntroBloc() : super(const IntroCarousel()) {
     on<IntroPageChanged>(_onPageChanged);
     on<IntroGoToWelcome>(_onGoToWelcome);
   }
@@ -15,7 +15,7 @@ class IntroBloc extends Bloc<IntroEvent, IntroState> {
     IntroGoToWelcome event,
     Emitter<IntroState> emit,
   ) {
-    emit(IntroWelcome());
+    emit(const IntroWelcome());
   }
 
   FutureOr<void> _onPageChanged(
