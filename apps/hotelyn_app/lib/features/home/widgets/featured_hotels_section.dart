@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/core/data/mocks/hotels.dart';
 import 'package:hotelyn/features/home/widgets/featured_hotel_card.dart';
+import 'package:hotelyn/features/location/location.dart';
 
 class FeaturedHotelsSection extends StatelessWidget {
   const FeaturedHotelsSection({super.key});
@@ -18,6 +19,7 @@ class FeaturedHotelsSection extends StatelessWidget {
         children: [
           const SizedBox(height: 24),
           const Text('Featured Hotels', style: HotelynTextStyle.h2),
+          const LocationFallbackBanner(),
           const SizedBox(height: 16),
           ...mockHotels.map(
             (hotel) => Padding(
