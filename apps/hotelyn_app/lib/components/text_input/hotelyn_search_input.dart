@@ -6,10 +6,20 @@ class HotelynSearchInput extends StatelessWidget {
     required this.hintText,
     super.key,
     this.controller,
+    this.onTap,
+    this.readOnly = false,
+    this.enabled,
+    this.onChanged,
+    this.onSubmitted,
   });
 
   final String hintText;
   final TextEditingController? controller;
+  final VoidCallback? onTap;
+  final bool readOnly;
+  final bool? enabled;
+  final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onSubmitted;
 
   double get _radius => 30;
 
@@ -17,6 +27,11 @@ class HotelynSearchInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      readOnly: readOnly,
+      enabled: enabled,
+      onTap: onTap,
+      onChanged: onChanged,
+      onSubmitted: onSubmitted,
       decoration: InputDecoration(
         filled: true,
         fillColor: LightGreyColors.lightGrey,
