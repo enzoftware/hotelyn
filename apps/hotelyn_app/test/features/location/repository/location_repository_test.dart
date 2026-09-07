@@ -23,50 +23,54 @@ void main() {
       locationService = MockLocationService();
     });
 
-    test('getPermissionStatus reconciles stored status with operating system',
-        () async {
-      SharedPreferences.setMockInitialValues({
-        SharedStorage.locationPermissionKey: 'denied',
-      });
-      final prefs = await SharedPreferences.getInstance();
-      sharedStorage = SharedStorage(sharedPreferences: prefs);
-      repository = LocationRepository(
-        sharedStorage: sharedStorage,
-        locationService: locationService,
-      );
+    test(
+      'getPermissionStatus reconciles stored status with operating system',
+      () async {
+        SharedPreferences.setMockInitialValues({
+          SharedStorage.locationPermissionKey: 'denied',
+        });
+        final prefs = await SharedPreferences.getInstance();
+        sharedStorage = SharedStorage(sharedPreferences: prefs);
+        repository = LocationRepository(
+          sharedStorage: sharedStorage,
+          locationService: locationService,
+        );
 
-      when(() => locationService.checkPermission()).thenAnswer(
-        (_) async => LocationPermissionStatus.granted,
-      );
+        when(() => locationService.checkPermission()).thenAnswer(
+          (_) async => LocationPermissionStatus.granted,
+        );
 
-      final status = await repository.getPermissionStatus();
-      expect(status, LocationPermissionStatus.granted);
-      expect(
-        sharedStorage.getLocationPermissionStatus(),
-        LocationPermissionStatus.granted,
-      );
-      verify(() => locationService.checkPermission()).called(1);
-    });
+        final status = await repository.getPermissionStatus();
+        expect(status, LocationPermissionStatus.granted);
+        expect(
+          sharedStorage.getLocationPermissionStatus(),
+          LocationPermissionStatus.granted,
+        );
+        verify(() => locationService.checkPermission()).called(1);
+      },
+    );
 
-    test('getPermissionStatus preserves primed when system is unknown',
-        () async {
-      SharedPreferences.setMockInitialValues({
-        SharedStorage.locationPermissionKey: 'primed',
-      });
-      final prefs = await SharedPreferences.getInstance();
-      sharedStorage = SharedStorage(sharedPreferences: prefs);
-      repository = LocationRepository(
-        sharedStorage: sharedStorage,
-        locationService: locationService,
-      );
+    test(
+      'getPermissionStatus preserves primed when system is unknown',
+      () async {
+        SharedPreferences.setMockInitialValues({
+          SharedStorage.locationPermissionKey: 'primed',
+        });
+        final prefs = await SharedPreferences.getInstance();
+        sharedStorage = SharedStorage(sharedPreferences: prefs);
+        repository = LocationRepository(
+          sharedStorage: sharedStorage,
+          locationService: locationService,
+        );
 
-      when(() => locationService.checkPermission()).thenAnswer(
-        (_) async => LocationPermissionStatus.unknown,
-      );
+        when(() => locationService.checkPermission()).thenAnswer(
+          (_) async => LocationPermissionStatus.unknown,
+        );
 
-      final status = await repository.getPermissionStatus();
-      expect(status, LocationPermissionStatus.primed);
-    });
+        final status = await repository.getPermissionStatus();
+        expect(status, LocationPermissionStatus.primed);
+      },
+    );
 
     test('getPermissionStatus checks service if no status stored', () async {
       SharedPreferences.setMockInitialValues({});
@@ -218,21 +222,23 @@ void main() {
       },
     );
 
-    test('getLocation returns defaultFallback when stored data is non-map',
-        () async {
-      SharedPreferences.setMockInitialValues({
-        SharedStorage.userLocationKey: '[1, 2, 3]',
-      });
-      final prefs = await SharedPreferences.getInstance();
-      sharedStorage = SharedStorage(sharedPreferences: prefs);
-      repository = LocationRepository(
-        sharedStorage: sharedStorage,
-        locationService: locationService,
-      );
+    test(
+      'getLocation returns defaultFallback when stored data is non-map',
+      () async {
+        SharedPreferences.setMockInitialValues({
+          SharedStorage.userLocationKey: '[1, 2, 3]',
+        });
+        final prefs = await SharedPreferences.getInstance();
+        sharedStorage = SharedStorage(sharedPreferences: prefs);
+        repository = LocationRepository(
+          sharedStorage: sharedStorage,
+          locationService: locationService,
+        );
 
-      final location = await repository.getLocation();
-      expect(location, UserLocation.defaultFallback);
-    });
+        final location = await repository.getLocation();
+        expect(location, UserLocation.defaultFallback);
+      },
+    );
 
     test(
       'SharedStorage.getUserLocation returns null on invalid field types '

@@ -101,8 +101,9 @@ class _CaliforniaCheckboxBox extends StatelessWidget {
     final Color borderColor;
 
     if (disabled) {
-      fillColor =
-          value ? CaliforniaColors.disabled : CaliforniaColors.surfaceElevated;
+      fillColor = value
+          ? CaliforniaColors.disabled
+          : CaliforniaColors.surfaceElevated;
       borderColor = CaliforniaColors.disabled;
     } else if (value) {
       fillColor = CaliforniaColors.brandPrimary;

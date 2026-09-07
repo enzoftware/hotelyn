@@ -22,9 +22,9 @@ Future<Response> onRequest(RequestContext context) async {
 
   return authAction('POST /auth/otp/verify', () async {
     final session = await context.read<AuthClient>().verifyEmailOtp(
-          email: fields['email']!,
-          token: fields['token']!,
-        );
+      email: fields['email']!,
+      token: fields['token']!,
+    );
     // Token-bearing response: keep it out of any shared/browser cache.
     return Response.json(
       body: session.toJson(),

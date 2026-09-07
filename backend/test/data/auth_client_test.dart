@@ -107,8 +107,7 @@ void main() {
       );
     });
 
-    test('derives a rate-limit code and retry-after from the message',
-        () async {
+    test('derives a rate-limit code and retry-after from the message', () async {
       when(() => auth.signInWithOtp(email: any(named: 'email'))).thenThrow(
         const gotrue.AuthException(
           'For security purposes, you can only request this after 27 seconds.',

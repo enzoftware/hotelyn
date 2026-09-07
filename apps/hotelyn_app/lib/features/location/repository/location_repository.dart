@@ -6,12 +6,11 @@ import 'package:hotelyn/features/location/services/location_service.dart';
 /// manual fallback locations, and persistence in [SharedStorage].
 class LocationRepository {
   LocationRepository({
-    required SharedStorage sharedStorage,
+    required this.sharedStorage,
     LocationService? locationService,
-  })  : _sharedStorage = sharedStorage,
-        _locationService = locationService ?? DefaultLocationService();
+  }) : _locationService = locationService ?? DefaultLocationService();
 
-  final SharedStorage _sharedStorage;
+  final SharedStorage sharedStorage;
   final LocationService _locationService;
 
   /// Retrieves the current permission status by checking the platform status
@@ -20,10 +19,10 @@ class LocationRepository {
   /// unresolved.
   Future<LocationPermissionStatus> getPermissionStatus() async {
     final systemStatus = await _locationService.checkPermission();
-    final stored = _sharedStorage.getLocationPermissionStatus();
+    final stored = sharedStorage.getLocationPermissionStatus();
 
     if (systemStatus != LocationPermissionStatus.unknown) {
-      await _sharedStorage.saveLocationPermissionStatus(systemStatus);
+      await sharedStorage.saveLocationPermissionStatus(systemStatus);
       return systemStatus;
     }
 
@@ -36,7 +35,7 @@ class LocationRepository {
 
   /// Records that the user was primed with product rationale.
   Future<void> markAsPrimed() async {
-    await _sharedStorage.saveLocationPermissionStatus(
+    await sharedStorage.saveLocationPermissionStatus(
       LocationPermissionStatus.primed,
     );
   }
@@ -47,19 +46,19 @@ class LocationRepository {
   /// If denied, ensures a manual fallback is available so downstream features
   /// have valid data.
   Future<({LocationPermissionStatus status, UserLocation location})>
-      requestPermission() async {
+  requestPermission() async {
     final status = await _locationService.requestPermission();
-    await _sharedStorage.saveLocationPermissionStatus(status);
+    await sharedStorage.saveLocationPermissionStatus(status);
 
     if (status == LocationPermissionStatus.granted) {
       final acquired = await _locationService.getCurrentLocation();
       final location = acquired ?? UserLocation.defaultFallback;
-      await _sharedStorage.saveUserLocation(location);
+      await sharedStorage.saveUserLocation(location);
       return (status: status, location: location);
     } else {
       final fallback =
-          _sharedStorage.getUserLocation() ?? UserLocation.defaultFallback;
-      await _sharedStorage.saveUserLocation(fallback);
+          sharedStorage.getUserLocation() ?? UserLocation.defaultFallback;
+      await sharedStorage.saveUserLocation(fallback);
       return (status: status, location: fallback);
     }
   }
@@ -67,12 +66,12 @@ class LocationRepository {
   /// Retrieves the active location, returning persisted data or falling back
   /// to [UserLocation.defaultFallback].
   Future<UserLocation> getLocation() async {
-    final stored = _sharedStorage.getUserLocation();
+    final stored = sharedStorage.getUserLocation();
     if (stored != null) {
       return stored;
     }
     const defaultLoc = UserLocation.defaultFallback;
-    await _sharedStorage.saveUserLocation(defaultLoc);
+    await sharedStorage.saveUserLocation(defaultLoc);
     return defaultLoc;
   }
 
@@ -81,12 +80,12 @@ class LocationRepository {
   Future<UserLocation> setManualLocation({UserLocation? location}) async {
     final chosen = location ?? UserLocation.defaultFallback;
     final manualLoc = chosen.copyWith(isManualFallback: true);
-    await _sharedStorage.saveUserLocation(manualLoc);
+    await sharedStorage.saveUserLocation(manualLoc);
     return manualLoc;
   }
 
   /// Persists permission status directly.
   Future<void> savePermissionStatus(LocationPermissionStatus status) async {
-    await _sharedStorage.saveLocationPermissionStatus(status);
+    await sharedStorage.saveLocationPermissionStatus(status);
   }
 }

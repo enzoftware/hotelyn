@@ -47,7 +47,7 @@ class SplashView extends StatelessWidget {
           context.go(LoginPage.route);
         }
       },
-      builder: (_, __) {
+      builder: (_, _) {
         return const SplashScreenBody();
       },
     );

@@ -21,7 +21,8 @@ void main() {
         expect(
           steps[i],
           greaterThan(steps[i - 1]),
-          reason: 'step $i (${steps[i]}) should exceed step ${i - 1} '
+          reason:
+              'step $i (${steps[i]}) should exceed step ${i - 1} '
               '(${steps[i - 1]})',
         );
       }

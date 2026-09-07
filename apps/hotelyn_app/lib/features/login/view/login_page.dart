@@ -82,16 +82,16 @@ class _Header extends StatelessWidget {
         Text(
           'Hotelyn',
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: PrimaryColors.black,
-              ),
+            fontWeight: FontWeight.bold,
+            color: PrimaryColors.black,
+          ),
         ),
         const SizedBox(height: 8),
         Text(
           'Login to your account',
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: GreyColors.grey,
-              ),
+            color: GreyColors.grey,
+          ),
         ),
       ],
     );
@@ -115,8 +115,9 @@ class _LoginForm extends StatelessWidget {
                 keyboardType: TextInputType.emailAddress,
                 onChanged: (value) =>
                     context.read<LoginCubit>().emailChanged(value),
-                errorText:
-                    state.email.displayError != null ? 'Invalid email' : null,
+                errorText: state.email.displayError != null
+                    ? 'Invalid email'
+                    : null,
               );
             },
           ),
@@ -177,8 +178,8 @@ class _SocialLoginSection extends StatelessWidget {
               child: Text(
                 'Or login with',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: GreyColors.grey,
-                    ),
+                  color: GreyColors.grey,
+                ),
               ),
             ),
             const Expanded(child: Divider()),
@@ -255,17 +256,17 @@ class _RegisterText extends StatelessWidget {
         Text(
           "Don't have an account? ",
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: GreyColors.grey,
-              ),
+            color: GreyColors.grey,
+          ),
         ),
         GestureDetector(
           onTap: () {},
           child: Text(
             'Register',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: PrimaryColors.blue,
-                ),
+              fontWeight: FontWeight.bold,
+              color: PrimaryColors.blue,
+            ),
           ),
         ),
       ],

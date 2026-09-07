@@ -2,7 +2,7 @@ name: hotelyn_workspace
 description: "Hotelyn Dart workspaces monorepo root."
 
 environment:
-  sdk: ">=3.5.0 <4.0.0"
+  sdk: ">=3.13.0 <4.0.0"
 
 workspace:
   - apps/hotelyn_app
@@ -15,10 +15,11 @@ workspace:
 
 dev_dependencies:
   melos: ^7.3.0
-  very_good_analysis: ^10.3.0
+  very_good_analysis: ^11.0.0
 
 melos:
   name: hotelyn
+  sdkPath: .fvm/flutter_sdk
 
   command:
     bootstrap:

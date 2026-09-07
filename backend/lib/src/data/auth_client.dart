@@ -27,12 +27,12 @@ class AuthSession {
   final String tokenType;
 
   Map<String, dynamic> toJson() => {
-        'access_token': accessToken,
-        'refresh_token': refreshToken,
-        'user_id': userId,
-        'expires_in': expiresIn,
-        'token_type': tokenType,
-      };
+    'access_token': accessToken,
+    'refresh_token': refreshToken,
+    'user_id': userId,
+    'expires_in': expiresIn,
+    'token_type': tokenType,
+  };
 }
 
 /// A recognized authentication failure, carrying a stable [code] the route
@@ -196,8 +196,8 @@ class SupabaseAuthClient implements AuthClient {
   /// GoTrue's cooldown message reads like "... after N seconds"; pull N out so
   /// the client can surface the remaining wait (BE-601). `null` when absent.
   int? _retryAfterFromMessage(String message) {
-    final match =
-        RegExp(r'after (\d+) seconds?').firstMatch(message.toLowerCase());
+    final match = RegExp(r'after (\d+) seconds?')
+        .firstMatch(message.toLowerCase());
     return match == null ? null : int.tryParse(match.group(1)!);
   }
 }

@@ -23,22 +23,20 @@ class HotelynApiClient {
   HotelynApiClient({
     required String baseUrl,
     http.Client? httpClient,
-    TokenProvider? tokenProvider,
-  })  : _baseUrl = Uri.parse(baseUrl),
-        _httpClient = httpClient ?? http.Client(),
-        _tokenProvider = tokenProvider;
+    this.tokenProvider,
+  }) : _baseUrl = Uri.parse(baseUrl),
+       _httpClient = httpClient ?? http.Client();
 
   final Uri _baseUrl;
   final http.Client _httpClient;
-  final TokenProvider? _tokenProvider;
+  final TokenProvider? tokenProvider;
 
   /// Hotels within [radiusKm] of ([lat], [lng]), nearest-first.
   Future<List<Hotel>> getNearbyHotels({
     required double lat,
     required double lng,
     required double radiusKm,
-  }) =>
-      _getHotels('/hotels/nearby', lat: lat, lng: lng, radiusKm: radiusKm);
+  }) => _getHotels('/hotels/nearby', lat: lat, lng: lng, radiusKm: radiusKm);
 
   /// Popular-yet-nearby hotels within [radiusKm] of ([lat], [lng]).
   Future<List<Hotel>> getRecommendedHotels({
@@ -50,8 +48,9 @@ class HotelynApiClient {
 
   /// Rooms for [hotelId], each with a computed `available_now` flag.
   Future<List<Room>> getRooms({required String hotelId}) async {
-    final json =
-        await _getJsonList('/hotels/${Uri.encodeComponent(hotelId)}/rooms');
+    final json = await _getJsonList(
+      '/hotels/${Uri.encodeComponent(hotelId)}/rooms',
+    );
     return json
         .map((row) => Room.fromJson(row as Map<String, dynamic>))
         .toList();
@@ -338,7 +337,7 @@ class HotelynApiClient {
   }
 
   Future<Map<String, String>> _headers({bool json = false}) async {
-    final token = await _tokenProvider?.call();
+    final token = await tokenProvider?.call();
     return {
       'Accept': 'application/json',
       if (json) 'Content-Type': 'application/json',

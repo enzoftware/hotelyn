@@ -9,14 +9,13 @@ void main() {
       String senderId = 'u1',
       String body = 'Hi',
       DateTime? sentAt,
-    }) =>
-        Message(
-          id: id,
-          reservationId: reservationId,
-          senderId: senderId,
-          body: body,
-          sentAt: sentAt ?? DateTime.utc(2026, 9, 1, 10, 30),
-        );
+    }) => Message(
+      id: id,
+      reservationId: reservationId,
+      senderId: senderId,
+      body: body,
+      sentAt: sentAt ?? DateTime.utc(2026, 9, 1, 10, 30),
+    );
 
     test('supports value equality', () {
       expect(message(), equals(message()));

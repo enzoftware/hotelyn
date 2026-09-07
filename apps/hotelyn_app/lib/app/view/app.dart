@@ -12,35 +12,32 @@ import 'package:hotelyn/features/location/location.dart';
 
 class HotelynApp extends StatelessWidget {
   const HotelynApp({
-    required IntroRepository preferenceRepository,
-    required AuthRepository authRepository,
-    required ClarityService clarityService,
-    required LocationRepository locationRepository,
+    required this.preferenceRepository,
+    required this.authRepository,
+    required this.clarityService,
+    required this.locationRepository,
     super.key,
-  })  : _preferenceRepository = preferenceRepository,
-        _authRepository = authRepository,
-        _clarityService = clarityService,
-        _locationRepository = locationRepository;
+  });
 
-  final IntroRepository _preferenceRepository;
-  final AuthRepository _authRepository;
-  final ClarityService _clarityService;
-  final LocationRepository _locationRepository;
+  final IntroRepository preferenceRepository;
+  final AuthRepository authRepository;
+  final ClarityService clarityService;
+  final LocationRepository locationRepository;
 
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MultiRepositoryProvider(
         providers: [
-          RepositoryProvider.value(value: _preferenceRepository),
-          RepositoryProvider.value(value: _authRepository),
-          RepositoryProvider.value(value: _clarityService),
-          RepositoryProvider.value(value: _locationRepository),
+          RepositoryProvider.value(value: preferenceRepository),
+          RepositoryProvider.value(value: authRepository),
+          RepositoryProvider.value(value: clarityService),
+          RepositoryProvider.value(value: locationRepository),
         ],
         child: BlocProvider(
           create: (_) {
             final cubit = LocationCubit(
-              locationRepository: _locationRepository,
+              locationRepository: locationRepository,
             );
             unawaited(
               cubit.loadLocation().catchError((Object error, StackTrace stack) {

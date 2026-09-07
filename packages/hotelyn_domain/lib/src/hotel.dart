@@ -51,15 +51,15 @@ class Hotel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        city,
-        country,
-        description,
-        address,
-        latitude,
-        longitude,
-        distanceKm,
-        popularity,
-      ];
+    id,
+    name,
+    city,
+    country,
+    description,
+    address,
+    latitude,
+    longitude,
+    distanceKm,
+    popularity,
+  ];
 }

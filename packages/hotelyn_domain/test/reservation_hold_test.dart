@@ -12,17 +12,16 @@ void main() {
       DateTime? checkOut,
       DateTime? expiresAt,
       String confirmationCode = 'HZ-3F7K9Q2A',
-    }) =>
-        ReservationHold(
-          id: id,
-          hotelId: hotelId,
-          roomId: roomId,
-          guestId: guestId,
-          checkIn: checkIn ?? DateTime.utc(2026, 9),
-          checkOut: checkOut ?? DateTime.utc(2026, 9, 3),
-          expiresAt: expiresAt ?? DateTime.utc(2026, 9, 1, 0, 15),
-          confirmationCode: confirmationCode,
-        );
+    }) => ReservationHold(
+      id: id,
+      hotelId: hotelId,
+      roomId: roomId,
+      guestId: guestId,
+      checkIn: checkIn ?? DateTime.utc(2026, 9),
+      checkOut: checkOut ?? DateTime.utc(2026, 9, 3),
+      expiresAt: expiresAt ?? DateTime.utc(2026, 9, 1, 0, 15),
+      confirmationCode: confirmationCode,
+    );
 
     test('supports value equality', () {
       expect(hold(), equals(hold()));

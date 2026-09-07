@@ -61,8 +61,9 @@ void main() {
       expect(find.text('Change'), findsOneWidget);
     });
 
-    testWidgets('renders non-denial copy when manual fallback is voluntary',
-        (tester) async {
+    testWidgets('renders non-denial copy when manual fallback is voluntary', (
+      tester,
+    ) async {
       await tester.pumpApp(
         buildSubject(
           const LocationState(

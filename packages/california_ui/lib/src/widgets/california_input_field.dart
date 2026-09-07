@@ -47,9 +47,9 @@ class CaliforniaInputField extends StatefulWidget {
     this.enabled = true,
     this.onChanged,
     this.onSubmitted,
-  })  : isSelector = false,
-        value = null,
-        onTap = null;
+  }) : isSelector = false,
+       value = null,
+       onTap = null;
 
   /// Creates a read-only "selector" field: tap it to open a picker/dropdown
   /// (e.g. a bottom sheet, a date picker) rather than typing directly.
@@ -63,13 +63,13 @@ class CaliforniaInputField extends StatefulWidget {
     this.value,
     this.onTap,
     this.enabled = true,
-  })  : isSelector = true,
-        controller = null,
-        leadingIcon = null,
-        keyboardType = null,
-        obscureText = false,
-        onChanged = null,
-        onSubmitted = null;
+  }) : isSelector = true,
+       controller = null,
+       leadingIcon = null,
+       keyboardType = null,
+       obscureText = false,
+       onChanged = null,
+       onSubmitted = null;
 
   /// Label shown above the field.
   final String title;

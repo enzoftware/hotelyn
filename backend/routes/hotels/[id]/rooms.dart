@@ -12,8 +12,9 @@ Future<Response> onRequest(RequestContext context, String id) async {
   }
 
   try {
-    final rooms =
-        await context.read<HotelDataClient>().roomsAvailability(hotelId: id);
+    final rooms = await context.read<HotelDataClient>().roomsAvailability(
+      hotelId: id,
+    );
     return Response.json(body: rooms.map((r) => r.toJson()).toList());
   } on Object {
     return internalError();

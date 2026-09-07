@@ -11,35 +11,30 @@ abstract class UnusedStaffMethodsBase implements HotelDataClient {
   Future<List<StaffRoom>> staffRoomList({
     required String actorId,
     String? hotelId,
-  }) =>
-      throw UnimplementedError();
+  }) => throw UnimplementedError();
 
   @override
   Future<StaffRoom> setRoomAvailability({
     required String actorId,
     required String roomId,
     required bool isAvailable,
-  }) =>
-      throw UnimplementedError();
+  }) => throw UnimplementedError();
 
   @override
   Future<Reservation> confirmReservation({
     required String actorId,
     required String reservationId,
-  }) =>
-      throw UnimplementedError();
+  }) => throw UnimplementedError();
 
   @override
   Future<Reservation> rejectReservation({
     required String actorId,
     required String reservationId,
-  }) =>
-      throw UnimplementedError();
+  }) => throw UnimplementedError();
 
   @override
   Future<Reservation> markReservationPaid({
     required String actorId,
     required String reservationId,
-  }) =>
-      throw UnimplementedError();
+  }) => throw UnimplementedError();
 }

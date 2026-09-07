@@ -6,15 +6,15 @@ version: 0.1.0+1
 resolution: workspace
 
 environment:
-  sdk: ">=3.5.0 <4.0.0"
+  sdk: ">=3.13.0 <4.0.0"
 
 dependencies:
   dart_frog: ^1.2.0
   hotelyn_domain: any
-  supabase: ^2.14.0
+  supabase: ^2.16.1
 
 dev_dependencies:
-  mocktail: ^1.0.0
+  mocktail: ^1.0.4
   # Pinned to the version bundled with the Flutter SDK (test_api 0.7.12); see #225.
   test: ^1.25.0
-  very_good_analysis: ^10.3.0
+  very_good_analysis: ^11.0.0

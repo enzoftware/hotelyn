@@ -19,8 +19,10 @@ Future<Response> onRequest(RequestContext context, String id) async {
     try {
       final body = jsonDecode(await context.request.body());
       if (body is! Map<String, dynamic> || body['is_available'] is! bool) {
-        return badRequest('Body must be a JSON object with a boolean '
-            '"is_available".');
+        return badRequest(
+          'Body must be a JSON object with a boolean '
+          '"is_available".',
+        );
       }
       isAvailable = body['is_available'] as bool;
     } on FormatException {
@@ -28,10 +30,10 @@ Future<Response> onRequest(RequestContext context, String id) async {
     }
 
     final room = await context.read<HotelDataClient>().setRoomAvailability(
-          actorId: actorId,
-          roomId: id,
-          isAvailable: isAvailable,
-        );
+      actorId: actorId,
+      roomId: id,
+      isAvailable: isAvailable,
+    );
     return Response.json(body: room.toJson());
   });
 }

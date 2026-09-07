@@ -12,16 +12,16 @@ class _FakeHotelRepository implements HotelRepository {
     required double latitude,
     required double longitude,
     required double radiusKm,
-  }) async =>
-      const [Hotel(id: 'h1', name: 'Bay', city: 'Lima', country: 'Peru')];
+  }) async => const [
+    Hotel(id: 'h1', name: 'Bay', city: 'Lima', country: 'Peru'),
+  ];
 
   @override
   Future<List<Hotel>> recommendedHotels({
     required double latitude,
     required double longitude,
     required double radiusKm,
-  }) async =>
-      const [];
+  }) async => const [];
 
   @override
   Future<Hotel?> hotelById(String hotelId) async => null;
@@ -35,25 +35,23 @@ class _FakeRoomRepository implements RoomRepository {
   Future<List<StaffRoom>> staffRooms({
     required String actorId,
     String? hotelId,
-  }) async =>
-      const [];
+  }) async => const [];
 
   @override
   Future<StaffRoom> setRoomAvailability({
     required String actorId,
     required String roomId,
     required bool isAvailable,
-  }) async =>
-      StaffRoom(
-        id: roomId,
-        hotelId: 'h1',
-        name: '101',
-        roomType: 'double',
-        capacity: 2,
-        pricePerNight: 180,
-        isAvailable: isAvailable,
-        status: isAvailable ? RoomStatus.available : RoomStatus.unavailable,
-      );
+  }) async => StaffRoom(
+    id: roomId,
+    hotelId: 'h1',
+    name: '101',
+    roomType: 'double',
+    capacity: 2,
+    pricePerNight: 180,
+    isAvailable: isAvailable,
+    status: isAvailable ? RoomStatus.available : RoomStatus.unavailable,
+  );
 }
 
 class _FakeReservationRepository implements ReservationRepository {
@@ -63,17 +61,16 @@ class _FakeReservationRepository implements ReservationRepository {
     required String guestId,
     required DateTime checkIn,
     required DateTime checkOut,
-  }) async =>
-      ReservationHold(
-        id: 'res-1',
-        hotelId: 'h1',
-        roomId: roomId,
-        guestId: guestId,
-        checkIn: checkIn,
-        checkOut: checkOut,
-        expiresAt: DateTime.utc(2026, 9, 1, 0, 15),
-        confirmationCode: 'HZ-3F7K9Q2A',
-      );
+  }) async => ReservationHold(
+    id: 'res-1',
+    hotelId: 'h1',
+    roomId: roomId,
+    guestId: guestId,
+    checkIn: checkIn,
+    checkOut: checkOut,
+    expiresAt: DateTime.utc(2026, 9, 1, 0, 15),
+    confirmationCode: 'HZ-3F7K9Q2A',
+  );
 
   @override
   Future<List<Reservation>> reservationsForGuest(String guestId) async =>
@@ -83,42 +80,39 @@ class _FakeReservationRepository implements ReservationRepository {
   Future<Reservation> confirm({
     required String actorId,
     required String reservationId,
-  }) async =>
-      _reservation(reservationId, ReservationStatus.confirmed);
+  }) async => _reservation(reservationId, ReservationStatus.confirmed);
 
   @override
   Future<Reservation> reject({
     required String actorId,
     required String reservationId,
-  }) async =>
-      _reservation(reservationId, ReservationStatus.rejected);
+  }) async => _reservation(reservationId, ReservationStatus.rejected);
 
   @override
   Future<Reservation> markPaid({
     required String actorId,
     required String reservationId,
-  }) async =>
-      Reservation(
-        id: reservationId,
-        hotelId: 'h1',
-        roomId: 'r1',
-        guestId: 'g1',
-        status: ReservationStatus.confirmed,
-        checkIn: DateTime.utc(2026, 9),
-        checkOut: DateTime.utc(2026, 9, 3),
-        paidBy: actorId,
-        paidAt: DateTime.utc(2026, 9, 1, 10, 30),
-      );
+  }) async => Reservation(
+    id: reservationId,
+    hotelId: 'h1',
+    roomId: 'r1',
+    guestId: 'g1',
+    status: ReservationStatus.confirmed,
+    checkIn: DateTime.utc(2026, 9),
+    checkOut: DateTime.utc(2026, 9, 3),
+    paidBy: actorId,
+    paidAt: DateTime.utc(2026, 9, 1, 10, 30),
+  );
 
   Reservation _reservation(String id, ReservationStatus status) => Reservation(
-        id: id,
-        hotelId: 'h1',
-        roomId: 'r1',
-        guestId: 'g1',
-        status: status,
-        checkIn: DateTime.utc(2026, 9),
-        checkOut: DateTime.utc(2026, 9, 3),
-      );
+    id: id,
+    hotelId: 'h1',
+    roomId: 'r1',
+    guestId: 'g1',
+    status: status,
+    checkIn: DateTime.utc(2026, 9),
+    checkOut: DateTime.utc(2026, 9, 3),
+  );
 }
 
 class _FakeAuthRepository implements AuthRepository {
@@ -129,15 +123,13 @@ class _FakeAuthRepository implements AuthRepository {
   Future<AuthSession> verifyEmailOtp({
     required String email,
     required String token,
-  }) async =>
-      _session;
+  }) async => _session;
 
   @override
   Future<AuthSession> signInWithPassword({
     required String email,
     required String password,
-  }) async =>
-      _session;
+  }) async => _session;
 
   @override
   Future<User?> currentUser(String accessToken) async =>
@@ -162,14 +154,13 @@ class _FakeMessageRepository implements MessageRepository {
     required String reservationId,
     required String senderId,
     required String body,
-  }) async =>
-      Message(
-        id: 'm1',
-        reservationId: reservationId,
-        senderId: senderId,
-        body: body,
-        sentAt: DateTime.utc(2026, 9, 1, 10, 30),
-      );
+  }) async => Message(
+    id: 'm1',
+    reservationId: reservationId,
+    senderId: senderId,
+    body: body,
+    sentAt: DateTime.utc(2026, 9, 1, 10, 30),
+  );
 }
 
 void main() {
@@ -207,21 +198,25 @@ void main() {
   group('ReservationRepository contract', () {
     final ReservationRepository repo = _FakeReservationRepository();
 
-    test('createHold returns a ReservationHold with a non-null expiry',
-        () async {
-      final hold = await repo.createHold(
-        roomId: 'r1',
-        guestId: 'g1',
-        checkIn: DateTime.utc(2026, 9),
-        checkOut: DateTime.utc(2026, 9, 3),
-      );
-      expect(hold, isA<ReservationHold>());
-      expect(hold.expiresAt, isNotNull);
-    });
+    test(
+      'createHold returns a ReservationHold with a non-null expiry',
+      () async {
+        final hold = await repo.createHold(
+          roomId: 'r1',
+          guestId: 'g1',
+          checkIn: DateTime.utc(2026, 9),
+          checkOut: DateTime.utc(2026, 9, 3),
+        );
+        expect(hold, isA<ReservationHold>());
+        expect(hold.expiresAt, isNotNull);
+      },
+    );
 
     test('markPaid returns a confirmed, paid Reservation', () async {
-      final reservation =
-          await repo.markPaid(actorId: 'staff-1', reservationId: 'res-1');
+      final reservation = await repo.markPaid(
+        actorId: 'staff-1',
+        reservationId: 'res-1',
+      );
       expect(reservation.status, ReservationStatus.confirmed);
       expect(reservation.paidBy, 'staff-1');
       expect(reservation.paidAt, isNotNull);

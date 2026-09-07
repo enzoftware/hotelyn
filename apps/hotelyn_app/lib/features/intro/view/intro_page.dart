@@ -56,13 +56,15 @@ class _IntroCarouselPageState extends State<IntroCarouselPage> {
     ),
     IntroItemData(
       title: 'Make a Destination Plan',
-      description: 'Choose the location and we have many hotel recommendations '
+      description:
+          'Choose the location and we have many hotel recommendations '
           'wherever you are',
       imagePath: '$rootPath/ob2.png',
     ),
     IntroItemData(
       title: 'Let’s Discover the World',
-      description: 'Book your hotel right now for the next level travel.'
+      description:
+          'Book your hotel right now for the next level travel.'
           '\nEnjoy your trip!',
       imagePath: '$rootPath/ob3.png',
     ),
@@ -96,11 +98,11 @@ class _IntroCarouselPageState extends State<IntroCarouselPage> {
             controller: _controller,
             onPageChanged: (position) {
               context.read<IntroBloc>().add(
-                    IntroPageChanged(
-                      position: position,
-                      isLastItem: position == _introPagers.length - 1,
-                    ),
-                  );
+                IntroPageChanged(
+                  position: position,
+                  isLastItem: position == _introPagers.length - 1,
+                ),
+              );
             },
             itemCount: _introPagers.length,
             itemBuilder: (context, index) {

@@ -22,12 +22,11 @@ class DefaultLocationService implements LocationService {
   DefaultLocationService({
     LocationPermissionStatus initialPermission =
         LocationPermissionStatus.unknown,
-    UserLocation? mockedLocation,
-  })  : _permission = initialPermission,
-        _mockedLocation = mockedLocation;
+    this.mockedLocation,
+  }) : _permission = initialPermission;
 
   LocationPermissionStatus _permission;
-  final UserLocation? _mockedLocation;
+  final UserLocation? mockedLocation;
 
   @override
   Future<LocationPermissionStatus> checkPermission() async {
@@ -48,7 +47,7 @@ class DefaultLocationService implements LocationService {
     if (_permission != LocationPermissionStatus.granted) {
       return null;
     }
-    return _mockedLocation ??
+    return mockedLocation ??
         const UserLocation(
           latitude: -7.4243,
           longitude: 109.2391,

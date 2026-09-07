@@ -38,8 +38,9 @@ void main() {
       );
     }
 
-    testWidgets('renders title, input field, chips, and set location button',
-        (tester) async {
+    testWidgets('renders title, input field, chips, and set location button', (
+      tester,
+    ) async {
       await tester.pumpApp(buildSubject());
 
       expect(find.text('Enter Location Manually'), findsOneWidget);
@@ -52,23 +53,24 @@ void main() {
     });
 
     testWidgets(
-        'selecting a destination chip updates selection and calls callback',
-        (tester) async {
-      UserLocation? selected;
-      await tester.pumpApp(
-        buildSubject(onLocationSelected: (loc) => selected = loc),
-      );
+      'selecting a destination chip updates selection and calls callback',
+      (tester) async {
+        UserLocation? selected;
+        await tester.pumpApp(
+          buildSubject(onLocationSelected: (loc) => selected = loc),
+        );
 
-      await tester.tap(find.text('Bali, IND'));
-      await tester.pump();
+        await tester.tap(find.text('Bali, IND'));
+        await tester.pump();
 
-      await tester.tap(find.text('Set Location'));
-      await tester.pump();
+        await tester.tap(find.text('Set Location'));
+        await tester.pump();
 
-      expect(selected, isNotNull);
-      expect(selected?.cityName, 'Bali, IND');
-      expect(selected?.isManualFallback, isTrue);
-    });
+        expect(selected, isNotNull);
+        expect(selected?.cityName, 'Bali, IND');
+        expect(selected?.isManualFallback, isTrue);
+      },
+    );
 
     testWidgets(
       'typing a destination matching fallbackOptions sets destination '
@@ -95,73 +97,79 @@ void main() {
     );
 
     testWidgets(
-        'typing an unknown destination retains selected location to avoid '
-        'mismatched coordinates', (tester) async {
-      UserLocation? selected;
-      await tester.pumpApp(
-        buildSubject(
-          initialLocation: UserLocation.defaultFallback,
-          onLocationSelected: (loc) => selected = loc,
-        ),
-      );
+      'typing an unknown destination retains selected location to avoid '
+      'mismatched coordinates',
+      (tester) async {
+        UserLocation? selected;
+        await tester.pumpApp(
+          buildSubject(
+            initialLocation: UserLocation.defaultFallback,
+            onLocationSelected: (loc) => selected = loc,
+          ),
+        );
 
-      final inputFinder = find.byType(TextField);
-      await tester.enterText(inputFinder, 'Unknown City');
-      await tester.pump();
+        final inputFinder = find.byType(TextField);
+        await tester.enterText(inputFinder, 'Unknown City');
+        await tester.pump();
 
-      await tester.tap(find.text('Set Location'));
-      await tester.pump();
+        await tester.tap(find.text('Set Location'));
+        await tester.pump();
 
-      expect(selected, isNotNull);
-      expect(selected?.cityName, UserLocation.defaultFallback.cityName);
-      expect(selected?.latitude, UserLocation.defaultFallback.latitude);
-      expect(selected?.longitude, UserLocation.defaultFallback.longitude);
-    });
+        expect(selected, isNotNull);
+        expect(selected?.cityName, UserLocation.defaultFallback.cityName);
+        expect(selected?.latitude, UserLocation.defaultFallback.latitude);
+        expect(selected?.longitude, UserLocation.defaultFallback.longitude);
+      },
+    );
 
-    testWidgets('calls cubit.setManualLocation when onLocationSelected is null',
-        (tester) async {
-      when(() => locationCubit.setManualLocation(any())).thenAnswer(
-        (_) async {},
-      );
+    testWidgets(
+      'calls cubit.setManualLocation when onLocationSelected is null',
+      (tester) async {
+        when(() => locationCubit.setManualLocation(any())).thenAnswer(
+          (_) async {},
+        );
 
-      await tester.pumpApp(buildSubject());
+        await tester.pumpApp(buildSubject());
 
-      await tester.tap(find.text('Set Location'));
-      await tester.pump();
+        await tester.tap(find.text('Set Location'));
+        await tester.pump();
 
-      verify(() => locationCubit.setManualLocation(any())).called(1);
-    });
+        verify(() => locationCubit.setManualLocation(any())).called(1);
+      },
+    );
 
-    testWidgets('ManualLocationSheet.show opens and returns selected location',
-        (tester) async {
-      UserLocation? result;
+    testWidgets(
+      'ManualLocationSheet.show opens and returns selected location',
+      (tester) async {
+        UserLocation? result;
 
-      await tester.pumpApp(
-        Scaffold(
-          body: Builder(
-            builder: (context) => ElevatedButton(
-              onPressed: () async {
-                result = await ManualLocationSheet.show(context);
-              },
-              child: const Text('Open'),
+        await tester.pumpApp(
+          Scaffold(
+            body: Builder(
+              builder: (context) => ElevatedButton(
+                onPressed: () async {
+                  result = await ManualLocationSheet.show(context);
+                },
+                child: const Text('Open'),
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      await tester.tap(find.text('Open'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Open'));
+        await tester.pumpAndSettle();
 
-      expect(find.byType(ManualLocationSheet), findsOneWidget);
+        expect(find.byType(ManualLocationSheet), findsOneWidget);
 
-      await tester.tap(find.text('Jakarta, IND'));
-      await tester.pump();
+        await tester.tap(find.text('Jakarta, IND'));
+        await tester.pump();
 
-      await tester.tap(find.text('Set Location'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Set Location'));
+        await tester.pumpAndSettle();
 
-      expect(result?.cityName, 'Jakarta, IND');
-      expect(find.byType(ManualLocationSheet), findsNothing);
-    });
+        expect(result?.cityName, 'Jakarta, IND');
+        expect(find.byType(ManualLocationSheet), findsNothing);
+      },
+    );
   });
 }
