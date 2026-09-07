@@ -82,8 +82,11 @@ class _IntroCarouselPageState extends State<IntroCarouselPage> {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.select<IntroBloc, IntroState>((bloc) => bloc.state)
-        as IntroCarousel;
+    final currentPosition = context.select<IntroBloc, int>(
+      (bloc) => bloc.state is IntroCarousel
+          ? (bloc.state as IntroCarousel).currentPosition
+          : 0,
+    );
 
     return Column(
       children: [
@@ -108,7 +111,7 @@ class _IntroCarouselPageState extends State<IntroCarouselPage> {
         ),
         GroupDotIndicator(
           length: _introPagers.length,
-          selectedIndex: state.currentPosition,
+          selectedIndex: currentPosition,
         ),
         Expanded(
           flex: 3,
@@ -158,12 +161,15 @@ class IntroPrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.select<IntroBloc, IntroState>((bloc) => bloc.state)
-        as IntroCarousel;
-    final message = state.isLastItem ? 'Get Started' : 'Continue';
+    final isLastItem = context.select<IntroBloc, bool>(
+      (bloc) =>
+          bloc.state is IntroCarousel &&
+          (bloc.state as IntroCarousel).isLastItem,
+    );
+    final message = isLastItem ? 'Get Started' : 'Continue';
     return CaliforniaButton.primary(
       onPressed: () {
-        if (state.isLastItem) {
+        if (isLastItem) {
           context.read<IntroBloc>().add(const IntroGoToWelcome());
         } else {
           if (controller.hasClients) {

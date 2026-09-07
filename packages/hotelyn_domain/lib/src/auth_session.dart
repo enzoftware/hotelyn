@@ -55,7 +55,6 @@ class AuthSession extends Equatable {
   bool get stringify => false;
 
   @override
-  String toString() =>
-      'AuthSession(userId: $userId, tokenType: $tokenType, '
+  String toString() => 'AuthSession(userId: $userId, tokenType: $tokenType, '
       'expiresIn: $expiresIn)';
 }

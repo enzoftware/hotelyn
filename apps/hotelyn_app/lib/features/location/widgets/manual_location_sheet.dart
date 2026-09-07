@@ -68,16 +68,27 @@ class _ManualLocationSheetState extends State<ManualLocationSheet> {
 
   void _confirm() {
     final customName = _cityController.text.trim();
-    final finalLocation = customName.isEmpty
-        ? _selectedLocation
-        : _selectedLocation.cityName == customName
-            ? _selectedLocation
-            : UserLocation(
-                latitude: _selectedLocation.latitude,
-                longitude: _selectedLocation.longitude,
-                cityName: customName,
-                isManualFallback: true,
-              );
+    UserLocation finalLocation;
+
+    final matchedOption = UserLocation.fallbackOptions
+        .cast<UserLocation?>()
+        .firstWhere(
+          (opt) =>
+              opt!.cityName.toLowerCase() == customName.toLowerCase() ||
+              opt.cityName.toLowerCase().startsWith(customName.toLowerCase()),
+          orElse: () => null,
+        );
+
+    if (matchedOption != null) {
+      finalLocation = matchedOption;
+    } else if (customName.isEmpty ||
+        customName.toLowerCase() == _selectedLocation.cityName.toLowerCase()) {
+      finalLocation = _selectedLocation;
+    } else {
+      // Custom destination does not resolve to known coordinates; retain
+      // the currently selected location to prevent mismatched coordinates.
+      finalLocation = _selectedLocation;
+    }
 
     if (widget.onLocationSelected != null) {
       widget.onLocationSelected!(finalLocation);

@@ -17,18 +17,16 @@ void main() {
 
     Widget buildSubject(LocationState state) {
       when(() => locationCubit.state).thenReturn(state);
-      return MaterialApp(
-        home: Scaffold(
-          body: BlocProvider<LocationCubit>.value(
-            value: locationCubit,
-            child: const LocationCard(),
-          ),
+      return Scaffold(
+        body: BlocProvider<LocationCubit>.value(
+          value: locationCubit,
+          child: const LocationCard(),
         ),
       );
     }
 
     testWidgets('renders current location cityName from state', (tester) async {
-      await tester.pumpWidget(
+      await tester.pumpApp(
         buildSubject(
           const LocationState(
             userLocation: UserLocation(
@@ -48,7 +46,7 @@ void main() {
     testWidgets(
       'tapping opens LocationPrimingSheet when not denied or manual',
       (tester) async {
-        await tester.pumpWidget(
+        await tester.pumpApp(
           buildSubject(
             const LocationState(
               userLocation: UserLocation(
@@ -70,7 +68,7 @@ void main() {
     testWidgets(
       'tapping opens ManualLocationSheet directly when permission is denied',
       (tester) async {
-        await tester.pumpWidget(
+        await tester.pumpApp(
           buildSubject(
             const LocationState(
               permissionStatus: LocationPermissionStatus.denied,
@@ -94,7 +92,7 @@ void main() {
       'tapping opens ManualLocationSheet directly '
       'when isManualFallback is true',
       (tester) async {
-        await tester.pumpWidget(
+        await tester.pumpApp(
           buildSubject(
             const LocationState(
               userLocation: UserLocation(

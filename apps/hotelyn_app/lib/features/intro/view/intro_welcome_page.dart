@@ -41,6 +41,7 @@ class IntroWelcomePage extends StatelessWidget {
               ),
               const Spacer(),
               CaliforniaButton.primary(
+                width: double.infinity,
                 label: 'Create Account / Login',
                 onPressed: () {
                   context.read<IntroRepository>().setIntroPassed();
@@ -49,6 +50,7 @@ class IntroWelcomePage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               CaliforniaButton.ghost(
+                width: double.infinity,
                 label: 'Go To Homepage',
                 onPressed: () {
                   context.read<IntroRepository>().setIntroPassed();

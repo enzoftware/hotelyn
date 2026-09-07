@@ -31,8 +31,10 @@ class LocationFallbackBanner extends StatelessWidget {
           ),
           child: Row(
             children: [
-              const Icon(
-                CupertinoIcons.location_slash,
+              Icon(
+                state.isDenied
+                    ? CupertinoIcons.location_slash
+                    : CupertinoIcons.placemark,
                 size: 20,
                 color: CaliforniaColors.brandPrimary,
               ),
@@ -46,7 +48,10 @@ class LocationFallbackBanner extends StatelessWidget {
                       style: CaliforniaTypography.p14Medium,
                     ),
                     Text(
-                      'Permission denied. Select your destination manually.',
+                      state.isDenied
+                          ? 'Permission denied. '
+                              'Select your destination manually.'
+                          : 'Manually selected destination.',
                       style: CaliforniaTypography.p12Regular.copyWith(
                         color: CaliforniaColors.textSecondary,
                       ),

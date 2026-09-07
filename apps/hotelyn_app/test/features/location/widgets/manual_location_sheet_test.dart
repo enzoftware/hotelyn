@@ -19,7 +19,6 @@ void main() {
       when(() => locationCubit.state).thenReturn(
         const LocationState(
           permissionStatus: LocationPermissionStatus.denied,
-          isManualLocationDialogOpen: true,
         ),
       );
     });
@@ -28,14 +27,12 @@ void main() {
       UserLocation? initialLocation,
       ValueChanged<UserLocation>? onLocationSelected,
     }) {
-      return MaterialApp(
-        home: Scaffold(
-          body: BlocProvider<LocationCubit>.value(
-            value: locationCubit,
-            child: ManualLocationSheet(
-              initialLocation: initialLocation,
-              onLocationSelected: onLocationSelected,
-            ),
+      return Scaffold(
+        body: BlocProvider<LocationCubit>.value(
+          value: locationCubit,
+          child: ManualLocationSheet(
+            initialLocation: initialLocation,
+            onLocationSelected: onLocationSelected,
           ),
         ),
       );
@@ -43,7 +40,7 @@ void main() {
 
     testWidgets('renders title, input field, chips, and set location button',
         (tester) async {
-      await tester.pumpWidget(buildSubject());
+      await tester.pumpApp(buildSubject());
 
       expect(find.text('Enter Location Manually'), findsOneWidget);
       expect(find.text('City or Region'), findsOneWidget);
@@ -58,7 +55,7 @@ void main() {
         'selecting a destination chip updates selection and calls callback',
         (tester) async {
       UserLocation? selected;
-      await tester.pumpWidget(
+      await tester.pumpApp(
         buildSubject(onLocationSelected: (loc) => selected = loc),
       );
 
@@ -73,23 +70,52 @@ void main() {
       expect(selected?.isManualFallback, isTrue);
     });
 
-    testWidgets('typing a custom city name sets custom manual location',
-        (tester) async {
+    testWidgets(
+      'typing a destination matching fallbackOptions sets destination '
+      'with coordinates',
+      (tester) async {
+        UserLocation? selected;
+        await tester.pumpApp(
+          buildSubject(onLocationSelected: (loc) => selected = loc),
+        );
+
+        final inputFinder = find.byType(TextField);
+        await tester.enterText(inputFinder, 'Jakarta');
+        await tester.pump();
+
+        await tester.tap(find.text('Set Location'));
+        await tester.pump();
+
+        expect(selected, isNotNull);
+        expect(selected?.cityName, 'Jakarta, IND');
+        expect(selected?.latitude, -6.2088);
+        expect(selected?.longitude, 106.8456);
+        expect(selected?.isManualFallback, isTrue);
+      },
+    );
+
+    testWidgets(
+        'typing an unknown destination retains selected location to avoid '
+        'mismatched coordinates', (tester) async {
       UserLocation? selected;
-      await tester.pumpWidget(
-        buildSubject(onLocationSelected: (loc) => selected = loc),
+      await tester.pumpApp(
+        buildSubject(
+          initialLocation: UserLocation.defaultFallback,
+          onLocationSelected: (loc) => selected = loc,
+        ),
       );
 
       final inputFinder = find.byType(TextField);
-      await tester.enterText(inputFinder, 'Cusco, PER');
+      await tester.enterText(inputFinder, 'Unknown City');
       await tester.pump();
 
       await tester.tap(find.text('Set Location'));
       await tester.pump();
 
       expect(selected, isNotNull);
-      expect(selected?.cityName, 'Cusco, PER');
-      expect(selected?.isManualFallback, isTrue);
+      expect(selected?.cityName, UserLocation.defaultFallback.cityName);
+      expect(selected?.latitude, UserLocation.defaultFallback.latitude);
+      expect(selected?.longitude, UserLocation.defaultFallback.longitude);
     });
 
     testWidgets('calls cubit.setManualLocation when onLocationSelected is null',
@@ -98,7 +124,7 @@ void main() {
         (_) async {},
       );
 
-      await tester.pumpWidget(buildSubject());
+      await tester.pumpApp(buildSubject());
 
       await tester.tap(find.text('Set Location'));
       await tester.pump();
@@ -110,16 +136,14 @@ void main() {
         (tester) async {
       UserLocation? result;
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Builder(
-              builder: (context) => ElevatedButton(
-                onPressed: () async {
-                  result = await ManualLocationSheet.show(context);
-                },
-                child: const Text('Open'),
-              ),
+      await tester.pumpApp(
+        Scaffold(
+          body: Builder(
+            builder: (context) => ElevatedButton(
+              onPressed: () async {
+                result = await ManualLocationSheet.show(context);
+              },
+              child: const Text('Open'),
             ),
           ),
         ),

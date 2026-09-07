@@ -45,26 +45,15 @@ class LocationCubit extends Cubit<LocationState> {
     await _locationRepository.markAsPrimed();
     emit(
       state.copyWith(
-        isPrimingSheetVisible: true,
         permissionStatus: LocationPermissionStatus.primed,
       ),
     );
   }
 
-  /// Dismisses the priming sheet without taking further action.
-  void dismissPriming() {
-    emit(state.copyWith(isPrimingSheetVisible: false));
-  }
-
   /// Invoked when the user taps "Enable Location" from the priming sheet.
-  /// Dismisses the priming sheet and invokes the OS permission request.
+  /// Requests OS permission and updates location and permission status.
   Future<void> requestPermissionFromPriming() async {
-    emit(
-      state.copyWith(
-        isPrimingSheetVisible: false,
-        isLoading: true,
-      ),
-    );
+    emit(state.copyWith(isLoading: true));
 
     try {
       final result = await _locationRepository.requestPermission();
@@ -73,9 +62,6 @@ class LocationCubit extends Cubit<LocationState> {
           permissionStatus: result.status,
           userLocation: result.location,
           isLoading: false,
-          // When denied, prompt manual location entry fallback
-          isManualLocationDialogOpen:
-              result.status == LocationPermissionStatus.denied,
         ),
       );
     } on Exception catch (e) {
@@ -86,7 +72,6 @@ class LocationCubit extends Cubit<LocationState> {
           userLocation: fallback,
           isLoading: false,
           errorMessage: e.toString(),
-          isManualLocationDialogOpen: true,
         ),
       );
     }
@@ -95,12 +80,6 @@ class LocationCubit extends Cubit<LocationState> {
   /// Invoked when user taps "Maybe Later" or "Enter Location Manually"
   /// from priming sheet.
   Future<void> enterLocationManuallyFromPriming() async {
-    emit(
-      state.copyWith(
-        isPrimingSheetVisible: false,
-        isManualLocationDialogOpen: true,
-      ),
-    );
     await _locationRepository.savePermissionStatus(
       LocationPermissionStatus.denied,
     );
@@ -122,7 +101,6 @@ class LocationCubit extends Cubit<LocationState> {
       emit(
         state.copyWith(
           userLocation: saved,
-          isManualLocationDialogOpen: false,
           isLoading: false,
         ),
       );
@@ -139,15 +117,5 @@ class LocationCubit extends Cubit<LocationState> {
   /// Sets the default fallback location ("Purwokerto, IND").
   Future<void> selectDefaultFallback() async {
     await setManualLocation(UserLocation.defaultFallback);
-  }
-
-  /// Opens the manual location selector dialog/sheet.
-  void openManualLocationDialog() {
-    emit(state.copyWith(isManualLocationDialogOpen: true));
-  }
-
-  /// Closes the manual location selector dialog/sheet.
-  void closeManualLocationDialog() {
-    emit(state.copyWith(isManualLocationDialogOpen: false));
   }
 }
