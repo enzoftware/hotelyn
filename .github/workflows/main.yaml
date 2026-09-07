@@ -12,29 +12,135 @@ on:
     branches:
       - main
 
+env:
+  MELOS_SDK_PATH: auto
+
 jobs:
   semantic-pull-request:
+    if: github.event_name == 'pull_request'
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/semantic_pull_request.yml@v1
 
-  build-app:
-    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
-    with:
-      flutter_channel: stable
-      working_directory: apps/hotelyn_app
-      # TEMPORARY (requested 2026-08-06): lowered from the 100 default to
-      # just validate the test suite runs/passes. Must be restored to a
-      # measured real baseline — do not leave at 1 long-term.
-      min_coverage: 1
+  workspace-quality:
+    name: Workspace Quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
-  build-dashboard:
-    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
-    with:
-      flutter_channel: stable
-      working_directory: apps/hotelyn_dashboard
-      # TEMPORARY (requested 2026-08-06): lowered from the 100 default to
-      # just validate the test suite runs/passes. Must be restored to a
-      # measured real baseline — do not leave at 1 long-term.
-      min_coverage: 1
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.2'
+          channel: 'stable'
+          cache: true
+
+      - name: Activate Melos
+        run: dart pub global activate melos
+
+      - name: Bootstrap workspace
+        run: melos bootstrap
+
+      - name: Format check
+        run: melos run format
+
+      - name: Analyze workspace
+        run: melos run analyze
+
+      - name: Build generated code
+        run: melos run build
+
+      - name: Verify clean working tree
+        run: git diff --exit-code
+
+  workspace-tests:
+    name: Workspace Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.2'
+          channel: 'stable'
+          cache: true
+
+      - name: Activate Melos
+        run: dart pub global activate melos
+
+      - name: Bootstrap workspace
+        run: melos bootstrap
+
+      - name: Run tests across workspace
+        run: melos run test
+
+  backend-build:
+    name: Backend Server Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.2'
+          channel: 'stable'
+          cache: true
+
+      - name: Activate Melos
+        run: dart pub global activate melos
+
+      - name: Bootstrap workspace
+        run: melos bootstrap
+
+      - name: Activate Dart Frog CLI
+        run: dart pub global activate dart_frog_cli
+
+      - name: Build and compile Dart Frog server
+        working-directory: backend
+        run: |
+          dart_frog build
+          ln -s build/bin bin
+          dart compile exe bin/server.dart
+
+  app-builds:
+    name: App Builds
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.2'
+          channel: 'stable'
+          cache: true
+
+      - name: Activate Melos
+        run: dart pub global activate melos
+
+      - name: Bootstrap workspace
+        run: melos bootstrap
+
+      - name: Build dashboard web app
+        working-directory: apps/hotelyn_dashboard
+        run: flutter build web --no-pub
+
+      - name: Build mobile app debug APK
+        working-directory: apps/hotelyn_app
+        run: flutter build apk --debug --flavor development --no-pub
 
   # BE-603: proves RLS tenant isolation (and the other DB behaviours) on every PR
   # that touches migrations, policies, seed, or the pgTAP tests. The path filter
@@ -60,7 +166,7 @@ jobs:
       - if: steps.changes.outputs.supabase == 'true'
         uses: supabase/setup-cli@v3
         with:
-          # Pinned (not `latest`) so an unrelated CLI release can't turn a green
+          # Pinned (not latest) so an unrelated CLI release can't turn a green
           # PR red between runs; bump deliberately.
           version: 2.109.1
 
