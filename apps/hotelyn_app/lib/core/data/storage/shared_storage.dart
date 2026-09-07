@@ -51,9 +51,12 @@ class SharedStorage {
     final raw = sharedPreferences.getString(userLocationKey);
     if (raw == null) return null;
     try {
-      final json = jsonDecode(raw) as Map<String, dynamic>;
-      return UserLocation.fromJson(json);
-    } on Exception catch (_) {
+      final decoded = jsonDecode(raw);
+      if (decoded is! Map<String, dynamic>) {
+        return null;
+      }
+      return UserLocation.fromJson(decoded);
+    } on Object catch (_) {
       return null;
     }
   }

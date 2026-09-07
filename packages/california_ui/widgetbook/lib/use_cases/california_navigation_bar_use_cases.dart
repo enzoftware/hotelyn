@@ -2,8 +2,7 @@ import 'package:california_ui/california_ui.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 const _items = [
   CaliforniaNavigationBarItem(
@@ -50,8 +49,7 @@ class _InteractiveNavigationBar extends StatefulWidget {
       _InteractiveNavigationBarState();
 }
 
-class _InteractiveNavigationBarState
-    extends State<_InteractiveNavigationBar> {
+class _InteractiveNavigationBarState extends State<_InteractiveNavigationBar> {
   late int _index = widget.initialIndex;
 
   @override

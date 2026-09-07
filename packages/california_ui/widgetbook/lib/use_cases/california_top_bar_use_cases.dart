@@ -2,8 +2,7 @@ import 'package:california_ui/california_ui.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(name: 'General', type: CaliforniaTopBar)
 Widget buildCaliforniaTopBarGeneralUseCase(BuildContext context) {
@@ -16,8 +15,8 @@ Widget buildCaliforniaTopBarGeneralUseCase(BuildContext context) {
         : null,
     onMenuTap:
         context.knobs.boolean(label: 'with onMenuTap', initialValue: true)
-            ? () {}
-            : null,
+        ? () {}
+        : null,
   );
 }
 

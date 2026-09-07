@@ -59,14 +59,14 @@ class CaliforniaNavigationBar extends StatelessWidget {
     required this.currentIndex,
     super.key,
     this.onTap,
-  }) : assert(
-         items.length >= 2,
-         'CaliforniaNavigationBar needs at least 2 items.',
-       ),
-       assert(
-         currentIndex >= 0 && currentIndex < items.length,
-         'currentIndex must be a valid index into items.',
-       );
+  })  : assert(
+          items.length >= 2,
+          'CaliforniaNavigationBar needs at least 2 items.',
+        ),
+        assert(
+          currentIndex >= 0 && currentIndex < items.length,
+          'currentIndex must be a valid index into items.',
+        );
 
   /// The destinations to render, in display order.
   final List<CaliforniaNavigationBarItem> items;

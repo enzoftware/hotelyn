@@ -16,12 +16,10 @@ void main() {
 
     Widget buildSubject(LocationState state) {
       when(() => locationCubit.state).thenReturn(state);
-      return MaterialApp(
-        home: Scaffold(
-          body: BlocProvider<LocationCubit>.value(
-            value: locationCubit,
-            child: const LocationFallbackBanner(),
-          ),
+      return Scaffold(
+        body: BlocProvider<LocationCubit>.value(
+          value: locationCubit,
+          child: const LocationFallbackBanner(),
         ),
       );
     }
@@ -29,7 +27,7 @@ void main() {
     testWidgets(
       'renders nothing when permission is granted and not manual fallback',
       (tester) async {
-        await tester.pumpWidget(
+        await tester.pumpApp(
           buildSubject(
             const LocationState(
               permissionStatus: LocationPermissionStatus.granted,
@@ -47,7 +45,7 @@ void main() {
     );
 
     testWidgets('renders banner when permission is denied', (tester) async {
-      await tester.pumpWidget(
+      await tester.pumpApp(
         buildSubject(
           const LocationState(
             permissionStatus: LocationPermissionStatus.denied,
@@ -63,8 +61,30 @@ void main() {
       expect(find.text('Change'), findsOneWidget);
     });
 
+    testWidgets('renders non-denial copy when manual fallback is voluntary',
+        (tester) async {
+      await tester.pumpApp(
+        buildSubject(
+          const LocationState(
+            permissionStatus: LocationPermissionStatus.granted,
+            userLocation: UserLocation(
+              latitude: -8.4095,
+              longitude: 115.1889,
+              cityName: 'Bali, IND',
+              isManualFallback: true,
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Location: Bali, IND'), findsOneWidget);
+      expect(find.text('Manually selected destination.'), findsOneWidget);
+      expect(find.textContaining('Permission denied'), findsNothing);
+      expect(find.text('Change'), findsOneWidget);
+    });
+
     testWidgets('tapping Change opens ManualLocationSheet', (tester) async {
-      await tester.pumpWidget(
+      await tester.pumpApp(
         buildSubject(
           const LocationState(
             permissionStatus: LocationPermissionStatus.denied,

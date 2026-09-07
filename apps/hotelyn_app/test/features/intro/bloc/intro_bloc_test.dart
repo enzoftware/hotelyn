@@ -4,15 +4,18 @@ import 'package:hotelyn/features/intro/bloc/intro_bloc.dart';
 
 void main() {
   group('IntroBloc', () {
-    test('initial state is IntroCarousel with defaults', () {
-      final bloc = IntroBloc();
-      expect(
-        bloc.state,
-        equals(const IntroCarousel()),
-      );
-      expect((bloc.state as IntroCarousel).currentPosition, equals(0));
-      expect((bloc.state as IntroCarousel).isLastItem, isFalse);
-    });
+    blocTest<IntroBloc, IntroState>(
+      'initial state is IntroCarousel with defaults',
+      build: IntroBloc.new,
+      verify: (bloc) {
+        expect(
+          bloc.state,
+          equals(const IntroCarousel()),
+        );
+        expect((bloc.state as IntroCarousel).currentPosition, equals(0));
+        expect((bloc.state as IntroCarousel).isLastItem, isFalse);
+      },
+    );
 
     blocTest<IntroBloc, IntroState>(
       'emits IntroCarousel with updated position and isLastItem '

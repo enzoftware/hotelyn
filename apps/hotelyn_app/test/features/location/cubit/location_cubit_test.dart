@@ -28,8 +28,6 @@ void main() {
       final cubit = LocationCubit(locationRepository: locationRepository);
       expect(cubit.state.permissionStatus, LocationPermissionStatus.unknown);
       expect(cubit.state.userLocation, UserLocation.defaultFallback);
-      expect(cubit.state.isPrimingSheetVisible, isFalse);
-      expect(cubit.state.isManualLocationDialogOpen, isFalse);
       expect(cubit.state.isLoading, isFalse);
     });
 
@@ -79,7 +77,7 @@ void main() {
 
     group('triggerPriming', () {
       blocTest<LocationCubit, LocationState>(
-        'marks as primed and shows sheet when status is not granted',
+        'marks as primed when status is not granted',
         setUp: () {
           when(() => locationRepository.markAsPrimed()).thenAnswer(
             (_) async {},
@@ -89,7 +87,6 @@ void main() {
         act: (cubit) => cubit.triggerPriming(),
         expect: () => [
           const LocationState(
-            isPrimingSheetVisible: true,
             permissionStatus: LocationPermissionStatus.primed,
           ),
         ],
@@ -99,7 +96,7 @@ void main() {
       );
 
       blocTest<LocationCubit, LocationState>(
-        'does not show priming sheet if permission is already granted',
+        'does not mark as primed if permission is already granted',
         build: () => LocationCubit(locationRepository: locationRepository),
         seed: () => const LocationState(
           permissionStatus: LocationPermissionStatus.granted,
@@ -112,21 +109,9 @@ void main() {
       );
     });
 
-    group('dismissPriming', () {
-      blocTest<LocationCubit, LocationState>(
-        'hides priming sheet',
-        build: () => LocationCubit(locationRepository: locationRepository),
-        seed: () => const LocationState(isPrimingSheetVisible: true),
-        act: (cubit) => cubit.dismissPriming(),
-        expect: () => [
-          const LocationState(),
-        ],
-      );
-    });
-
     group('requestPermissionFromPriming', () {
       blocTest<LocationCubit, LocationState>(
-        'granted flow: hides sheet, requests permission, emits granted',
+        'granted flow: requests permission, emits granted',
         setUp: () {
           when(() => locationRepository.requestPermission()).thenAnswer(
             (_) async => (
@@ -136,7 +121,6 @@ void main() {
           );
         },
         build: () => LocationCubit(locationRepository: locationRepository),
-        seed: () => const LocationState(isPrimingSheetVisible: true),
         act: (cubit) => cubit.requestPermissionFromPriming(),
         expect: () => [
           const LocationState(
@@ -150,7 +134,7 @@ void main() {
       );
 
       blocTest<LocationCubit, LocationState>(
-        'denied flow: emits denied and opens manual location fallback',
+        'denied flow: emits denied and fallback location',
         setUp: () {
           when(() => locationRepository.requestPermission()).thenAnswer(
             (_) async => (
@@ -160,7 +144,6 @@ void main() {
           );
         },
         build: () => LocationCubit(locationRepository: locationRepository),
-        seed: () => const LocationState(isPrimingSheetVisible: true),
         act: (cubit) => cubit.requestPermissionFromPriming(),
         expect: () => [
           const LocationState(
@@ -168,7 +151,6 @@ void main() {
           ),
           const LocationState(
             permissionStatus: LocationPermissionStatus.denied,
-            isManualLocationDialogOpen: true,
           ),
         ],
       );
@@ -184,7 +166,6 @@ void main() {
           );
         },
         build: () => LocationCubit(locationRepository: locationRepository),
-        seed: () => const LocationState(isPrimingSheetVisible: true),
         act: (cubit) => cubit.requestPermissionFromPriming(),
         expect: () => [
           const LocationState(
@@ -197,11 +178,6 @@ void main() {
                 LocationPermissionStatus.denied,
               )
               .having(
-                (s) => s.isManualLocationDialogOpen,
-                'isManualLocationDialogOpen',
-                true,
-              )
-              .having(
                 (s) => s.errorMessage,
                 'errorMessage',
                 contains('Hardware error'),
@@ -212,7 +188,7 @@ void main() {
 
     group('enterLocationManuallyFromPriming', () {
       blocTest<LocationCubit, LocationState>(
-        'dismisses priming, opens manual dialog, saves fallback',
+        'saves denied status and fallback location',
         setUp: () {
           when(() => locationRepository.savePermissionStatus(any()))
               .thenAnswer((_) async {});
@@ -221,14 +197,9 @@ void main() {
           );
         },
         build: () => LocationCubit(locationRepository: locationRepository),
-        seed: () => const LocationState(isPrimingSheetVisible: true),
         act: (cubit) => cubit.enterLocationManuallyFromPriming(),
         expect: () => [
           const LocationState(
-            isManualLocationDialogOpen: true,
-          ),
-          const LocationState(
-            isManualLocationDialogOpen: true,
             permissionStatus: LocationPermissionStatus.denied,
           ),
         ],
@@ -252,7 +223,7 @@ void main() {
       );
 
       blocTest<LocationCubit, LocationState>(
-        'saves manual location and closes dialog',
+        'saves manual location',
         setUp: () {
           when(
             () => locationRepository.setManualLocation(
@@ -261,11 +232,9 @@ void main() {
           ).thenAnswer((_) async => customLocation);
         },
         build: () => LocationCubit(locationRepository: locationRepository),
-        seed: () => const LocationState(isManualLocationDialogOpen: true),
         act: (cubit) => cubit.setManualLocation(customLocation),
         expect: () => [
           const LocationState(
-            isManualLocationDialogOpen: true,
             isLoading: true,
           ),
           const LocationState(
@@ -292,19 +261,6 @@ void main() {
           const LocationState(),
         ],
       );
-    });
-
-    group('dialog visibility controls', () {
-      test('open and close manual location dialog works', () {
-        final cubit = LocationCubit(locationRepository: locationRepository);
-        expect(cubit.state.isManualLocationDialogOpen, isFalse);
-
-        cubit.openManualLocationDialog();
-        expect(cubit.state.isManualLocationDialogOpen, isTrue);
-
-        cubit.closeManualLocationDialog();
-        expect(cubit.state.isManualLocationDialogOpen, isFalse);
-      });
     });
   });
 }

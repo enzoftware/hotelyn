@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:california_ui/california_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,15 +25,13 @@ void main() {
       VoidCallback? onEnterManually,
       VoidCallback? onMaybeLater,
     }) {
-      return MaterialApp(
-        home: Scaffold(
-          body: BlocProvider<LocationCubit>.value(
-            value: locationCubit,
-            child: LocationPrimingSheet(
-              onEnableLocation: onEnableLocation,
-              onEnterManually: onEnterManually,
-              onMaybeLater: onMaybeLater,
-            ),
+      return Scaffold(
+        body: BlocProvider<LocationCubit>.value(
+          value: locationCubit,
+          child: LocationPrimingSheet(
+            onEnableLocation: onEnableLocation,
+            onEnterManually: onEnterManually,
+            onMaybeLater: onMaybeLater,
           ),
         ),
       );
@@ -40,7 +39,7 @@ void main() {
 
     testWidgets('renders all copy and value proposition elements',
         (tester) async {
-      await tester.pumpWidget(buildSubject());
+      await tester.pumpApp(buildSubject());
 
       // Heading
       expect(find.text('Find Hotels Near You'), findsOneWidget);
@@ -62,13 +61,19 @@ void main() {
       expect(find.text('Enable Location'), findsOneWidget);
       expect(find.text('Enter Location Manually'), findsOneWidget);
       expect(find.text('Maybe Later'), findsOneWidget);
+
+      // Verify minimum 48px touch target for Maybe Later
+      final maybeLaterBtn =
+          find.widgetWithText(CaliforniaButton, 'Maybe Later');
+      final size = tester.getSize(maybeLaterBtn);
+      expect(size.height, greaterThanOrEqualTo(48.0));
     });
 
     testWidgets(
         'calls onEnableLocation callback when Enable Location is tapped',
         (tester) async {
       var enabledTapped = false;
-      await tester.pumpWidget(
+      await tester.pumpApp(
         buildSubject(onEnableLocation: () => enabledTapped = true),
       );
 
@@ -86,7 +91,7 @@ void main() {
           (_) async {},
         );
 
-        await tester.pumpWidget(buildSubject());
+        await tester.pumpApp(buildSubject());
 
         await tester.tap(find.text('Enable Location'));
         await tester.pump();
@@ -99,7 +104,7 @@ void main() {
       'calls onEnterManually callback when Enter Location Manually is tapped',
       (tester) async {
         var manualTapped = false;
-        await tester.pumpWidget(
+        await tester.pumpApp(
           buildSubject(onEnterManually: () => manualTapped = true),
         );
 
@@ -114,22 +119,27 @@ void main() {
       'calls cubit.enterLocationManuallyFromPriming '
       'when onEnterManually null',
       (tester) async {
-        when(() => locationCubit.enterLocationManuallyFromPriming()).thenAnswer(
+        when(
+          () => locationCubit.enterLocationManuallyFromPriming(),
+        ).thenAnswer(
           (_) async {},
         );
 
-        await tester.pumpWidget(buildSubject());
+        await tester.pumpApp(buildSubject());
 
-      await tester.tap(find.text('Enter Location Manually'));
-      await tester.pump();
+        await tester.tap(find.text('Enter Location Manually'));
+        await tester.pump();
 
-      verify(() => locationCubit.enterLocationManuallyFromPriming()).called(1);
-    });
+        verify(
+          () => locationCubit.enterLocationManuallyFromPriming(),
+        ).called(1);
+      },
+    );
 
     testWidgets('calls onMaybeLater callback when Maybe Later is tapped',
         (tester) async {
       var laterTapped = false;
-      await tester.pumpWidget(
+      await tester.pumpApp(
         buildSubject(onMaybeLater: () => laterTapped = true),
       );
 
@@ -141,40 +151,33 @@ void main() {
       expect(laterTapped, isTrue);
     });
 
-    testWidgets(
-        'calls cubit.dismissPriming when Maybe Later tapped with null callback',
+    testWidgets('tapping Maybe Later without onMaybeLater does not throw',
         (tester) async {
-      when(() => locationCubit.dismissPriming()).thenReturn(null);
-
-      await tester.pumpWidget(buildSubject());
+      await tester.pumpApp(buildSubject());
 
       final maybeLater = find.text('Maybe Later');
       await tester.ensureVisible(maybeLater);
       await tester.tap(maybeLater);
       await tester.pump();
-
-      verify(() => locationCubit.dismissPriming()).called(1);
     });
 
     testWidgets('LocationPrimingSheet.show opens sheet and triggers action',
         (tester) async {
       var enabledFromSheet = false;
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: Builder(
-              builder: (context) => ElevatedButton(
-                onPressed: () {
-                  unawaited(
-                    LocationPrimingSheet.show<void>(
-                      context,
-                      onEnableLocation: () => enabledFromSheet = true,
-                    ),
-                  );
-                },
-                child: const Text('Open'),
-              ),
+      await tester.pumpApp(
+        Scaffold(
+          body: Builder(
+            builder: (context) => ElevatedButton(
+              onPressed: () {
+                unawaited(
+                  LocationPrimingSheet.show<void>(
+                    context,
+                    onEnableLocation: () => enabledFromSheet = true,
+                  ),
+                );
+              },
+              child: const Text('Open'),
             ),
           ),
         ),

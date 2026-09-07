@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,7 +42,16 @@ class HotelynApp extends StatelessWidget {
             final cubit = LocationCubit(
               locationRepository: _locationRepository,
             );
-            unawaited(cubit.loadLocation());
+            unawaited(
+              cubit.loadLocation().catchError((Object error, StackTrace stack) {
+                log(
+                  'Failed to load initial location',
+                  error: error,
+                  stackTrace: stack,
+                  name: 'HotelynApp',
+                );
+              }),
+            );
             return cubit;
           },
           child: MaterialApp.router(

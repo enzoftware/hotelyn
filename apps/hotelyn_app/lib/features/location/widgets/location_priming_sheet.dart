@@ -79,7 +79,7 @@ class LocationPrimingSheet extends StatelessWidget {
     if (onMaybeLater != null) {
       onMaybeLater!.call();
     } else {
-      context.read<LocationCubit>().dismissPriming();
+      Navigator.of(context).pop();
     }
   }
 
@@ -180,7 +180,7 @@ class LocationPrimingSheet extends StatelessWidget {
               // Tertiary Action: Maybe Later
               CaliforniaButton.ghost(
                 label: 'Maybe Later',
-                height: 40,
+                height: 48,
                 onPressed: () => _handleMaybeLater(context),
               ),
             ],

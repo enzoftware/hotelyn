@@ -84,26 +84,26 @@ class CaliforniaButton extends StatelessWidget {
   bool get _isDisabled => onPressed == null;
 
   double get _width => switch (size) {
-    CaliforniaButtonSize.large => 327,
-    CaliforniaButtonSize.medium => 258,
-    CaliforniaButtonSize.small => 173,
-  };
+        CaliforniaButtonSize.large => 327,
+        CaliforniaButtonSize.medium => 258,
+        CaliforniaButtonSize.small => 173,
+      };
 
   double get _borderRadius => switch (size) {
-    CaliforniaButtonSize.large => 46,
-    CaliforniaButtonSize.medium => 40,
-    CaliforniaButtonSize.small => 46,
-  };
+        CaliforniaButtonSize.large => 46,
+        CaliforniaButtonSize.medium => 40,
+        CaliforniaButtonSize.small => 46,
+      };
 
   TextStyle get _textStyle {
     final base = switch (size) {
       CaliforniaButtonSize.large => CaliforniaTypography.h5,
       CaliforniaButtonSize.medium => CaliforniaTypography.h5,
       CaliforniaButtonSize.small => CaliforniaTypography.p16Medium.copyWith(
-        fontSize: 15,
-        fontWeight: FontWeight.w700,
-        height: 1.6,
-      ),
+          fontSize: 15,
+          fontWeight: FontWeight.w700,
+          height: 1.6,
+        ),
     };
 
     if (_isGhost) return base.copyWith(color: CaliforniaColors.brandPrimary);

@@ -2,8 +2,7 @@ import 'package:california_ui/california_ui.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(name: 'Free-typing', type: CaliforniaInputField)
 Widget buildCaliforniaInputFieldFreeTypingUseCase(BuildContext context) {
@@ -15,10 +14,11 @@ Widget buildCaliforniaInputFieldFreeTypingUseCase(BuildContext context) {
         label: 'placeholder',
         initialValue: 'Enter your name',
       ),
-      leadingIcon: context.knobs.boolean(
-        label: 'with leading icon',
-        initialValue: true,
-      )
+      leadingIcon:
+          context.knobs.boolean(
+            label: 'with leading icon',
+            initialValue: true,
+          )
           ? CupertinoIcons.person
           : null,
       obscureText: context.knobs.boolean(label: 'obscureText'),

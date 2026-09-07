@@ -2,8 +2,7 @@ import 'package:california_ui/california_ui.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 const _placeholderImageUrl =
     'https://images.unsplash.com/photo-1566073771259-6a8506099945'
@@ -43,10 +42,11 @@ Widget buildCaliforniaProductCardLargeUseCase(BuildContext context) {
       initialValue: 4.6,
       max: 5,
     ),
-    facilities: context.knobs.boolean(
-      label: 'with facilities',
-      initialValue: true,
-    )
+    facilities:
+        context.knobs.boolean(
+          label: 'with facilities',
+          initialValue: true,
+        )
         ? _facilities
         : const [],
     onTap: () {},
@@ -73,10 +73,11 @@ Widget buildCaliforniaProductCardMediumUseCase(BuildContext context) {
       label: 'priceSuffix',
       initialValue: '/Night',
     ),
-    facilities: context.knobs.boolean(
-      label: 'with facilities',
-      initialValue: true,
-    )
+    facilities:
+        context.knobs.boolean(
+          label: 'with facilities',
+          initialValue: true,
+        )
         ? _facilities.take(2).toList()
         : const [],
     onTap: () {},
@@ -152,7 +153,7 @@ Widget buildCaliforniaProductCardAllSizesUseCase(BuildContext context) {
           rating: 4.2,
           reviewCount: 84,
           reviewCountLabel: (count) =>
-        '($count ${count == 1 ? 'Review' : 'Reviews'})',
+              '($count ${count == 1 ? 'Review' : 'Reviews'})',
         ),
       ],
     ),

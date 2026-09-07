@@ -47,15 +47,13 @@ void main() {
         value: introRepository,
         child: DefaultAssetBundle(
           bundle: _TestAssetBundle(),
-          child: const MaterialApp(
-            home: IntroPage(),
-          ),
+          child: const IntroPage(),
         ),
       );
     }
 
     testWidgets('renders IntroView and first carousel page', (tester) async {
-      await tester.pumpWidget(buildSubject());
+      await tester.pumpApp(buildSubject());
 
       expect(find.byType(IntroView), findsOneWidget);
       expect(find.byType(IntroCarouselPage), findsOneWidget);
@@ -75,7 +73,7 @@ void main() {
       'advances through carousel steps with Continue and shows Get Started on '
       'last step',
       (tester) async {
-        await tester.pumpWidget(buildSubject());
+        await tester.pumpApp(buildSubject());
 
         // Step 1
         expect(find.text('Find Hundreds of Hotels'), findsOneWidget);
@@ -129,7 +127,7 @@ void main() {
 
     testWidgets('tapping Skip navigates directly to IntroWelcomePage',
         (tester) async {
-      await tester.pumpWidget(buildSubject());
+      await tester.pumpApp(buildSubject());
 
       final skipButton = find.widgetWithText(CaliforniaButton, 'Skip');
       expect(skipButton, findsOneWidget);
@@ -164,11 +162,9 @@ void main() {
         value: introRepository,
         child: DefaultAssetBundle(
           bundle: _TestAssetBundle(),
-          child: MaterialApp(
-            home: BlocProvider.value(
-              value: introBloc,
-              child: const IntroView(),
-            ),
+          child: BlocProvider.value(
+            value: introBloc,
+            child: const IntroView(),
           ),
         ),
       );
@@ -176,7 +172,7 @@ void main() {
 
     testWidgets('renders IntroCarouselPage when state is IntroCarousel',
         (tester) async {
-      await tester.pumpWidget(buildSubject(const IntroCarousel()));
+      await tester.pumpApp(buildSubject(const IntroCarousel()));
 
       expect(find.byType(IntroCarouselPage), findsOneWidget);
       expect(find.byType(IntroWelcomePage), findsNothing);
@@ -184,7 +180,7 @@ void main() {
 
     testWidgets('renders IntroWelcomePage when state is IntroWelcome',
         (tester) async {
-      await tester.pumpWidget(buildSubject(const IntroWelcome()));
+      await tester.pumpApp(buildSubject(const IntroWelcome()));
 
       expect(find.byType(IntroWelcomePage), findsOneWidget);
       expect(find.byType(IntroCarouselPage), findsNothing);

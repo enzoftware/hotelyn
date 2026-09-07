@@ -14,18 +14,24 @@ class LocationRepository {
   final SharedStorage _sharedStorage;
   final LocationService _locationService;
 
-  /// Retrieves the current stored permission status, or checks the system
-  /// status if no status has been recorded yet.
+  /// Retrieves the current permission status by checking the platform status
+  /// via [_locationService] and reconciling it with persisted storage.
+  /// Preserves [LocationPermissionStatus.primed] if the OS status is
+  /// unresolved.
   Future<LocationPermissionStatus> getPermissionStatus() async {
+    final systemStatus = await _locationService.checkPermission();
     final stored = _sharedStorage.getLocationPermissionStatus();
+
+    if (systemStatus != LocationPermissionStatus.unknown) {
+      await _sharedStorage.saveLocationPermissionStatus(systemStatus);
+      return systemStatus;
+    }
+
     if (stored != null && stored != LocationPermissionStatus.unknown) {
       return stored;
     }
-    final systemStatus = await _locationService.checkPermission();
-    if (systemStatus != LocationPermissionStatus.unknown) {
-      await _sharedStorage.saveLocationPermissionStatus(systemStatus);
-    }
-    return systemStatus;
+
+    return LocationPermissionStatus.unknown;
   }
 
   /// Records that the user was primed with product rationale.
@@ -47,8 +53,7 @@ class LocationRepository {
 
     if (status == LocationPermissionStatus.granted) {
       final acquired = await _locationService.getCurrentLocation();
-      final location = acquired ??
-          UserLocation.defaultFallback.copyWith(isManualFallback: false);
+      final location = acquired ?? UserLocation.defaultFallback;
       await _sharedStorage.saveUserLocation(location);
       return (status: status, location: location);
     } else {
