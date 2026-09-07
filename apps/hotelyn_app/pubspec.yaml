@@ -25,6 +25,10 @@ dependencies:
   font_awesome_flutter: ">=10.12.0 <12.0.0"
   formz: ^0.8.1
   go_router: ^18.0.1
+  hotelyn_api_client:
+    path: ../../packages/hotelyn_api_client
+  hotelyn_domain:
+    path: ../../packages/hotelyn_domain
   intl: ^0.20.2
   json_annotation: ^4.9.0
   logger: ^2.8.0
