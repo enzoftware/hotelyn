@@ -5,6 +5,7 @@ import 'package:hotelyn/bootstrap.dart';
 import 'package:hotelyn/core/data/storage/storage.dart';
 import 'package:hotelyn/core/domain/repository/repository.dart';
 import 'package:hotelyn/core/services/clarity_service.dart';
+import 'package:hotelyn/features/location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -19,13 +20,16 @@ void main() {
       final authRepository = AuthRepository(
         sharedStorage: localDataSource,
       );
-
+      final locationRepository = LocationRepository(
+        sharedStorage: localDataSource,
+      );
       final clarityService = ClarityService();
 
       return HotelynApp(
         preferenceRepository: preferenceRepository,
         authRepository: authRepository,
         clarityService: clarityService,
+        locationRepository: locationRepository,
       );
     }),
   );

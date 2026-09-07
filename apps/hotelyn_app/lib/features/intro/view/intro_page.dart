@@ -1,10 +1,7 @@
-import 'dart:async';
-
+import 'package:california_ui/california_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotelyn/components/components.dart';
-import 'package:hotelyn/components/hotelyn_button.dart';
-import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/features/intro/intro.dart';
 
 class IntroPage extends StatelessWidget {
@@ -15,6 +12,7 @@ class IntroPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CaliforniaColors.surfacePrimary,
       body: BlocProvider(
         create: (context) => IntroBloc(),
         child: const IntroView(),
@@ -39,73 +37,93 @@ class IntroView extends StatelessWidget {
   }
 }
 
-class IntroCarouselPage extends StatelessWidget {
+class IntroCarouselPage extends StatefulWidget {
   const IntroCarouselPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final controller = PageController();
-    final introPagers = [
-      IntroItemData(
-        title: 'Find Hundreds of Hotels',
-        description:
-            'Discover hundreds of hotels that spread across the world for you',
-        imagePath: '$rootPath/ob1.png',
-      ),
-      IntroItemData(
-        title: 'Make a Destination Plan',
-        description:
-            'Choose the location and we have many hotel recommendations '
-            'wherever you are',
-        imagePath: '$rootPath/ob2.png',
-      ),
-      IntroItemData(
-        title: 'Let’s Discover the World',
-        description: 'Book your hotel right now for the next level travel.'
-            '\nEnjoy your trip!',
-        imagePath: '$rootPath/ob3.png',
-      ),
-    ];
+  State<IntroCarouselPage> createState() => _IntroCarouselPageState();
+}
 
-    final state = context.select<IntroBloc, IntroState>((bloc) => bloc.state)
-        as IntroCarousel;
+class _IntroCarouselPageState extends State<IntroCarouselPage> {
+  late final PageController _controller;
+
+  static const _introPagers = [
+    IntroItemData(
+      title: 'Find Hundreds of Hotels',
+      description:
+          'Discover hundreds of hotels that spread across the world for you',
+      imagePath: '$rootPath/ob1.png',
+    ),
+    IntroItemData(
+      title: 'Make a Destination Plan',
+      description: 'Choose the location and we have many hotel recommendations '
+          'wherever you are',
+      imagePath: '$rootPath/ob2.png',
+    ),
+    IntroItemData(
+      title: 'Let’s Discover the World',
+      description: 'Book your hotel right now for the next level travel.'
+          '\nEnjoy your trip!',
+      imagePath: '$rootPath/ob3.png',
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = PageController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final currentPosition = context.select<IntroBloc, int>(
+      (bloc) => bloc.state is IntroCarousel
+          ? (bloc.state as IntroCarousel).currentPosition
+          : 0,
+    );
 
     return Column(
       children: [
         Expanded(
           flex: 8,
           child: PageView.builder(
-            controller: controller,
+            controller: _controller,
             onPageChanged: (position) {
               context.read<IntroBloc>().add(
                     IntroPageChanged(
                       position: position,
-                      isLastItem: position == introPagers.length - 1,
+                      isLastItem: position == _introPagers.length - 1,
                     ),
                   );
             },
-            itemCount: introPagers.length,
+            itemCount: _introPagers.length,
             itemBuilder: (context, index) {
-              final item = introPagers[index];
+              final item = _introPagers[index];
               return IntroItem(data: item);
             },
           ),
         ),
         GroupDotIndicator(
-          length: introPagers.length,
-          selectedIndex: state.currentPosition,
+          length: _introPagers.length,
+          selectedIndex: currentPosition,
         ),
         Expanded(
           flex: 3,
           child: Padding(
             padding: const EdgeInsets.symmetric(
-              horizontal: 20,
+              horizontal: 24,
               vertical: 10,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IntroPrimaryButton(controller: controller),
+                IntroPrimaryButton(controller: _controller),
                 const SizedBox(height: 16),
                 const IntroSecondaryButton(),
               ],
@@ -124,11 +142,11 @@ class IntroSecondaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HotelynButton.secondary(
+    return CaliforniaButton.ghost(
       onPressed: () {
         context.read<IntroBloc>().add(const IntroGoToWelcome());
       },
-      message: 'Skip',
+      label: 'Skip',
     );
   }
 }
@@ -143,23 +161,26 @@ class IntroPrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.select<IntroBloc, IntroState>((bloc) => bloc.state)
-        as IntroCarousel;
-    final message = state.isLastItem ? 'Get Started' : 'Continue';
-    return HotelynButton(
+    final isLastItem = context.select<IntroBloc, bool>(
+      (bloc) =>
+          bloc.state is IntroCarousel &&
+          (bloc.state as IntroCarousel).isLastItem,
+    );
+    final message = isLastItem ? 'Get Started' : 'Continue';
+    return CaliforniaButton.primary(
       onPressed: () {
-        if (state.isLastItem) {
+        if (isLastItem) {
           context.read<IntroBloc>().add(const IntroGoToWelcome());
         } else {
-          unawaited(
+          if (controller.hasClients) {
             controller.nextPage(
               duration: const Duration(milliseconds: 250),
               curve: Curves.easeInCubic,
-            ),
-          );
+            );
+          }
         }
       },
-      message: message,
+      label: message,
     );
   }
 }
@@ -176,11 +197,12 @@ class IntroItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Image.asset(
-          data.imagePath,
-          height: MediaQuery.of(context).size.height * 0.55,
-          width: double.infinity,
-          fit: BoxFit.cover,
+        Expanded(
+          child: Image.asset(
+            data.imagePath,
+            width: double.infinity,
+            fit: BoxFit.cover,
+          ),
         ),
         const SizedBox(height: 32),
         Padding(
@@ -191,24 +213,28 @@ class IntroItem extends StatelessWidget {
             children: [
               Text(
                 data.title,
-                style: HotelynTextStyle.h1,
+                style: CaliforniaTypography.h1,
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
               Text(
                 data.description,
-                style: HotelynTextStyle.description,
+                style: CaliforniaTypography.p14Regular.copyWith(
+                  color: CaliforniaColors.textSecondary,
+                ),
                 textAlign: TextAlign.center,
               ),
             ],
           ),
         ),
+        const SizedBox(height: 16),
       ],
     );
   }
 }
 
 class IntroItemData {
-  IntroItemData({
+  const IntroItemData({
     required this.title,
     required this.description,
     required this.imagePath,

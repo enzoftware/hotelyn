@@ -1,8 +1,7 @@
 import 'package:california_ui/california_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(name: 'Primary', type: CaliforniaButton)
 Widget buildCaliforniaButtonPrimaryUseCase(BuildContext context) {

@@ -2,8 +2,7 @@ import 'package:california_ui_widgetbook/main.directories.g.dart';
 import 'package:california_ui_widgetbook/src/app_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 void main() {
   runApp(const WidgetbookApp());

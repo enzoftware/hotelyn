@@ -1,7 +1,12 @@
+import 'dart:async';
+
+import 'package:california_ui/california_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotelyn/components/text_input/hotelyn_search_input.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/components/theme/hotelyn_colors.dart';
+import 'package:hotelyn/features/location/location.dart';
 
 const _cardElevation = 2.0;
 
@@ -70,23 +75,72 @@ class LocationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Card(
-      color: PrimaryColors.white,
-      elevation: _cardElevation,
-      shape: StadiumBorder(),
-      child: Padding(
-        padding: EdgeInsets.all(12),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.place),
-            SizedBox(width: 8),
-            Text('Lima, PE'),
-            SizedBox(width: 16),
-            Icon(Icons.arrow_circle_down),
-          ],
-        ),
-      ),
+    return BlocBuilder<LocationCubit, LocationState>(
+      builder: (context, state) {
+        final cityName = state.userLocation.cityName;
+
+        return GestureDetector(
+          onTap: () {
+            final cubit = context.read<LocationCubit>();
+            if (state.isDenied || state.userLocation.isManualFallback) {
+              unawaited(
+                ManualLocationSheet.show(
+                  context,
+                  initialLocation: state.userLocation,
+                  onLocationSelected: cubit.setManualLocation,
+                ),
+              );
+            } else {
+              unawaited(
+                LocationPrimingSheet.show<void>(
+                  context,
+                  onEnableLocation: cubit.requestPermissionFromPriming,
+                  onEnterManually: () {
+                    unawaited(
+                      ManualLocationSheet.show(
+                        context,
+                        initialLocation: state.userLocation,
+                        onLocationSelected: cubit.setManualLocation,
+                      ),
+                    );
+                  },
+                ),
+              );
+            }
+          },
+          child: Card(
+            color: PrimaryColors.white,
+            elevation: _cardElevation,
+            shape: const StadiumBorder(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.place_outlined,
+                    size: 18,
+                    color: CaliforniaColors.brandPrimary,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    cityName,
+                    style: CaliforniaTypography.p14Medium.copyWith(
+                      color: CaliforniaColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  const Icon(
+                    Icons.keyboard_arrow_down,
+                    size: 18,
+                    color: CaliforniaColors.textSecondary,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

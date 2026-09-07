@@ -3,6 +3,7 @@ import 'package:hotelyn/app/view/app.dart';
 import 'package:hotelyn/core/domain/repository/auth_repository.dart';
 import 'package:hotelyn/core/domain/repository/intro_repository.dart';
 import 'package:hotelyn/core/services/clarity_service.dart';
+import 'package:hotelyn/features/location/location.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'helpers/helpers.dart';
@@ -12,15 +13,21 @@ void main() {
     late IntroRepository preferenceRepository;
     late AuthRepository authRepository;
     late ClarityService clarityService;
+    late LocationRepository locationRepository;
 
     setUp(() {
       preferenceRepository = MockPreferenceRepository();
       authRepository = MockAuthRepository();
       clarityService = MockClarityService();
+      locationRepository = MockLocationRepository();
 
       when(() => preferenceRepository.isIntroPassed())
           .thenAnswer((_) async => false);
       when(() => authRepository.isAuthenticated).thenReturn(false);
+      when(() => locationRepository.getLocation())
+          .thenAnswer((_) async => UserLocation.defaultFallback);
+      when(() => locationRepository.getPermissionStatus())
+          .thenAnswer((_) async => LocationPermissionStatus.unknown);
     });
 
     testWidgets(
@@ -31,6 +38,7 @@ void main() {
             preferenceRepository: preferenceRepository,
             authRepository: authRepository,
             clarityService: clarityService,
+            locationRepository: locationRepository,
           ),
         );
         // Just verify the widget tree is built without navigating

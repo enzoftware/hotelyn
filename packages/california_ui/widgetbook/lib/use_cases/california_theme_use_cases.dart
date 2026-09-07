@@ -1,7 +1,6 @@
 import 'package:california_ui/california_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 /// A read-only reference of every [CaliforniaColors] semantic token, so
 /// palette/token changes can be sanity-checked visually alongside the

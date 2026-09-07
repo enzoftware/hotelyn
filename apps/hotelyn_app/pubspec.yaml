@@ -2,6 +2,7 @@ name: hotelyn
 description: "Hotelyn Flutter mobile app"
 
 version: 1.0.0+1
+publish_to: 'none'
 
 resolution: workspace
 
@@ -10,6 +11,8 @@ environment:
 
 dependencies:
   bloc: ^9.2.0
+  california_ui:
+    path: ../../packages/california_ui
   clarity_flutter: ^1.7.1
   cupertino_icons: ^1.0.2
   equatable: ^2.0.8
@@ -40,9 +43,8 @@ dev_dependencies:
   melos: ^7.3.0
   mocktail: ^1.0.3
   riverpod_lint: ^3.0.3
-  # Pinned to the version bundled with the Flutter SDK (test_api 0.7.11); newer
-  # `test` releases require a test_api the SDK's flutter_test does not allow. See #225.
-  test: 1.31.0
+  # Pinned to the version bundled with the Flutter SDK (test_api 0.7.12); see #225.
+  test: ^1.25.0
   very_good_analysis: ^10.3.0
 
 fonts:
