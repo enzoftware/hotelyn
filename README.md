@@ -160,10 +160,10 @@ In a separate terminal, launch the mobile application:
 cd apps/hotelyn_app
 
 # Using FVM (recommended)
-fvm flutter run -t lib/main_development.dart
+fvm flutter run -t lib/main_development.dart --dart-define-from-file=.dart_defines/local.json
 
 # Or using global Flutter
-flutter run -t lib/main_development.dart
+flutter run -t lib/main_development.dart --dart-define-from-file=.dart_defines/local.json
 ```
 
 > **Targeting Devices:**
@@ -174,12 +174,14 @@ flutter run -t lib/main_development.dart
 #### 6. (Optional) Run Dashboard & Widgetbook
 
 - **Staff Dashboard App**:
+
   ```bash
   cd apps/hotelyn_dashboard
   flutter run -d chrome
   ```
 
 - **Interactive Widgetbook Component Catalog**:
+
   ```bash
   # From repository root
   melos run widgetbook
@@ -224,10 +226,12 @@ We welcome contributions! Please follow our standardized development workflow an
 ### Git Workflow & Branching
 
 1. Ensure your local branch is updated from `main`:
+
    ```bash
    git checkout main
    git pull origin main
    ```
+
 2. Create a new topic branch using our naming conventions:
    - `feat/<feature-name>`: New functionality or enhancement
    - `fix/<bug-name>`: Bug fixes
