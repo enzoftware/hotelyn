@@ -24,16 +24,14 @@ class FakeHotelDataClient implements HotelDataClient {
     required double lat,
     required double lng,
     required double radiusKm,
-  }) async =>
-      const [];
+  }) async => const [];
 
   @override
   Future<List<Hotel>> recommendedHotels({
     required double lat,
     required double lng,
     required double radiusKm,
-  }) async =>
-      const [];
+  }) async => const [];
 
   @override
   Future<List<Room>> roomsAvailability({String? hotelId}) async => const [];
@@ -132,16 +130,15 @@ class FakeHotelDataClient implements HotelDataClient {
     ReservationStatus status, {
     String? paidBy,
     DateTime? paidAt,
-  }) =>
-      Reservation(
-        id: id,
-        hotelId: 'h1',
-        roomId: 'r1',
-        guestId: 'g1',
-        status: status,
-        checkIn: DateTime.utc(2026, 9),
-        checkOut: DateTime.utc(2026, 9, 3),
-        paidBy: paidBy,
-        paidAt: paidAt,
-      );
+  }) => Reservation(
+    id: id,
+    hotelId: 'h1',
+    roomId: 'r1',
+    guestId: 'g1',
+    status: status,
+    checkIn: DateTime.utc(2026, 9),
+    checkOut: DateTime.utc(2026, 9, 3),
+    paidBy: paidBy,
+    paidAt: paidAt,
+  );
 }

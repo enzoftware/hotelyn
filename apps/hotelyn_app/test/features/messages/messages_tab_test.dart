@@ -67,8 +67,9 @@ void main() {
       expect(screenType, findsOneWidget);
     });
 
-    testWidgets('Messages tab when state is MessagesLoadSuccess',
-        (tester) async {
+    testWidgets('Messages tab when state is MessagesLoadSuccess', (
+      tester,
+    ) async {
       final state = MessagesLoadSuccess();
       whenListen<MessagesState>(
         cubit,

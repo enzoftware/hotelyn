@@ -36,9 +36,9 @@ class LocationState extends Equatable {
 
   @override
   List<Object?> get props => [
-        permissionStatus,
-        userLocation,
-        isLoading,
-        errorMessage,
-      ];
+    permissionStatus,
+    userLocation,
+    isLoading,
+    errorMessage,
+  ];
 }

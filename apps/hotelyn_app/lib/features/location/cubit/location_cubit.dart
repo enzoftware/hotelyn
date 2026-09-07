@@ -7,18 +7,17 @@ import 'package:hotelyn/features/location/repository/location_repository.dart';
 /// and manual fallback destinations.
 class LocationCubit extends Cubit<LocationState> {
   LocationCubit({
-    required LocationRepository locationRepository,
-  })  : _locationRepository = locationRepository,
-        super(const LocationState());
+    required this.locationRepository,
+  }) : super(const LocationState());
 
-  final LocationRepository _locationRepository;
+  final LocationRepository locationRepository;
 
   /// Loads persisted permission status and active location.
   Future<void> loadLocation() async {
     emit(state.copyWith(isLoading: true));
     try {
-      final status = await _locationRepository.getPermissionStatus();
-      final location = await _locationRepository.getLocation();
+      final status = await locationRepository.getPermissionStatus();
+      final location = await locationRepository.getLocation();
       emit(
         state.copyWith(
           permissionStatus: status,
@@ -42,7 +41,7 @@ class LocationCubit extends Cubit<LocationState> {
     if (state.permissionStatus == LocationPermissionStatus.granted) {
       return;
     }
-    await _locationRepository.markAsPrimed();
+    await locationRepository.markAsPrimed();
     emit(
       state.copyWith(
         permissionStatus: LocationPermissionStatus.primed,
@@ -56,7 +55,7 @@ class LocationCubit extends Cubit<LocationState> {
     emit(state.copyWith(isLoading: true));
 
     try {
-      final result = await _locationRepository.requestPermission();
+      final result = await locationRepository.requestPermission();
       emit(
         state.copyWith(
           permissionStatus: result.status,
@@ -65,7 +64,7 @@ class LocationCubit extends Cubit<LocationState> {
         ),
       );
     } on Exception catch (e) {
-      final fallback = await _locationRepository.setManualLocation();
+      final fallback = await locationRepository.setManualLocation();
       emit(
         state.copyWith(
           permissionStatus: LocationPermissionStatus.denied,
@@ -80,10 +79,10 @@ class LocationCubit extends Cubit<LocationState> {
   /// Invoked when user taps "Maybe Later" or "Enter Location Manually"
   /// from priming sheet.
   Future<void> enterLocationManuallyFromPriming() async {
-    await _locationRepository.savePermissionStatus(
+    await locationRepository.savePermissionStatus(
       LocationPermissionStatus.denied,
     );
-    final fallback = await _locationRepository.setManualLocation();
+    final fallback = await locationRepository.setManualLocation();
     emit(
       state.copyWith(
         permissionStatus: LocationPermissionStatus.denied,
@@ -96,8 +95,9 @@ class LocationCubit extends Cubit<LocationState> {
   Future<void> setManualLocation(UserLocation location) async {
     emit(state.copyWith(isLoading: true));
     try {
-      final saved =
-          await _locationRepository.setManualLocation(location: location);
+      final saved = await locationRepository.setManualLocation(
+        location: location,
+      );
       emit(
         state.copyWith(
           userLocation: saved,

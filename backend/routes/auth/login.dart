@@ -24,9 +24,9 @@ Future<Response> onRequest(RequestContext context) async {
 
   return authAction('POST /auth/login', () async {
     final session = await context.read<AuthClient>().signInWithPassword(
-          email: fields['email']!,
-          password: fields['password']!,
-        );
+      email: fields['email']!,
+      password: fields['password']!,
+    );
     // Token-bearing response: keep it out of any shared/browser cache.
     return Response.json(
       body: session.toJson(),

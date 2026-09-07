@@ -42,14 +42,14 @@ class CaliforniaTopBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     this.onBack,
     this.onMenuTap,
-  })  : _variant = _CaliforniaTopBarVariant.general,
-        leading = null,
-        trailing = null,
-        onSearchTap = null,
-        searchButtonLabel = null,
-        hasUnreadNotifications = false,
-        onNotificationsTap = null,
-        notificationsButtonLabel = null;
+  }) : _variant = _CaliforniaTopBarVariant.general,
+       leading = null,
+       trailing = null,
+       onSearchTap = null,
+       searchButtonLabel = null,
+       hasUnreadNotifications = false,
+       onNotificationsTap = null,
+       notificationsButtonLabel = null;
 
   /// A large, left-aligned screen title with a trailing notification bell.
   /// Figma variant: `Main Screen`.
@@ -59,15 +59,15 @@ class CaliforniaTopBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     this.hasUnreadNotifications = false,
     this.onNotificationsTap,
-  })  : _variant = _CaliforniaTopBarVariant.mainScreen,
-        leading = null,
-        trailing = null,
-        onBack = null,
-        backButtonLabel = null,
-        onMenuTap = null,
-        menuButtonLabel = null,
-        onSearchTap = null,
-        searchButtonLabel = null;
+  }) : _variant = _CaliforniaTopBarVariant.mainScreen,
+       leading = null,
+       trailing = null,
+       onBack = null,
+       backButtonLabel = null,
+       onMenuTap = null,
+       menuButtonLabel = null,
+       onSearchTap = null,
+       searchButtonLabel = null;
 
   /// A back button beside a rounded search box showing [title] as the
   /// current search query/location. Figma variant: `Search by Map`.
@@ -78,14 +78,14 @@ class CaliforniaTopBar extends StatelessWidget implements PreferredSizeWidget {
     this.onBack,
     this.onSearchTap,
     this.searchButtonLabel,
-  })  : _variant = _CaliforniaTopBarVariant.searchByMap,
-        leading = null,
-        trailing = null,
-        onMenuTap = null,
-        menuButtonLabel = null,
-        hasUnreadNotifications = false,
-        onNotificationsTap = null,
-        notificationsButtonLabel = null;
+  }) : _variant = _CaliforniaTopBarVariant.searchByMap,
+       leading = null,
+       trailing = null,
+       onMenuTap = null,
+       menuButtonLabel = null,
+       hasUnreadNotifications = false,
+       onNotificationsTap = null,
+       notificationsButtonLabel = null;
 
   /// A back button plus [trailing] actions (e.g. share/like), floating over
   /// a transparent/blurred background — meant to sit on top of a product's
@@ -95,16 +95,16 @@ class CaliforniaTopBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     this.onBack,
     this.trailing,
-  })  : _variant = _CaliforniaTopBarVariant.detailProduct,
-        title = null,
-        leading = null,
-        onMenuTap = null,
-        menuButtonLabel = null,
-        onSearchTap = null,
-        searchButtonLabel = null,
-        hasUnreadNotifications = false,
-        onNotificationsTap = null,
-        notificationsButtonLabel = null;
+  }) : _variant = _CaliforniaTopBarVariant.detailProduct,
+       title = null,
+       leading = null,
+       onMenuTap = null,
+       menuButtonLabel = null,
+       onSearchTap = null,
+       searchButtonLabel = null,
+       hasUnreadNotifications = false,
+       onNotificationsTap = null,
+       notificationsButtonLabel = null;
 
   /// A back button, a conversation partner's avatar + name/status
   /// ([leading]), and a trailing overflow button. Figma variant: `Message`.
@@ -115,14 +115,14 @@ class CaliforniaTopBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     this.onBack,
     this.onMenuTap,
-  })  : _variant = _CaliforniaTopBarVariant.message,
-        title = null,
-        trailing = null,
-        onSearchTap = null,
-        searchButtonLabel = null,
-        hasUnreadNotifications = false,
-        onNotificationsTap = null,
-        notificationsButtonLabel = null;
+  }) : _variant = _CaliforniaTopBarVariant.message,
+       title = null,
+       trailing = null,
+       onSearchTap = null,
+       searchButtonLabel = null,
+       hasUnreadNotifications = false,
+       onNotificationsTap = null,
+       notificationsButtonLabel = null;
 
   final _CaliforniaTopBarVariant _variant;
 
@@ -304,7 +304,7 @@ class CaliforniaTopBar extends StatelessWidget implements PreferredSizeWidget {
           semanticLabel: backButtonLabel,
         ),
         const Spacer(),
-        if (trailing != null) trailing!,
+        ?trailing,
       ],
     );
   }

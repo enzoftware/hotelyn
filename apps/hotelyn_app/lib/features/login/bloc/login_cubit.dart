@@ -9,11 +9,10 @@ part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit({
-    required AuthRepository authRepository,
-  })  : _authRepository = authRepository,
-        super(const LoginState());
+    required this.authRepository,
+  }) : super(const LoginState());
 
-  final AuthRepository _authRepository;
+  final AuthRepository authRepository;
 
   void emailChanged(String value) {
     final email = Email.dirty(value);
@@ -49,7 +48,7 @@ class LoginCubit extends Cubit<LoginState> {
     emit(state.copyWith(status: FormzSubmissionStatus.inProgress));
     try {
       // Perform login and persist user ID with Clarity tracking
-      await _authRepository.login();
+      await authRepository.login();
       emit(state.copyWith(status: FormzSubmissionStatus.success));
     } on Exception catch (_) {
       emit(state.copyWith(status: FormzSubmissionStatus.failure));

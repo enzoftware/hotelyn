@@ -16,11 +16,12 @@ Future<Response> onRequest(RequestContext context, String id) async {
   }
 
   return staffAction(context, (actorId) async {
-    final reservation =
-        await context.read<HotelDataClient>().markReservationPaid(
-              actorId: actorId,
-              reservationId: id,
-            );
+    final reservation = await context
+        .read<HotelDataClient>()
+        .markReservationPaid(
+          actorId: actorId,
+          reservationId: id,
+        );
     return Response.json(body: reservation.toJson());
   });
 }

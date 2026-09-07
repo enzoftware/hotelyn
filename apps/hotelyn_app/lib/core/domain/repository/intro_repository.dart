@@ -3,10 +3,10 @@ import 'package:hotelyn/core/data/storage/storage.dart';
 /// Handles information stored on the local storage of the app.
 class IntroRepository {
   IntroRepository({
-    required SharedStorage sharedStorage,
-  }) : _sharedStorage = sharedStorage;
+    required this.sharedStorage,
+  });
 
-  final SharedStorage _sharedStorage;
+  final SharedStorage sharedStorage;
 
   /// Returns if the user already passed trough the intro process.
   ///
@@ -14,9 +14,9 @@ class IntroRepository {
   /// or to the intro flow.
   Future<bool> isIntroPassed() async {
     await Future<void>.delayed(const Duration(seconds: 1));
-    return _sharedStorage.isIntroPassed();
+    return sharedStorage.isIntroPassed();
   }
 
   /// Set that the user already passed trough the intro process.
-  void setIntroPassed() => _sharedStorage.setIntroPassed();
+  void setIntroPassed() => sharedStorage.setIntroPassed();
 }

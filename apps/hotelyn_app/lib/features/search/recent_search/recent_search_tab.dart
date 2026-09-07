@@ -29,7 +29,7 @@ class RecentSearchTab extends StatelessWidget {
                 SearchInitial() => const SearchInitialScreen(),
                 SearchError() => const SearchErrorScreen(),
                 SearchLoading() => const SearchLoadingScreen(),
-                SearchLoadSuccess() => const SearchLoadSuccessScreen()
+                SearchLoadSuccess() => const SearchLoadSuccessScreen(),
               };
             },
           );

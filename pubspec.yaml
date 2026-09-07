@@ -2,7 +2,7 @@ name: hotelyn_workspace
 description: "Hotelyn Dart workspaces monorepo root."
 
 environment:
-  sdk: ">=3.5.0 <4.0.0"
+  sdk: ">=3.13.0 <4.0.0"
 
 workspace:
   - apps/hotelyn_app

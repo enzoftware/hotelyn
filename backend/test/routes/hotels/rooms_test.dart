@@ -23,16 +23,14 @@ class _FakeHotelDataClient extends UnusedStaffMethodsBase {
     required double lat,
     required double lng,
     required double radiusKm,
-  }) async =>
-      const [];
+  }) async => const [];
 
   @override
   Future<List<Hotel>> recommendedHotels({
     required double lat,
     required double lng,
     required double radiusKm,
-  }) async =>
-      const [];
+  }) async => const [];
 
   @override
   Future<List<Room>> roomsAvailability({String? hotelId}) async {

@@ -8,33 +8,35 @@ import 'package:hotelyn/core/data/storage/storage.dart';
 /// and integrates with Microsoft Clarity for user identification tracking.
 class AuthRepository {
   AuthRepository({
-    required SharedStorage sharedStorage,
-  }) : _sharedStorage = sharedStorage;
+    required this.sharedStorage,
+  });
 
-  final SharedStorage _sharedStorage;
+  final SharedStorage sharedStorage;
 
   /// Checks if a user is currently authenticated.
   ///
   /// Returns `true` if a user ID exists in local storage.
-  bool get isAuthenticated => _sharedStorage.getUserId() != null;
+  bool get isAuthenticated => sharedStorage.getUserId() != null;
 
   /// Returns the current user ID if authenticated, `null` otherwise.
-  String? get currentUserId => _sharedStorage.getUserId();
+  String? get currentUserId => sharedStorage.getUserId();
 
   /// Performs login by generating and storing a unique user ID.
   ///
   /// Also sets the custom user ID in Clarity for session tracking.
   /// Returns the generated user ID.
   Future<String> login() async {
-    final userId = await _sharedStorage.setUserId();
+    final userId = await sharedStorage.setUserId();
     Clarity.setCustomUserId(userId);
     Clarity.setCustomTag('login_success', 'credentials');
     return userId;
   }
 
   /// Performs logout by clearing the stored user ID.
+  ///
+  /// Clears Clarity user tracking data.
   Future<void> logout() async {
-    await _sharedStorage.clearUserId();
+    await sharedStorage.clearUserId();
   }
 
   /// Initializes Clarity tracking with the stored user ID on app startup.

@@ -107,21 +107,19 @@ class SupabaseHotelDataClient implements HotelDataClient {
     required double lat,
     required double lng,
     required double radiusKm,
-  }) =>
-      _hotelsFromRpc('nearby_hotels', lat: lat, lng: lng, radiusKm: radiusKm);
+  }) => _hotelsFromRpc('nearby_hotels', lat: lat, lng: lng, radiusKm: radiusKm);
 
   @override
   Future<List<Hotel>> recommendedHotels({
     required double lat,
     required double lng,
     required double radiusKm,
-  }) =>
-      _hotelsFromRpc(
-        'recommended_hotels',
-        lat: lat,
-        lng: lng,
-        radiusKm: radiusKm,
-      );
+  }) => _hotelsFromRpc(
+    'recommended_hotels',
+    lat: lat,
+    lng: lng,
+    radiusKm: radiusKm,
+  );
 
   /// Shared radius-search plumbing: `nearby_hotels` and `recommended_hotels`
   /// take the same params and row shape, differing only in ranking.
@@ -131,10 +129,12 @@ class SupabaseHotelDataClient implements HotelDataClient {
     required double lng,
     required double radiusKm,
   }) async {
-    final rows = await _client.rpc<List<dynamic>>(
-      function,
-      params: {'lat': lat, 'lng': lng, 'radius_km': radiusKm},
-    ).timeout(requestTimeout);
+    final rows = await _client
+        .rpc<List<dynamic>>(
+          function,
+          params: {'lat': lat, 'lng': lng, 'radius_km': radiusKm},
+        )
+        .timeout(requestTimeout);
     return rows
         .map((row) => Hotel.fromJson(row as Map<String, dynamic>))
         .toList();
@@ -142,10 +142,12 @@ class SupabaseHotelDataClient implements HotelDataClient {
 
   @override
   Future<List<Room>> roomsAvailability({String? hotelId}) async {
-    final rows = await _client.rpc<List<dynamic>>(
-      'rooms_with_availability',
-      params: {'p_hotel_id': hotelId},
-    ).timeout(requestTimeout);
+    final rows = await _client
+        .rpc<List<dynamic>>(
+          'rooms_with_availability',
+          params: {'p_hotel_id': hotelId},
+        )
+        .timeout(requestTimeout);
     return rows
         .map((row) => Room.fromJson(row as Map<String, dynamic>))
         .toList();

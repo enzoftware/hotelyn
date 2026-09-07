@@ -101,8 +101,10 @@ void main() {
       (tester) async {
         await tester.pumpWidget(buildSubject());
 
-        final button =
-            find.widgetWithText(CaliforniaButton, 'Create Account / Login');
+        final button = find.widgetWithText(
+          CaliforniaButton,
+          'Create Account / Login',
+        );
         expect(button, findsOneWidget);
 
         await tester.tap(button);

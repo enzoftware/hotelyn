@@ -125,8 +125,9 @@ void main() {
       },
     );
 
-    testWidgets('tapping Skip navigates directly to IntroWelcomePage',
-        (tester) async {
+    testWidgets('tapping Skip navigates directly to IntroWelcomePage', (
+      tester,
+    ) async {
       await tester.pumpApp(buildSubject());
 
       final skipButton = find.widgetWithText(CaliforniaButton, 'Skip');
@@ -170,16 +171,18 @@ void main() {
       );
     }
 
-    testWidgets('renders IntroCarouselPage when state is IntroCarousel',
-        (tester) async {
+    testWidgets('renders IntroCarouselPage when state is IntroCarousel', (
+      tester,
+    ) async {
       await tester.pumpApp(buildSubject(const IntroCarousel()));
 
       expect(find.byType(IntroCarouselPage), findsOneWidget);
       expect(find.byType(IntroWelcomePage), findsNothing);
     });
 
-    testWidgets('renders IntroWelcomePage when state is IntroWelcome',
-        (tester) async {
+    testWidgets('renders IntroWelcomePage when state is IntroWelcome', (
+      tester,
+    ) async {
       await tester.pumpApp(buildSubject(const IntroWelcome()));
 
       expect(find.byType(IntroWelcomePage), findsOneWidget);

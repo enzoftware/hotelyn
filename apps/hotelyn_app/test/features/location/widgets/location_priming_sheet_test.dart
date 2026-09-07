@@ -37,8 +37,9 @@ void main() {
       );
     }
 
-    testWidgets('renders all copy and value proposition elements',
-        (tester) async {
+    testWidgets('renders all copy and value proposition elements', (
+      tester,
+    ) async {
       await tester.pumpApp(buildSubject());
 
       // Heading
@@ -63,25 +64,28 @@ void main() {
       expect(find.text('Maybe Later'), findsOneWidget);
 
       // Verify minimum 48px touch target for Maybe Later
-      final maybeLaterBtn =
-          find.widgetWithText(CaliforniaButton, 'Maybe Later');
+      final maybeLaterBtn = find.widgetWithText(
+        CaliforniaButton,
+        'Maybe Later',
+      );
       final size = tester.getSize(maybeLaterBtn);
       expect(size.height, greaterThanOrEqualTo(48.0));
     });
 
     testWidgets(
-        'calls onEnableLocation callback when Enable Location is tapped',
-        (tester) async {
-      var enabledTapped = false;
-      await tester.pumpApp(
-        buildSubject(onEnableLocation: () => enabledTapped = true),
-      );
+      'calls onEnableLocation callback when Enable Location is tapped',
+      (tester) async {
+        var enabledTapped = false;
+        await tester.pumpApp(
+          buildSubject(onEnableLocation: () => enabledTapped = true),
+        );
 
-      await tester.tap(find.text('Enable Location'));
-      await tester.pump();
+        await tester.tap(find.text('Enable Location'));
+        await tester.pump();
 
-      expect(enabledTapped, isTrue);
-    });
+        expect(enabledTapped, isTrue);
+      },
+    );
 
     testWidgets(
       'calls cubit.requestPermissionFromPriming '
@@ -136,8 +140,9 @@ void main() {
       },
     );
 
-    testWidgets('calls onMaybeLater callback when Maybe Later is tapped',
-        (tester) async {
+    testWidgets('calls onMaybeLater callback when Maybe Later is tapped', (
+      tester,
+    ) async {
       var laterTapped = false;
       await tester.pumpApp(
         buildSubject(onMaybeLater: () => laterTapped = true),
@@ -151,8 +156,9 @@ void main() {
       expect(laterTapped, isTrue);
     });
 
-    testWidgets('tapping Maybe Later without onMaybeLater does not throw',
-        (tester) async {
+    testWidgets('tapping Maybe Later without onMaybeLater does not throw', (
+      tester,
+    ) async {
       await tester.pumpApp(buildSubject());
 
       final maybeLater = find.text('Maybe Later');
@@ -161,8 +167,9 @@ void main() {
       await tester.pump();
     });
 
-    testWidgets('LocationPrimingSheet.show opens sheet and triggers action',
-        (tester) async {
+    testWidgets('LocationPrimingSheet.show opens sheet and triggers action', (
+      tester,
+    ) async {
       var enabledFromSheet = false;
 
       await tester.pumpApp(

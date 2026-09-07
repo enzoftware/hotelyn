@@ -222,7 +222,8 @@ Response rpcErrorResponse(RpcException error) {
 Response authFailureResponse(AuthFailure failure) {
   // Prefer the upstream status when GoTrue provided it; fall back to the code
   // for older responses that omit a status.
-  final isRateLimit = failure.statusCode == HttpStatus.tooManyRequests ||
+  final isRateLimit =
+      failure.statusCode == HttpStatus.tooManyRequests ||
       failure.code.contains('rate_limit');
 
   if (isRateLimit) {

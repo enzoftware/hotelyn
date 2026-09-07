@@ -9,22 +9,20 @@ part 'splash_state.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
   SplashBloc({
-    required IntroRepository introRepository,
-    required AuthRepository authRepository,
-  })  : _introRepository = introRepository,
-        _authRepository = authRepository,
-        super(SplashInitial()) {
+    required this.introRepository,
+    required this.authRepository,
+  }) : super(SplashInitial()) {
     on<SplashStarted>(_onStartSplash);
   }
 
-  final IntroRepository _introRepository;
-  final AuthRepository _authRepository;
+  final IntroRepository introRepository;
+  final AuthRepository authRepository;
 
   FutureOr<void> _onStartSplash(
     SplashStarted event,
     Emitter<SplashState> emit,
   ) async {
-    final introPassed = await _introRepository.isIntroPassed();
+    final introPassed = await introRepository.isIntroPassed();
 
     if (!introPassed) {
       emit(SplashToIntro());
@@ -32,9 +30,9 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     }
 
     // Check if user is authenticated
-    if (_authRepository.isAuthenticated) {
+    if (authRepository.isAuthenticated) {
       // Initialize Clarity with the stored user ID for returning users
-      _authRepository.initializeClarityUser();
+      authRepository.initializeClarityUser();
       emit(SplashToHome());
     } else {
       emit(SplashToLogin());

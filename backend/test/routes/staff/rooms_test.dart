@@ -32,7 +32,7 @@ void main() {
 
   void auth(String? header) {
     when(() => request.headers).thenReturn({
-      if (header != null) HttpHeaders.authorizationHeader: header,
+      HttpHeaders.authorizationHeader: ?header,
     });
   }
 

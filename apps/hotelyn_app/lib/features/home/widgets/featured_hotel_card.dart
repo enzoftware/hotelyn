@@ -104,7 +104,8 @@ class _HotelInfo extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              r'$' '${hotel.price}',
+              r'$'
+              '${hotel.price}',
               style: HotelynTextStyle.h3.copyWith(
                 color: PrimaryColors.blue,
               ),

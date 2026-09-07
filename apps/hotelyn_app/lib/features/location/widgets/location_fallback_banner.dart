@@ -50,7 +50,7 @@ class LocationFallbackBanner extends StatelessWidget {
                     Text(
                       state.isDenied
                           ? 'Permission denied. '
-                              'Select your destination manually.'
+                                'Select your destination manually.'
                           : 'Manually selected destination.',
                       style: CaliforniaTypography.p12Regular.copyWith(
                         color: CaliforniaColors.textSecondary,
@@ -68,8 +68,9 @@ class LocationFallbackBanner extends StatelessWidget {
                     ManualLocationSheet.show(
                       context,
                       initialLocation: state.userLocation,
-                      onLocationSelected:
-                          context.read<LocationCubit>().setManualLocation,
+                      onLocationSelected: context
+                          .read<LocationCubit>()
+                          .setManualLocation,
                     ),
                   );
                 },

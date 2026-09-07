@@ -4,13 +4,12 @@ import 'package:hotelyn/features/search/recent_search/cubit/search_state.dart';
 
 class SearchCubit extends Cubit<SearchState> {
   SearchCubit({
-    required ClarityService clarityService,
-  })  : _clarityService = clarityService,
-        super(SearchLoadSuccess()) {
-    _clarityService.setCurrentScreenName('search');
+    required this.clarityService,
+  }) : super(SearchLoadSuccess()) {
+    clarityService.setCurrentScreenName('search');
   }
 
-  final ClarityService _clarityService;
+  final ClarityService clarityService;
 
   static const searchTag = 'searchTag';
 }

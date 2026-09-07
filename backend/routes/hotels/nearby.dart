@@ -35,10 +35,10 @@ Future<Response> onRequest(RequestContext context) async {
 
   try {
     final hotels = await context.read<HotelDataClient>().nearbyHotels(
-          lat: lat,
-          lng: lng,
-          radiusKm: radiusKm,
-        );
+      lat: lat,
+      lng: lng,
+      radiusKm: radiusKm,
+    );
     return Response.json(body: hotels.map((h) => h.toJson()).toList());
   } on Object {
     return internalError();

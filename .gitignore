@@ -41,7 +41,6 @@ flutter_*.png
 linked_*.ds
 unlinked.ds
 unlinked_spec.ds
-.fvm/*
 !.fvm/fvm_config.json
 
 # Workspace root lockfile is committed; package-level lockfiles are not
@@ -128,4 +127,6 @@ app.*.map.json
 !.vscode/settings.json
 !.idea/codeStyles/
 !.idea/dictionaries/
-!.idea/runConfigurations/
+# FVM
+.fvm/*
+!.fvm/fvm_config.json

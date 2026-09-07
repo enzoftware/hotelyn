@@ -14,8 +14,9 @@ Future<Response> onRequest(RequestContext context) async {
   }
 
   return staffAction(context, (actorId) async {
-    final rooms =
-        await context.read<HotelDataClient>().staffRoomList(actorId: actorId);
+    final rooms = await context.read<HotelDataClient>().staffRoomList(
+      actorId: actorId,
+    );
     return Response.json(body: rooms.map((r) => r.toJson()).toList());
   });
 }

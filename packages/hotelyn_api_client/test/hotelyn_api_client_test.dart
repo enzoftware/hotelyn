@@ -27,29 +27,36 @@ void main() {
       );
     }
 
-    test('getNearbyHotels hits /hotels/nearby with the radius params',
-        () async {
-      late Uri captured;
-      final client = clientReturning(
-        [
-          {'id': 'h1', 'name': 'Miraflores', 'city': 'Lima', 'country': 'Peru'},
-        ],
-        onRequest: (request) => captured = request.url,
-      );
+    test(
+      'getNearbyHotels hits /hotels/nearby with the radius params',
+      () async {
+        late Uri captured;
+        final client = clientReturning(
+          [
+            {
+              'id': 'h1',
+              'name': 'Miraflores',
+              'city': 'Lima',
+              'country': 'Peru',
+            },
+          ],
+          onRequest: (request) => captured = request.url,
+        );
 
-      final hotels = await client.getNearbyHotels(
-        lat: -12.11,
-        lng: -77.03,
-        radiusKm: 200,
-      );
+        final hotels = await client.getNearbyHotels(
+          lat: -12.11,
+          lng: -77.03,
+          radiusKm: 200,
+        );
 
-      expect(captured.path, '/hotels/nearby');
-      expect(captured.queryParameters['lat'], '-12.11');
-      expect(captured.queryParameters['lng'], '-77.03');
-      expect(captured.queryParameters['radiusKm'], '200.0');
-      expect(hotels, hasLength(1));
-      expect(hotels.first.name, 'Miraflores');
-    });
+        expect(captured.path, '/hotels/nearby');
+        expect(captured.queryParameters['lat'], '-12.11');
+        expect(captured.queryParameters['lng'], '-77.03');
+        expect(captured.queryParameters['radiusKm'], '200.0');
+        expect(hotels, hasLength(1));
+        expect(hotels.first.name, 'Miraflores');
+      },
+    );
 
     test('getRecommendedHotels hits /hotels/recommended', () async {
       late Uri captured;
@@ -334,8 +341,9 @@ void main() {
           onRequest: (request) => captured = request,
         );
 
-        final reservation =
-            await client.confirmReservation(reservationId: 'res-1');
+        final reservation = await client.confirmReservation(
+          reservationId: 'res-1',
+        );
 
         expect(captured.method, 'POST');
         expect(captured.url.path, '/reservations/res-1/confirm');
@@ -349,8 +357,9 @@ void main() {
           onRequest: (request) => captured = request,
         );
 
-        final reservation =
-            await client.rejectReservation(reservationId: 'res-1');
+        final reservation = await client.rejectReservation(
+          reservationId: 'res-1',
+        );
 
         expect(captured.method, 'POST');
         expect(captured.url.path, '/reservations/res-1/reject');
@@ -384,39 +393,43 @@ void main() {
         'token_type': 'bearer',
       };
 
-      test('requestEmailOtp POSTs the email and tolerates a 202 no-body',
-          () async {
-        late http.Request captured;
-        final client = rawClient(202, '', onRequest: (r) => captured = r);
+      test(
+        'requestEmailOtp POSTs the email and tolerates a 202 no-body',
+        () async {
+          late http.Request captured;
+          final client = rawClient(202, '', onRequest: (r) => captured = r);
 
-        await client.requestEmailOtp(email: 'guest@hotelyn.test');
+          await client.requestEmailOtp(email: 'guest@hotelyn.test');
 
-        expect(captured.method, 'POST');
-        expect(captured.url.path, '/auth/otp/request');
-        expect(jsonDecode(captured.body), {'email': 'guest@hotelyn.test'});
-      });
+          expect(captured.method, 'POST');
+          expect(captured.url.path, '/auth/otp/request');
+          expect(jsonDecode(captured.body), {'email': 'guest@hotelyn.test'});
+        },
+      );
 
-      test('requestEmailOtp maps a 429 to AuthApiException with retry-after',
-          () async {
-        final client = rawClient(
-          429,
-          jsonEncode({
-            'error': 'over_email_send_rate_limit',
-            'retry_after_seconds': 30,
-          }),
-        );
+      test(
+        'requestEmailOtp maps a 429 to AuthApiException with retry-after',
+        () async {
+          final client = rawClient(
+            429,
+            jsonEncode({
+              'error': 'over_email_send_rate_limit',
+              'retry_after_seconds': 30,
+            }),
+          );
 
-        await expectLater(
-          client.requestEmailOtp(email: 'guest@hotelyn.test'),
-          throwsA(
-            isA<AuthApiException>()
-                .having((e) => e.code, 'code', 'over_email_send_rate_limit')
-                .having((e) => e.retryAfterSeconds, 'retryAfter', 30)
-                // The HTTP status is preserved on the exception.
-                .having((e) => e.statusCode, 'statusCode', 429),
-          ),
-        );
-      });
+          await expectLater(
+            client.requestEmailOtp(email: 'guest@hotelyn.test'),
+            throwsA(
+              isA<AuthApiException>()
+                  .having((e) => e.code, 'code', 'over_email_send_rate_limit')
+                  .having((e) => e.retryAfterSeconds, 'retryAfter', 30)
+                  // The HTTP status is preserved on the exception.
+                  .having((e) => e.statusCode, 'statusCode', 429),
+            ),
+          );
+        },
+      );
 
       test('verifyEmailOtp returns the session', () async {
         late http.Request captured;
@@ -440,18 +453,23 @@ void main() {
         expect(session.userId, 'user-1');
       });
 
-      test('verifyEmailOtp maps a 401 to AuthApiException(otp_expired)',
-          () async {
-        final client = rawClient(401, jsonEncode({'error': 'otp_expired'}));
+      test(
+        'verifyEmailOtp maps a 401 to AuthApiException(otp_expired)',
+        () async {
+          final client = rawClient(401, jsonEncode({'error': 'otp_expired'}));
 
-        await expectLater(
-          client.verifyEmailOtp(email: 'guest@hotelyn.test', token: '000000'),
-          throwsA(
-            isA<AuthApiException>()
-                .having((e) => e.code, 'code', 'otp_expired'),
-          ),
-        );
-      });
+          await expectLater(
+            client.verifyEmailOtp(email: 'guest@hotelyn.test', token: '000000'),
+            throwsA(
+              isA<AuthApiException>().having(
+                (e) => e.code,
+                'code',
+                'otp_expired',
+              ),
+            ),
+          );
+        },
+      );
 
       test('signInWithPassword returns the session', () async {
         late http.Request captured;
@@ -475,8 +493,10 @@ void main() {
       });
 
       test('signInWithPassword maps a 401 to invalid_credentials', () async {
-        final client =
-            rawClient(401, jsonEncode({'error': 'invalid_credentials'}));
+        final client = rawClient(
+          401,
+          jsonEncode({'error': 'invalid_credentials'}),
+        );
 
         await expectLater(
           client.signInWithPassword(
@@ -484,8 +504,11 @@ void main() {
             password: 'wrong',
           ),
           throwsA(
-            isA<AuthApiException>()
-                .having((e) => e.code, 'code', 'invalid_credentials'),
+            isA<AuthApiException>().having(
+              (e) => e.code,
+              'code',
+              'invalid_credentials',
+            ),
           ),
         );
       });
