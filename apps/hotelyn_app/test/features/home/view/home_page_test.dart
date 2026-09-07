@@ -231,7 +231,6 @@ void main() {
         },
       );
     });
-
     testWidgets(
       'tapping filter button in HomeTab opens HotelFilterBottomSheet',
       (tester) async {
