@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hotelyn/features/home/view/home_page.dart';
 import 'package:hotelyn/features/intro/intro.dart';
 import 'package:hotelyn/features/login/view/login_page.dart';
+import 'package:hotelyn/features/notifications/notifications.dart';
 import 'package:hotelyn/features/payment/view/payment_page.dart';
 import 'package:hotelyn/features/splash/view/splash_screen.dart';
 
@@ -28,6 +29,10 @@ class AppRouter {
       GoRoute(
         path: '/payment',
         builder: (context, state) => const PaymentPage(),
+      ),
+      GoRoute(
+        path: '/notifications',
+        builder: (context, state) => const NotificationsPage(),
       ),
     ],
   );
