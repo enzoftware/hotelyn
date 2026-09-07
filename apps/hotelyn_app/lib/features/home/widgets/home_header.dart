@@ -18,6 +18,7 @@ class HomeHeader extends StatelessWidget {
     this.onNotificationTap,
     this.onSearchTap,
     this.onLocationTap,
+    this.onFilterTap,
     this.overlapsContent = false,
     super.key,
   });
@@ -26,6 +27,7 @@ class HomeHeader extends StatelessWidget {
   final VoidCallback? onNotificationTap;
   final VoidCallback? onSearchTap;
   final VoidCallback? onLocationTap;
+  final VoidCallback? onFilterTap;
   final bool overlapsContent;
 
   @override
@@ -71,6 +73,14 @@ class HomeHeader extends StatelessWidget {
                         );
                       } on Exception catch (_) {}
                     },
+                suffixIcon: IconButton(
+                  icon: const Icon(
+                    Icons.tune,
+                    color: CaliforniaColors.brandPrimary,
+                  ),
+                  tooltip: 'Filter hotels',
+                  onPressed: onFilterTap,
+                ),
               ),
           ],
         ),
@@ -85,12 +95,14 @@ class HotelynHeader extends SliverPersistentHeaderDelegate {
     this.onNotificationTap,
     this.onSearchTap,
     this.onLocationTap,
+    this.onFilterTap,
   });
 
   final String userName;
   final VoidCallback? onNotificationTap;
   final VoidCallback? onSearchTap;
   final VoidCallback? onLocationTap;
+  final VoidCallback? onFilterTap;
 
   final _maxExtent = 250.0;
   final _minExtent = 240.0;
@@ -106,6 +118,7 @@ class HotelynHeader extends SliverPersistentHeaderDelegate {
       onNotificationTap: onNotificationTap,
       onSearchTap: onSearchTap,
       onLocationTap: onLocationTap,
+      onFilterTap: onFilterTap,
       overlapsContent: overlapsContent,
     );
   }

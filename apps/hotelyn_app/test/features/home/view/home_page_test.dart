@@ -5,6 +5,7 @@ import 'package:hotelyn/components/navigation_bar/navigation_bar.dart';
 import 'package:hotelyn/components/navigation_bar/navigation_bar_cubit.dart';
 import 'package:hotelyn/components/text_input/hotelyn_search_input.dart';
 import 'package:hotelyn/core/services/clarity_service.dart';
+import 'package:hotelyn/features/filter/filter.dart';
 import 'package:hotelyn/features/home/home.dart';
 import 'package:hotelyn/features/location/location.dart';
 import 'package:hotelyn/features/messages/messages_cubit.dart';
@@ -230,5 +231,19 @@ void main() {
         },
       );
     });
+
+    testWidgets(
+      'tapping filter button in HomeTab opens HotelFilterBottomSheet',
+      (tester) async {
+        await tester.pumpApp(buildSubject());
+
+        await tester.tap(find.byIcon(Icons.tune));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(HotelFilterBottomSheet), findsOneWidget);
+        expect(find.text('Filter'), findsWidgets);
+        expect(find.text('Available Now'), findsOneWidget);
+      },
+    );
   });
 }

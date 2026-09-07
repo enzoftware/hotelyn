@@ -3,6 +3,7 @@ import 'package:california_ui/california_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hotelyn/features/filter/filter.dart';
 import 'package:hotelyn/features/home/cubit/nearby_hotels_cubit.dart';
 import 'package:hotelyn/features/home/widgets/nearby_hotels_section.dart';
 import 'package:hotelyn/features/location/location.dart';
@@ -15,14 +16,19 @@ class _MockNearbyHotelsCubit extends MockCubit<NearbyHotelsState>
 class _MockLocationCubit extends MockCubit<LocationState>
     implements LocationCubit {}
 
+class _MockFilterCubit extends MockCubit<FilterState> implements FilterCubit {}
+
 void main() {
   late _MockNearbyHotelsCubit mockNearbyCubit;
   late _MockLocationCubit mockLocationCubit;
+  late _MockFilterCubit mockFilterCubit;
 
   setUp(() {
     mockNearbyCubit = _MockNearbyHotelsCubit();
     mockLocationCubit = _MockLocationCubit();
+    mockFilterCubit = _MockFilterCubit();
 
+    when(() => mockFilterCubit.state).thenReturn(const FilterState());
     when(() => mockLocationCubit.state).thenReturn(
       const LocationState(
         permissionStatus: LocationPermissionStatus.granted,
@@ -35,13 +41,16 @@ void main() {
     );
   });
 
-  Widget buildSubject() {
+  Widget buildSubject({FilterCubit? filterCubit}) {
     return MaterialApp(
       home: Scaffold(
         body: MultiBlocProvider(
           providers: [
             BlocProvider<LocationCubit>.value(value: mockLocationCubit),
             BlocProvider<NearbyHotelsCubit>.value(value: mockNearbyCubit),
+            BlocProvider<FilterCubit>.value(
+              value: filterCubit ?? mockFilterCubit,
+            ),
           ],
           child: const CustomScrollView(
             slivers: [
@@ -54,7 +63,7 @@ void main() {
   }
 
   group('NearbyHotelsSection', () {
-    testWidgets('renders section title and See All action', (tester) async {
+    testWidgets('renders section title and Filter action', (tester) async {
       when(() => mockNearbyCubit.state).thenReturn(
         const NearbyHotelsInitial(),
       );
@@ -62,7 +71,7 @@ void main() {
       await tester.pumpWidget(buildSubject());
 
       expect(find.text('Nearby Hotels'), findsOneWidget);
-      expect(find.text('See All'), findsOneWidget);
+      expect(find.text('Filter'), findsOneWidget);
     });
 
     testWidgets('renders shimmer placeholders when loading', (tester) async {
