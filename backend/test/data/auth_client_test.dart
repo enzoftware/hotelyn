@@ -107,24 +107,28 @@ void main() {
       );
     });
 
-    test('derives a rate-limit code and retry-after from the message', () async {
-      when(() => auth.signInWithOtp(email: any(named: 'email'))).thenThrow(
-        const gotrue.AuthException(
-          'For security purposes, you can only request this after 27 seconds.',
-          statusCode: '429',
-        ),
-      );
+    test(
+      'derives a rate-limit code and retry-after from the message',
+      () async {
+        when(() => auth.signInWithOtp(email: any(named: 'email'))).thenThrow(
+          const gotrue.AuthException(
+            'For security purposes, you can only request this after '
+            '27 seconds.',
+            statusCode: '429',
+          ),
+        );
 
-      await expectLater(
-        client.requestEmailOtp('guest@hotelyn.test'),
-        throwsA(
-          isA<AuthFailure>()
-              .having((e) => e.code, 'code', 'over_request_rate_limit')
-              .having((e) => e.retryAfterSeconds, 'retryAfter', 27)
-              .having((e) => e.statusCode, 'statusCode', 429),
-        ),
-      );
-    });
+        await expectLater(
+          client.requestEmailOtp('guest@hotelyn.test'),
+          throwsA(
+            isA<AuthFailure>()
+                .having((e) => e.code, 'code', 'over_request_rate_limit')
+                .having((e) => e.retryAfterSeconds, 'retryAfter', 27)
+                .having((e) => e.statusCode, 'statusCode', 429),
+          ),
+        );
+      },
+    );
 
     test('falls back to otp_expired for an expired/invalid message', () async {
       when(
