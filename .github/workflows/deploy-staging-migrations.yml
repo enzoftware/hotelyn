@@ -49,10 +49,10 @@ jobs:
           fi
 
           echo "Linking Supabase staging project: ${SUPABASE_PROJECT_ID}..."
-          supabase link --project-ref "${SUPABASE_PROJECT_ID}" --password "${SUPABASE_DB_PASSWORD}"
+          supabase link --project-ref "${SUPABASE_PROJECT_ID}" --password "${SUPABASE_DB_PASSWORD}" 2>&1 | tee -a migration_output.log
 
           echo "Applying migrations via supabase db push..."
-          supabase db push --include-all --password "${SUPABASE_DB_PASSWORD}" 2>&1 | tee migration_output.log
+          supabase db push --include-all --yes --password "${SUPABASE_DB_PASSWORD}" 2>&1 | tee -a migration_output.log
 
       - name: Publish failure summary
         if: failure()
@@ -68,9 +68,11 @@ jobs:
 
       - name: Publish success summary
         if: success()
+        env:
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
         run: |
           echo "### ✅ Staging Migrations Deployed Successfully" >> "$GITHUB_STEP_SUMMARY"
-          echo "Database migrations were successfully applied to the staging database (`${{ secrets.SUPABASE_PROJECT_ID }}`)." >> "$GITHUB_STEP_SUMMARY"
+          echo "Database migrations were successfully applied to the staging database (\`${SUPABASE_PROJECT_ID}\`)." >> "$GITHUB_STEP_SUMMARY"
           if [ -f migration_output.log ]; then
             echo "#### Applied Migrations" >> "$GITHUB_STEP_SUMMARY"
             echo '```text' >> "$GITHUB_STEP_SUMMARY"
