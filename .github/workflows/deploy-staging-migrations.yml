@@ -10,6 +10,7 @@ concurrency:
       - main
     paths:
       - 'supabase/migrations/**'
+      - 'supabase/config.toml'
       - '.github/workflows/deploy-staging-migrations.yml'
   workflow_dispatch:
 

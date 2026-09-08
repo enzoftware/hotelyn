@@ -27,11 +27,11 @@ Database migrations are deployed automatically to the staging Supabase project v
   - Manually via `workflow_dispatch` in the GitHub Actions UI.
 - **Concurrency**:
   - Uses the `staging-db-deployment` concurrency group with `cancel-in-progress: false`.
-  - Database schema migrations are strictly sequential and must **never** be cancelled mid-execution to avoid partial state or corrupted migrations.
+  - Database schema migrations are strictly sequential and operators must avoid cancelling running deployments mid-execution to prevent leaving the schema in an ambiguous or partially applied state.
 - **Execution Mechanism**:
   - Authenticates using `SUPABASE_ACCESS_TOKEN`.
   - Links to the staging project reference using `supabase link --project-ref <REF> --password <PASSWORD>`.
-  - Pushes all pending migrations with `supabase db push --include-all --password <PASSWORD>`.
+  - Pushes all pending migrations non-interactively with `supabase db push --include-all --yes --password <PASSWORD>`.
   - Upon migration failure, the step aborts immediately with a non-zero exit code and publishes actionable log excerpts to the GitHub Step Summary.
 
 ---
@@ -53,7 +53,7 @@ To enable automated staging deployments, the following secrets must be configure
 All migrations applied to staging and production must adhere to safe database evolution practices to guarantee zero-downtime deployments and data integrity:
 
 ### 1. Transactional DDL & Atomic Operations
-- PostgreSQL wraps most DDL statements inside transactions automatically. If any statement in a migration fails, all changes within that migration are rolled back.
+- PostgreSQL wraps DDL statements inside transactions per migration file. When `supabase db push --include-all` runs a batch of pending migrations, atomicity is enforced per file: if a statement in a migration file fails, that migration is rolled back, but any previously succeeded migration files in the same batch remain committed.
 - **Exception**: Statements such as `CREATE INDEX CONCURRENTLY` cannot execute inside an explicit transaction block. When adding large indexes on populated tables in production, evaluate whether concurrent index creation is necessary or if standard index creation within the migration transaction is preferred.
 
 ### 2. Backwards Compatibility & Expand/Contract
