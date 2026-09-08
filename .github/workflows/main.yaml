@@ -15,9 +15,15 @@ on:
 env:
   MELOS_SDK_PATH: auto
 
+permissions:
+  contents: read
+
 jobs:
   semantic-pull-request:
     if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/semantic_pull_request.yml@v1
 
   workspace-quality:
@@ -51,7 +57,13 @@ jobs:
         run: melos run build
 
       - name: Verify clean working tree
-        run: git diff --exit-code
+        run: |
+          git diff --exit-code
+          if [ -n "$(git status --porcelain=v1 --untracked-files=all)" ]; then
+            echo "::error::Untracked files detected in working tree after build:"
+            git status --porcelain=v1 --untracked-files=all
+            exit 1
+          fi
 
   workspace-tests:
     name: Workspace Tests
