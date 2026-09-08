@@ -1,0 +1,82 @@
+name: deploy-staging-migrations
+
+concurrency:
+  group: staging-db-deployment
+  cancel-in-progress: false
+
+'on':
+  push:
+    branches:
+      - main
+    paths:
+      - 'supabase/migrations/**'
+      - 'supabase/config.toml'
+      - '.github/workflows/deploy-staging-migrations.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-staging-migrations:
+    name: Deploy Migrations to Staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v3
+        with:
+          version: 2.109.1
+
+      - name: Deploy migrations to staging
+        id: deploy
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${SUPABASE_ACCESS_TOKEN:-}" ] || [ -z "${SUPABASE_PROJECT_ID:-}" ] || [ -z "${SUPABASE_DB_PASSWORD:-}" ]; then
+            echo "::error::Required secrets (SUPABASE_ACCESS_TOKEN, SUPABASE_PROJECT_ID, SUPABASE_DB_PASSWORD) are not set."
+            echo "### ❌ Staging Deployment Configuration Error" >> "$GITHUB_STEP_SUMMARY"
+            echo "Missing required repository secrets (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_ID`, or `SUPABASE_DB_PASSWORD`)." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+          echo "Linking Supabase staging project: ${SUPABASE_PROJECT_ID}..."
+          supabase link --project-ref "${SUPABASE_PROJECT_ID}" --password "${SUPABASE_DB_PASSWORD}" 2>&1 | tee -a migration_output.log
+
+          echo "Applying migrations via supabase db push..."
+          supabase db push --include-all --yes --password "${SUPABASE_DB_PASSWORD}" 2>&1 | tee -a migration_output.log
+
+      - name: Publish failure summary
+        if: failure()
+        run: |
+          echo "### ❌ Staging Migration Deployment Failed" >> "$GITHUB_STEP_SUMMARY"
+          echo "Database migration deployment to staging project failed. Check the error logs below for details." >> "$GITHUB_STEP_SUMMARY"
+          if [ -f migration_output.log ]; then
+            echo "#### Migration Logs" >> "$GITHUB_STEP_SUMMARY"
+            echo '```text' >> "$GITHUB_STEP_SUMMARY"
+            cat migration_output.log >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Publish success summary
+        if: success()
+        env:
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          echo "### ✅ Staging Migrations Deployed Successfully" >> "$GITHUB_STEP_SUMMARY"
+          echo "Database migrations were successfully applied to the staging database (\`${SUPABASE_PROJECT_ID}\`)." >> "$GITHUB_STEP_SUMMARY"
+          if [ -f migration_output.log ]; then
+            echo "#### Applied Migrations" >> "$GITHUB_STEP_SUMMARY"
+            echo '```text' >> "$GITHUB_STEP_SUMMARY"
+            cat migration_output.log >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
