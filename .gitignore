@@ -130,7 +130,5 @@ app.*.map.json
 !.idea/codeStyles/
 !.idea/dictionaries/
 # FVM
+.fvm/*
 !.fvm/fvm_config.json
-
-# FVM Version Cache
-.fvm/
