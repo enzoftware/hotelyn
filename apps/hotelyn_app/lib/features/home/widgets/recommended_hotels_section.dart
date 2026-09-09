@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:california_ui/california_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/features/home/cubit/recommended_hotels_cubit.dart';
+import 'package:hotelyn/features/location/location.dart';
 import 'package:hotelyn_domain/hotelyn_domain.dart' as domain;
 
 /// Horizontal carousel of recommended hotel cards.
@@ -12,7 +15,18 @@ import 'package:hotelyn_domain/hotelyn_domain.dart' as domain;
 /// scrolling list, matching the Figma "Product List 1" component
 /// (node `200:13109`).
 class RecommendedHotelsSection extends StatelessWidget {
-  const RecommendedHotelsSection({super.key});
+  const RecommendedHotelsSection({
+    super.key,
+    this.onSeeAllTap,
+    this.onRetry,
+  });
+
+  /// Optional callback invoked when the "See All" button is tapped.
+  final VoidCallback? onSeeAllTap;
+
+  /// Optional callback invoked when the "Retry" button is tapped on error.
+  /// If null, retries by reloading using current [LocationCubit] coordinates.
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +45,7 @@ class RecommendedHotelsSection extends StatelessWidget {
                   style: HotelynTextStyle.h2,
                 ),
                 TextButton(
-                  onPressed: () {
-                    // TODO(FE-1304): Navigate to full recommended list.
-                  },
+                  onPressed: onSeeAllTap,
                   child: Text(
                     'See All',
                     style: HotelynTextStyle.description.copyWith(
@@ -56,6 +68,7 @@ class RecommendedHotelsSection extends StatelessWidget {
               ),
               RecommendedHotelsFailure(:final message) => _ErrorCard(
                 message: message,
+                onRetry: onRetry,
               ),
             },
           ),
@@ -154,9 +167,13 @@ class _EmptyPlaceholder extends StatelessWidget {
 }
 
 class _ErrorCard extends StatelessWidget {
-  const _ErrorCard({required this.message});
+  const _ErrorCard({
+    required this.message,
+    this.onRetry,
+  });
 
   final String message;
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -186,7 +203,24 @@ class _ErrorCard extends StatelessWidget {
               const SizedBox(height: 12),
               TextButton(
                 onPressed: () {
-                  // Retry by re-reading location from cubit.
+                  if (onRetry != null) {
+                    onRetry!();
+                    return;
+                  }
+                  final loc = context
+                      .read<LocationCubit?>()
+                      ?.state
+                      .userLocation;
+                  if (loc != null) {
+                    unawaited(
+                      context
+                          .read<RecommendedHotelsCubit>()
+                          .loadRecommendedHotels(
+                            latitude: loc.latitude,
+                            longitude: loc.longitude,
+                          ),
+                    );
+                  }
                 },
                 child: const Text('Retry'),
               ),

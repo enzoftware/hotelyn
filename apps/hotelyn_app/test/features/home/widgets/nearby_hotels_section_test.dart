@@ -35,7 +35,7 @@ void main() {
     );
   });
 
-  Widget buildSubject() {
+  Widget buildSubject({VoidCallback? onSeeAllTap}) {
     return MaterialApp(
       home: Scaffold(
         body: MultiBlocProvider(
@@ -43,9 +43,9 @@ void main() {
             BlocProvider<LocationCubit>.value(value: mockLocationCubit),
             BlocProvider<NearbyHotelsCubit>.value(value: mockNearbyCubit),
           ],
-          child: const CustomScrollView(
+          child: CustomScrollView(
             slivers: [
-              NearbyHotelsSection(),
+              NearbyHotelsSection(onSeeAllTap: onSeeAllTap),
             ],
           ),
         ),
@@ -63,6 +63,34 @@ void main() {
 
       expect(find.text('Nearby Hotels'), findsOneWidget);
       expect(find.text('See All'), findsOneWidget);
+    });
+
+    testWidgets('invokes onSeeAllTap callback when tapped', (tester) async {
+      var tapped = false;
+      when(() => mockNearbyCubit.state).thenReturn(
+        const NearbyHotelsInitial(),
+      );
+
+      await tester.pumpWidget(buildSubject(onSeeAllTap: () => tapped = true));
+      await tester.tap(find.text('See All'));
+      await tester.pump();
+
+      expect(tapped, isTrue);
+    });
+
+    testWidgets('See All action is disabled when onSeeAllTap is null', (
+      tester,
+    ) async {
+      when(() => mockNearbyCubit.state).thenReturn(
+        const NearbyHotelsInitial(),
+      );
+
+      await tester.pumpWidget(buildSubject());
+
+      final textButton = tester.widget<TextButton>(
+        find.widgetWithText(TextButton, 'See All'),
+      );
+      expect(textButton.onPressed, isNull);
     });
 
     testWidgets('renders shimmer placeholders when loading', (tester) async {

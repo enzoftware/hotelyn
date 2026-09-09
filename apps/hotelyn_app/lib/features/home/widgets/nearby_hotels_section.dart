@@ -16,7 +16,15 @@ import 'package:hotelyn_domain/hotelyn_domain.dart' as domain;
 /// empty placeholder, error state, and manual location fallback routing
 /// if permission is denied.
 class NearbyHotelsSection extends StatelessWidget {
-  const NearbyHotelsSection({super.key});
+  const NearbyHotelsSection({
+    super.key,
+    this.onSeeAllTap,
+  });
+
+  /// Optional callback invoked when the "See All" button is tapped.
+  /// When null, the action remains disabled until search/filter integration
+  /// (FE-1304).
+  final VoidCallback? onSeeAllTap;
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +43,7 @@ class NearbyHotelsSection extends StatelessWidget {
                   style: HotelynTextStyle.h2,
                 ),
                 TextButton(
-                  onPressed: () {
-                    // TODO(FE-1304): Navigate to full nearby list with filters.
-                  },
+                  onPressed: onSeeAllTap,
                   child: Text(
                     'See All',
                     style: HotelynTextStyle.description.copyWith(

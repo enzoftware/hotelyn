@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,6 +19,12 @@ import 'package:hotelyn/features/search/recent_search/recent_search_tab.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../helpers/helpers.dart';
+
+class _MockRecommendedHotelsCubit extends MockCubit<RecommendedHotelsState>
+    implements RecommendedHotelsCubit {}
+
+class _MockNearbyHotelsCubit extends MockCubit<NearbyHotelsState>
+    implements NearbyHotelsCubit {}
 
 void main() {
   group('HomePage', () {
@@ -55,6 +64,8 @@ void main() {
       ProfileCubit? profileCubit,
       MessagesCubit? messagesCubit,
       SearchCubit? searchCubit,
+      RecommendedHotelsCubit? recommendedHotelsCubit,
+      NearbyHotelsCubit? nearbyHotelsCubit,
     }) {
       return RepositoryProvider<ClarityService>.value(
         value: clarityService,
@@ -65,6 +76,8 @@ void main() {
             profileCubit: profileCubit,
             messagesCubit: messagesCubit,
             searchCubit: searchCubit,
+            recommendedHotelsCubit: recommendedHotelsCubit,
+            nearbyHotelsCubit: nearbyHotelsCubit,
           ),
         ),
       );
@@ -139,6 +152,74 @@ void main() {
 
       expect(navigationBarCubit.state.selectedTabIndex, 1);
     });
+
+    testWidgets(
+      'reloads recommended and nearby hotels when LocationCubit coordinates '
+      'change',
+      (tester) async {
+        final locationController = StreamController<LocationState>.broadcast();
+        final mockRecCubit = _MockRecommendedHotelsCubit();
+        final mockNearbyCubit = _MockNearbyHotelsCubit();
+
+        when(() => mockRecCubit.state).thenReturn(
+          const RecommendedHotelsInitial(),
+        );
+        when(
+          () => mockRecCubit.loadRecommendedHotels(
+            latitude: any(named: 'latitude'),
+            longitude: any(named: 'longitude'),
+          ),
+        ).thenAnswer((_) async {});
+
+        when(() => mockNearbyCubit.state).thenReturn(
+          const NearbyHotelsInitial(),
+        );
+        when(
+          () => mockNearbyCubit.loadNearbyHotels(
+            latitude: any(named: 'latitude'),
+            longitude: any(named: 'longitude'),
+          ),
+        ).thenAnswer((_) async {});
+
+        when(() => locationCubit.stream).thenAnswer(
+          (_) => locationController.stream,
+        );
+
+        await tester.pumpApp(
+          buildSubject(
+            recommendedHotelsCubit: mockRecCubit,
+            nearbyHotelsCubit: mockNearbyCubit,
+          ),
+        );
+
+        locationController.add(
+          const LocationState(
+            userLocation: UserLocation(
+              latitude: -8.4095,
+              longitude: 115.1889,
+              cityName: 'Bali, Indonesia',
+            ),
+          ),
+        );
+        await tester.pump();
+
+        verify(
+          () => mockRecCubit.loadRecommendedHotels(
+            latitude: -8.4095,
+            longitude: 115.1889,
+          ),
+        ).called(1);
+
+        verify(
+          () => mockNearbyCubit.loadNearbyHotels(
+            latitude: -8.4095,
+            longitude: 115.1889,
+          ),
+        ).called(1);
+
+        await locationController.close();
+      },
+    );
 
     group('back navigation behavior', () {
       testWidgets(
