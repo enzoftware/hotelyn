@@ -41,15 +41,16 @@ class HotelDetailReviewsSection extends StatelessWidget {
               'Reviews',
               style: CaliforniaTypography.h4,
             ),
-            GestureDetector(
-              onTap: onSeeAll,
-              child: Text(
-                'See All',
-                style: CaliforniaTypography.p14Medium.copyWith(
-                  color: CaliforniaColors.brandPrimary,
+            if (onSeeAll != null)
+              GestureDetector(
+                onTap: onSeeAll,
+                child: Text(
+                  'See All',
+                  style: CaliforniaTypography.p14Medium.copyWith(
+                    color: CaliforniaColors.brandPrimary,
+                  ),
                 ),
               ),
-            ),
           ],
         ),
         const SizedBox(height: CaliforniaSpacing.md),

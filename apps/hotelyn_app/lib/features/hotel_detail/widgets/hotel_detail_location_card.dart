@@ -34,15 +34,16 @@ class HotelDetailLocationCard extends StatelessWidget {
                 'Location',
                 style: CaliforniaTypography.h4,
               ),
-              GestureDetector(
-                onTap: onViewDetails,
-                child: Text(
-                  'View Details',
-                  style: CaliforniaTypography.p14Medium.copyWith(
-                    color: CaliforniaColors.brandPrimary,
+              if (onViewDetails != null)
+                GestureDetector(
+                  onTap: onViewDetails,
+                  child: Text(
+                    'View Details',
+                    style: CaliforniaTypography.p14Medium.copyWith(
+                      color: CaliforniaColors.brandPrimary,
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
           const SizedBox(height: CaliforniaSpacing.md),

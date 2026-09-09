@@ -187,5 +187,29 @@ void main() {
             ),
       ],
     );
+
+    blocTest<HotelDetailCubit, HotelDetailState>(
+      'checkAvailability emits failure when apiClient is null',
+      build: () {
+        return HotelDetailCubit(
+          hotel: testHotel,
+        );
+      },
+      act: (cubit) => cubit.checkAvailability(),
+      expect: () => [
+        const HotelDetailState(
+          hotel: testHotel,
+          status: HotelDetailStatus.loading,
+        ),
+        isA<HotelDetailState>()
+            .having((s) => s.status, 'status', HotelDetailStatus.failure)
+            .having((s) => s.hasAvailableRoom, 'hasAvailableRoom', isFalse)
+            .having(
+              (s) => s.errorMessage,
+              'errorMessage',
+              contains('API client not available'),
+            ),
+      ],
+    );
   });
 }

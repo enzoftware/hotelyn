@@ -19,30 +19,39 @@ class HotelDetailFacilities extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         for (final item in _facilities)
-          Container(
-            width: 72,
-            height: 72,
-            decoration: BoxDecoration(
-              color: CaliforniaColors.surfaceElevated,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: CaliforniaColors.borderDefault),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  item.icon,
-                  size: 24,
-                  color: CaliforniaColors.brandPrimary,
-                ),
-                const SizedBox(height: CaliforniaSpacing.xs),
-                Text(
-                  item.label,
-                  style: CaliforniaTypography.p12Medium.copyWith(
-                    color: CaliforniaColors.textSecondary,
+          Flexible(
+            child: Container(
+              constraints: const BoxConstraints(minWidth: 64, minHeight: 72),
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              padding: const EdgeInsets.symmetric(
+                horizontal: CaliforniaSpacing.xs,
+                vertical: CaliforniaSpacing.xs,
+              ),
+              decoration: BoxDecoration(
+                color: CaliforniaColors.surfaceElevated,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: CaliforniaColors.borderDefault),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    item.icon,
+                    size: 24,
+                    color: CaliforniaColors.brandPrimary,
                   ),
-                ),
-              ],
+                  const SizedBox(height: CaliforniaSpacing.xs),
+                  Text(
+                    item.label,
+                    style: CaliforniaTypography.p12Medium.copyWith(
+                      color: CaliforniaColors.textSecondary,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
           ),
       ],

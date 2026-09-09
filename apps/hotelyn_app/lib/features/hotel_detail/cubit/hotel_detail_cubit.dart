@@ -23,9 +23,10 @@ class HotelDetailCubit extends Cubit<HotelDetailState> {
     if (apiClient == null) {
       emit(
         state.copyWith(
-          status: HotelDetailStatus.loaded,
+          status: HotelDetailStatus.failure,
           rooms: const [],
-          hasAvailableRoom: true,
+          hasAvailableRoom: false,
+          errorMessage: 'API client not available',
         ),
       );
       return;

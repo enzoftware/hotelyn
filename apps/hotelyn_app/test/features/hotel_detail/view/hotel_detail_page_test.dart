@@ -151,7 +151,7 @@ void main() {
     });
 
     testWidgets(
-      'renders successfully using default cubit without injected cubit',
+      'renders Unavailable button using default cubit without injected client',
       (
         tester,
       ) async {
@@ -167,7 +167,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text('Grand Royal Palace'), findsNWidgets(2));
-        expect(find.text('Book Now'), findsOneWidget);
+        expect(find.text('Unavailable'), findsOneWidget);
       },
     );
   });
