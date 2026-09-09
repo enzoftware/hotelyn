@@ -11,6 +11,7 @@ class HotelynSearchInput extends StatelessWidget {
     this.enabled,
     this.onChanged,
     this.onSubmitted,
+    this.suffixIcon,
   });
 
   final String hintText;
@@ -20,6 +21,7 @@ class HotelynSearchInput extends StatelessWidget {
   final bool? enabled;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
+  final Widget? suffixIcon;
 
   double get _radius => 30;
 
@@ -36,6 +38,7 @@ class HotelynSearchInput extends StatelessWidget {
         filled: true,
         fillColor: LightGreyColors.lightGrey,
         prefixIcon: const Icon(Icons.search),
+        suffixIcon: suffixIcon,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(_radius)),
           borderSide: BorderSide.none,

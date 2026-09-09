@@ -3,6 +3,7 @@ import 'package:california_ui/california_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hotelyn/features/filter/filter.dart';
 import 'package:hotelyn/features/home/cubit/nearby_hotels_cubit.dart';
 import 'package:hotelyn/features/home/widgets/nearby_hotels_section.dart';
 import 'package:hotelyn/features/location/location.dart';
@@ -15,14 +16,19 @@ class _MockNearbyHotelsCubit extends MockCubit<NearbyHotelsState>
 class _MockLocationCubit extends MockCubit<LocationState>
     implements LocationCubit {}
 
+class _MockFilterCubit extends MockCubit<FilterState> implements FilterCubit {}
+
 void main() {
   late _MockNearbyHotelsCubit mockNearbyCubit;
   late _MockLocationCubit mockLocationCubit;
+  late _MockFilterCubit mockFilterCubit;
 
   setUp(() {
     mockNearbyCubit = _MockNearbyHotelsCubit();
     mockLocationCubit = _MockLocationCubit();
+    mockFilterCubit = _MockFilterCubit();
 
+    when(() => mockFilterCubit.state).thenReturn(const FilterState());
     when(() => mockLocationCubit.state).thenReturn(
       const LocationState(
         permissionStatus: LocationPermissionStatus.granted,
@@ -35,17 +41,27 @@ void main() {
     );
   });
 
-  Widget buildSubject({VoidCallback? onSeeAllTap}) {
+  Widget buildSubject({
+    FilterCubit? filterCubit,
+    VoidCallback? onSeeAllTap,
+    VoidCallback? onFilterTap,
+  }) {
     return MaterialApp(
       home: Scaffold(
         body: MultiBlocProvider(
           providers: [
             BlocProvider<LocationCubit>.value(value: mockLocationCubit),
             BlocProvider<NearbyHotelsCubit>.value(value: mockNearbyCubit),
+            BlocProvider<FilterCubit>.value(
+              value: filterCubit ?? mockFilterCubit,
+            ),
           ],
           child: CustomScrollView(
             slivers: [
-              NearbyHotelsSection(onSeeAllTap: onSeeAllTap),
+              NearbyHotelsSection(
+                onSeeAllTap: onSeeAllTap,
+                onFilterTap: onFilterTap,
+              ),
             ],
           ),
         ),
@@ -54,7 +70,9 @@ void main() {
   }
 
   group('NearbyHotelsSection', () {
-    testWidgets('renders section title and See All action', (tester) async {
+    testWidgets('renders section title, Filter, and See All actions', (
+      tester,
+    ) async {
       when(() => mockNearbyCubit.state).thenReturn(
         const NearbyHotelsInitial(),
       );
@@ -62,7 +80,21 @@ void main() {
       await tester.pumpWidget(buildSubject());
 
       expect(find.text('Nearby Hotels'), findsOneWidget);
+      expect(find.text('Filter'), findsOneWidget);
       expect(find.text('See All'), findsOneWidget);
+    });
+
+    testWidgets('invokes onFilterTap callback when tapped', (tester) async {
+      var tapped = false;
+      when(() => mockNearbyCubit.state).thenReturn(
+        const NearbyHotelsInitial(),
+      );
+
+      await tester.pumpWidget(buildSubject(onFilterTap: () => tapped = true));
+      await tester.tap(find.text('Filter'));
+      await tester.pump();
+
+      expect(tapped, isTrue);
     });
 
     testWidgets('invokes onSeeAllTap callback when tapped', (tester) async {
@@ -165,6 +197,132 @@ void main() {
       expect(find.text('Connection timed out'), findsOneWidget);
       expect(find.text('Retry'), findsOneWidget);
       expect(find.text('Choose Location'), findsOneWidget);
+    });
+
+    testWidgets('applies filter sorting when criteria updates', (
+      tester,
+    ) async {
+      const hotels = [
+        domain.Hotel(
+          id: 'n1',
+          name: 'Hotel Far',
+          city: 'Purwokerto',
+          country: 'Indonesia',
+          distanceKm: 10,
+          popularity: 5,
+        ),
+        domain.Hotel(
+          id: 'n2',
+          name: 'Hotel Close',
+          city: 'Purwokerto',
+          country: 'Indonesia',
+          distanceKm: 1,
+          popularity: 20,
+        ),
+      ];
+
+      when(() => mockNearbyCubit.state).thenReturn(
+        const NearbyHotelsLoaded(hotels: hotels),
+      );
+
+      when(() => mockFilterCubit.state).thenReturn(
+        const FilterState(
+          criteria: HotelFilterCriteria(
+            sortBy: HotelSortOption.nearestDistance,
+          ),
+        ),
+      );
+
+      await tester.pumpWidget(buildSubject());
+
+      final cardTitles = tester
+          .widgetList<CaliforniaProductCard>(
+            find.byType(CaliforniaProductCard),
+          )
+          .map((card) => card.title)
+          .toList();
+
+      expect(cardTitles, equals(['Hotel Close', 'Hotel Far']));
+    });
+
+    testWidgets(
+      'places hotels with null distance at the end when sorting nearest',
+      (
+        tester,
+      ) async {
+        const hotels = [
+          domain.Hotel(
+            id: 'n1',
+            name: 'Hotel Unknown Dist',
+            city: 'Purwokerto',
+            country: 'Indonesia',
+          ),
+          domain.Hotel(
+            id: 'n2',
+            name: 'Hotel Known Dist',
+            city: 'Purwokerto',
+            country: 'Indonesia',
+            distanceKm: 5,
+          ),
+        ];
+
+        when(() => mockNearbyCubit.state).thenReturn(
+          const NearbyHotelsLoaded(hotels: hotels),
+        );
+
+        when(() => mockFilterCubit.state).thenReturn(
+          const FilterState(
+            criteria: HotelFilterCriteria(
+              sortBy: HotelSortOption.nearestDistance,
+            ),
+          ),
+        );
+
+        await tester.pumpWidget(buildSubject());
+
+        final cardTitles = tester
+            .widgetList<CaliforniaProductCard>(
+              find.byType(CaliforniaProductCard),
+            )
+            .map((card) => card.title)
+            .toList();
+
+        expect(cardTitles, equals(['Hotel Known Dist', 'Hotel Unknown Dist']));
+      },
+    );
+
+    testWidgets('filters out hotels that do not match criteria', (
+      tester,
+    ) async {
+      const hotels = [
+        domain.Hotel(
+          id: 'h1',
+          name: 'Budget Lodge',
+          city: 'Purwokerto',
+          country: 'Indonesia',
+        ),
+      ];
+
+      when(() => mockNearbyCubit.state).thenReturn(
+        const NearbyHotelsLoaded(hotels: hotels),
+      );
+
+      // Set minPrice to 900 so the hotel with price < 450 is filtered out
+      when(() => mockFilterCubit.state).thenReturn(
+        const FilterState(
+          criteria: HotelFilterCriteria(
+            minPrice: 900,
+          ),
+        ),
+      );
+
+      await tester.pumpWidget(buildSubject());
+
+      expect(find.byType(CaliforniaProductCard), findsNothing);
+      expect(
+        find.text('No nearby hotels found in this area.'),
+        findsOneWidget,
+      );
     });
   });
 }

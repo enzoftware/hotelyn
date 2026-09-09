@@ -6,6 +6,7 @@ import 'package:hotelyn/components/navigation_bar/navigation_bar.dart';
 import 'package:hotelyn/components/navigation_bar/navigation_bar_cubit.dart';
 import 'package:hotelyn/components/navigation_bar/navigation_bar_state.dart';
 import 'package:hotelyn/core/services/clarity_service.dart';
+import 'package:hotelyn/features/filter/filter.dart';
 import 'package:hotelyn/features/home/cubit/nearby_hotels_cubit.dart';
 import 'package:hotelyn/features/home/cubit/recommended_hotels_cubit.dart';
 import 'package:hotelyn/features/home/widgets/home_header.dart';
@@ -29,6 +30,7 @@ class HomePage extends StatelessWidget {
     this.searchCubit,
     this.recommendedHotelsCubit,
     this.nearbyHotelsCubit,
+    this.filterCubit,
   });
 
   static const route = '/home';
@@ -39,6 +41,7 @@ class HomePage extends StatelessWidget {
   final SearchCubit? searchCubit;
   final RecommendedHotelsCubit? recommendedHotelsCubit;
   final NearbyHotelsCubit? nearbyHotelsCubit;
+  final FilterCubit? filterCubit;
 
   @override
   Widget build(BuildContext context) {
@@ -118,6 +121,12 @@ class HomePage extends StatelessWidget {
               return cubit;
             },
           ),
+        if (filterCubit != null)
+          BlocProvider.value(value: filterCubit!)
+        else
+          BlocProvider(
+            create: (_) => FilterCubit(),
+          ),
       ],
       child: const HomeView(),
     );
@@ -193,12 +202,14 @@ class HomeTab extends StatelessWidget {
     this.userName = 'Katherine',
     this.onNotificationTap,
     this.onSearchTap,
+    this.onFilterTap,
     super.key,
   });
 
   final String userName;
   final VoidCallback? onNotificationTap;
   final VoidCallback? onSearchTap;
+  final VoidCallback? onFilterTap;
 
   @override
   Widget build(BuildContext context) {
@@ -210,6 +221,19 @@ class HomeTab extends StatelessWidget {
             userName: userName,
             onNotificationTap: onNotificationTap,
             onSearchTap: onSearchTap,
+            onFilterTap:
+                onFilterTap ??
+                () {
+                  final filterCubit = context.read<FilterCubit?>();
+                  if (filterCubit == null) return;
+                  unawaited(
+                    HotelFilterBottomSheet.show(
+                      context,
+                      initialCriteria: filterCubit.state.criteria,
+                      onApply: filterCubit.applyCriteria,
+                    ),
+                  );
+                },
           ),
         ),
         const RecommendedHotelsSection(),

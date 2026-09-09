@@ -42,6 +42,7 @@ void main() {
       VoidCallback? onNotificationTap,
       VoidCallback? onSearchTap,
       VoidCallback? onLocationTap,
+      VoidCallback? onFilterTap,
       bool overlapsContent = false,
     }) {
       return MultiBlocProvider(
@@ -56,6 +57,7 @@ void main() {
               onNotificationTap: onNotificationTap,
               onSearchTap: onSearchTap,
               onLocationTap: onLocationTap,
+              onFilterTap: onFilterTap,
               overlapsContent: overlapsContent,
             ),
           ),
@@ -172,11 +174,26 @@ void main() {
       },
     );
 
+    testWidgets('tapping filter button in search input invokes onFilterTap', (
+      tester,
+    ) async {
+      var filterTapped = false;
+      await tester.pumpApp(
+        buildSubject(onFilterTap: () => filterTapped = true),
+      );
+
+      await tester.tap(find.byIcon(Icons.tune));
+      await tester.pumpAndSettle();
+
+      expect(filterTapped, isTrue);
+    });
+
     test('HotelynHeader delegate properties and rebuild', () {
       final delegate = HotelynHeader(userName: 'Maria');
       expect(delegate.maxExtent, 250.0);
       expect(delegate.minExtent, 240.0);
-      expect(delegate.shouldRebuild(HotelynHeader()), isFalse);
+      expect(delegate.shouldRebuild(HotelynHeader(userName: 'Maria')), isFalse);
+      expect(delegate.shouldRebuild(HotelynHeader(userName: 'Alex')), isTrue);
     });
   });
 }

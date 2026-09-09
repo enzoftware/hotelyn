@@ -4,6 +4,7 @@ import 'package:california_ui/california_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
+import 'package:hotelyn/features/filter/filter.dart';
 import 'package:hotelyn/features/home/cubit/nearby_hotels_cubit.dart';
 import 'package:hotelyn/features/location/location.dart';
 import 'package:hotelyn_domain/hotelyn_domain.dart' as domain;
@@ -19,6 +20,7 @@ class NearbyHotelsSection extends StatelessWidget {
   const NearbyHotelsSection({
     super.key,
     this.onSeeAllTap,
+    this.onFilterTap,
   });
 
   /// Optional callback invoked when the "See All" button is tapped.
@@ -26,8 +28,14 @@ class NearbyHotelsSection extends StatelessWidget {
   /// (FE-1304).
   final VoidCallback? onSeeAllTap;
 
+  /// Optional callback invoked when the filter action is tapped.
+  final VoidCallback? onFilterTap;
+
   @override
   Widget build(BuildContext context) {
+    final filterCubit = context.watch<FilterCubit?>();
+    final filterState = filterCubit?.state ?? const FilterState();
+
     return SliverToBoxAdapter(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,14 +50,40 @@ class NearbyHotelsSection extends StatelessWidget {
                   'Nearby Hotels',
                   style: HotelynTextStyle.h2,
                 ),
-                TextButton(
-                  onPressed: onSeeAllTap,
-                  child: Text(
-                    'See All',
-                    style: HotelynTextStyle.description.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextButton(
+                      onPressed:
+                          onFilterTap ??
+                          () {
+                            final cubit = context.read<FilterCubit?>();
+                            if (cubit == null) return;
+                            unawaited(
+                              HotelFilterBottomSheet.show(
+                                context,
+                                initialCriteria: cubit.state.criteria,
+                                onApply: cubit.applyCriteria,
+                              ),
+                            );
+                          },
+                      child: Text(
+                        'Filter',
+                        style: HotelynTextStyle.description.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
                     ),
-                  ),
+                    TextButton(
+                      onPressed: onSeeAllTap,
+                      child: Text(
+                        'See All',
+                        style: HotelynTextStyle.description.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -63,11 +97,13 @@ class NearbyHotelsSection extends StatelessWidget {
             builder: (context, state) => switch (state) {
               NearbyHotelsInitial() ||
               NearbyHotelsLoading() => const _LoadingShimmer(),
-              NearbyHotelsLoaded(:final hotels) when hotels.isEmpty =>
-                const _EmptyPlaceholder(),
-              NearbyHotelsLoaded(:final hotels) => _NearbyList(
-                hotels: hotels,
-              ),
+              NearbyHotelsLoaded(:final hotels) => () {
+                final filtered = _applyFilter(hotels, filterState.criteria);
+                if (filtered.isEmpty) {
+                  return const _EmptyPlaceholder();
+                }
+                return _NearbyList(hotels: filtered);
+              }(),
               NearbyHotelsFailure(:final message) => _ErrorCard(
                 message: message,
               ),
@@ -76,6 +112,32 @@ class NearbyHotelsSection extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  static List<domain.Hotel> _applyFilter(
+    List<domain.Hotel> hotels,
+    HotelFilterCriteria criteria,
+  ) {
+    // 1. Filter hotels by criteria
+    final result = hotels.where((h) => h.matchesFilter(criteria)).toList();
+
+    // 2. Sort hotels
+    switch (criteria.sortBy) {
+      case HotelSortOption.nearestDistance:
+        result.sort((a, b) {
+          final distA = a.distanceKm ?? double.infinity;
+          final distB = b.distanceKm ?? double.infinity;
+          return distA.compareTo(distB);
+        });
+      case HotelSortOption.lowestPrice:
+        result.sort((a, b) => a.pricePerNight.compareTo(b.pricePerNight));
+      case HotelSortOption.highestRating:
+        result.sort((a, b) => b.rating.compareTo(a.rating));
+      case HotelSortOption.highestPopularity:
+        result.sort((a, b) => (b.popularity ?? 0).compareTo(a.popularity ?? 0));
+    }
+
+    return result;
   }
 }
 
@@ -116,10 +178,10 @@ class _NearbyHotelItem extends StatelessWidget {
       image: const AssetImage('assets/images/hotelyn/hotelyn.png'),
       title: hotel.name,
       location: locationText,
-      pricePerNight: r'$84',
+      pricePerNight: '\$${hotel.pricePerNight.round()}',
       pricePeriodLabel: ' / Night',
-      rating: 4.8,
-      reviewCount: 84,
+      rating: hotel.rating,
+      reviewCount: hotel.reviewCount,
       reviewCountLabel: (count) => ' ($count Reviews)',
       onTap: () {
         // TODO(FE-1305): Navigate to hotel detail.
