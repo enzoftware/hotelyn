@@ -119,6 +119,66 @@ void main() {
         expect(result, isNotEmpty);
         expect(result.first.id, 'mock-1');
       });
+
+      test(
+        'returns empty list when both APIs empty and fallbackToMock is false',
+        () async {
+          final noFallbackRepo = AppHotelRepository(
+            apiClient: mockApiClient,
+            fallbackToMock: false,
+          );
+
+          when(
+            () => mockApiClient.getRecommendedHotels(
+              lat: any(named: 'lat'),
+              lng: any(named: 'lng'),
+              radiusKm: any(named: 'radiusKm'),
+            ),
+          ).thenAnswer((_) async => <domain.Hotel>[]);
+
+          when(
+            () => mockApiClient.getNearbyHotels(
+              lat: any(named: 'lat'),
+              lng: any(named: 'lng'),
+              radiusKm: any(named: 'radiusKm'),
+            ),
+          ).thenAnswer((_) async => <domain.Hotel>[]);
+
+          final result = await noFallbackRepo.recommendedHotels(
+            latitude: -7.42,
+            longitude: 109.23,
+            radiusKm: 50,
+          );
+
+          expect(result, isEmpty);
+        },
+      );
+
+      test('rethrows ApiException when fallbackToMock is false', () async {
+        final noFallbackRepo = AppHotelRepository(
+          apiClient: mockApiClient,
+          fallbackToMock: false,
+        );
+
+        when(
+          () => mockApiClient.getRecommendedHotels(
+            lat: any(named: 'lat'),
+            lng: any(named: 'lng'),
+            radiusKm: any(named: 'radiusKm'),
+          ),
+        ).thenThrow(
+          const ApiException('Server error', statusCode: 500),
+        );
+
+        expect(
+          () => noFallbackRepo.recommendedHotels(
+            latitude: -7.42,
+            longitude: 109.23,
+            radiusKm: 50,
+          ),
+          throwsA(isA<ApiException>()),
+        );
+      });
     });
 
     group('nearbyHotels', () {
@@ -177,6 +237,58 @@ void main() {
         );
 
         expect(result, isNotEmpty);
+      });
+
+      test(
+        'returns empty list when nearby is empty and fallbackToMock is false',
+        () async {
+          final noFallbackRepo = AppHotelRepository(
+            apiClient: mockApiClient,
+            fallbackToMock: false,
+          );
+
+          when(
+            () => mockApiClient.getNearbyHotels(
+              lat: any(named: 'lat'),
+              lng: any(named: 'lng'),
+              radiusKm: any(named: 'radiusKm'),
+            ),
+          ).thenAnswer((_) async => <domain.Hotel>[]);
+
+          final result = await noFallbackRepo.nearbyHotels(
+            latitude: -7.42,
+            longitude: 109.23,
+            radiusKm: 50,
+          );
+
+          expect(result, isEmpty);
+        },
+      );
+
+      test('rethrows ApiException when fallbackToMock is false', () async {
+        final noFallbackRepo = AppHotelRepository(
+          apiClient: mockApiClient,
+          fallbackToMock: false,
+        );
+
+        when(
+          () => mockApiClient.getNearbyHotels(
+            lat: any(named: 'lat'),
+            lng: any(named: 'lng'),
+            radiusKm: any(named: 'radiusKm'),
+          ),
+        ).thenThrow(
+          const ApiException('Timeout', statusCode: 408),
+        );
+
+        expect(
+          () => noFallbackRepo.nearbyHotels(
+            latitude: -7.42,
+            longitude: 109.23,
+            radiusKm: 50,
+          ),
+          throwsA(isA<ApiException>()),
+        );
       });
     });
 

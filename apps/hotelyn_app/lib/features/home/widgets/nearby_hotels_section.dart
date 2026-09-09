@@ -17,10 +17,25 @@ import 'package:hotelyn_domain/hotelyn_domain.dart' as domain;
 /// empty placeholder, error state, and manual location fallback routing
 /// if permission is denied.
 class NearbyHotelsSection extends StatelessWidget {
-  const NearbyHotelsSection({super.key});
+  const NearbyHotelsSection({
+    super.key,
+    this.onSeeAllTap,
+    this.onFilterTap,
+  });
+
+  /// Optional callback invoked when the "See All" button is tapped.
+  /// When null, the action remains disabled until search/filter integration
+  /// (FE-1304).
+  final VoidCallback? onSeeAllTap;
+
+  /// Optional callback invoked when the filter action is tapped.
+  final VoidCallback? onFilterTap;
 
   @override
   Widget build(BuildContext context) {
+    final filterCubit = context.watch<FilterCubit?>();
+    final filterState = filterCubit?.state ?? const FilterState();
+
     return SliverToBoxAdapter(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,23 +50,39 @@ class NearbyHotelsSection extends StatelessWidget {
                   'Nearby Hotels',
                   style: HotelynTextStyle.h2,
                 ),
-                TextButton(
-                  onPressed: () {
-                    final filterCubit = context.read<FilterCubit>();
-                    unawaited(
-                      HotelFilterBottomSheet.show(
-                        context,
-                        initialCriteria: filterCubit.state.criteria,
-                        onApply: filterCubit.applyCriteria,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextButton(
+                      onPressed:
+                          onFilterTap ??
+                          () {
+                            final cubit = context.read<FilterCubit>();
+                            unawaited(
+                              HotelFilterBottomSheet.show(
+                                context,
+                                initialCriteria: cubit.state.criteria,
+                                onApply: cubit.applyCriteria,
+                              ),
+                            );
+                          },
+                      child: Text(
+                        'Filter',
+                        style: HotelynTextStyle.description.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                       ),
-                    );
-                  },
-                  child: Text(
-                    'Filter',
-                    style: HotelynTextStyle.description.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
                     ),
-                  ),
+                    TextButton(
+                      onPressed: onSeeAllTap,
+                      child: Text(
+                        'See All',
+                        style: HotelynTextStyle.description.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -61,24 +92,20 @@ class NearbyHotelsSection extends StatelessWidget {
             child: LocationFallbackBanner(),
           ),
           const SizedBox(height: 8),
-          BlocBuilder<FilterCubit, FilterState>(
-            builder: (context, filterState) {
-              return BlocBuilder<NearbyHotelsCubit, NearbyHotelsState>(
-                builder: (context, state) => switch (state) {
-                  NearbyHotelsInitial() ||
-                  NearbyHotelsLoading() => const _LoadingShimmer(),
-                  NearbyHotelsLoaded(:final hotels) => () {
-                    final filtered = _applyFilter(hotels, filterState.criteria);
-                    if (filtered.isEmpty) {
-                      return const _EmptyPlaceholder();
-                    }
-                    return _NearbyList(hotels: filtered);
-                  }(),
-                  NearbyHotelsFailure(:final message) => _ErrorCard(
-                    message: message,
-                  ),
-                },
-              );
+          BlocBuilder<NearbyHotelsCubit, NearbyHotelsState>(
+            builder: (context, state) => switch (state) {
+              NearbyHotelsInitial() ||
+              NearbyHotelsLoading() => const _LoadingShimmer(),
+              NearbyHotelsLoaded(:final hotels) => () {
+                final filtered = _applyFilter(hotels, filterState.criteria);
+                if (filtered.isEmpty) {
+                  return const _EmptyPlaceholder();
+                }
+                return _NearbyList(hotels: filtered);
+              }(),
+              NearbyHotelsFailure(:final message) => _ErrorCard(
+                message: message,
+              ),
             },
           ),
         ],

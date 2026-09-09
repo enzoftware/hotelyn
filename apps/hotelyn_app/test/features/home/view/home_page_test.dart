@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,9 +17,18 @@ import 'package:hotelyn/features/profile/profile_cubit.dart';
 import 'package:hotelyn/features/profile/profile_tab.dart';
 import 'package:hotelyn/features/search/recent_search/cubit/search_cubit.dart';
 import 'package:hotelyn/features/search/recent_search/recent_search_tab.dart';
+import 'package:hotelyn_domain/hotelyn_domain.dart' as domain;
 import 'package:mocktail/mocktail.dart';
 
 import '../../../helpers/helpers.dart';
+
+class _MockRecommendedHotelsCubit extends MockCubit<RecommendedHotelsState>
+    implements RecommendedHotelsCubit {}
+
+class _MockNearbyHotelsCubit extends MockCubit<NearbyHotelsState>
+    implements NearbyHotelsCubit {}
+
+class _MockHotelRepository extends Mock implements domain.HotelRepository {}
 
 void main() {
   group('HomePage', () {
@@ -56,6 +68,8 @@ void main() {
       ProfileCubit? profileCubit,
       MessagesCubit? messagesCubit,
       SearchCubit? searchCubit,
+      RecommendedHotelsCubit? recommendedHotelsCubit,
+      NearbyHotelsCubit? nearbyHotelsCubit,
     }) {
       return RepositoryProvider<ClarityService>.value(
         value: clarityService,
@@ -66,6 +80,8 @@ void main() {
             profileCubit: profileCubit,
             messagesCubit: messagesCubit,
             searchCubit: searchCubit,
+            recommendedHotelsCubit: recommendedHotelsCubit,
+            nearbyHotelsCubit: nearbyHotelsCubit,
           ),
         ),
       );
@@ -140,6 +156,188 @@ void main() {
 
       expect(navigationBarCubit.state.selectedTabIndex, 1);
     });
+
+    testWidgets(
+      'reloads recommended and nearby hotels when LocationCubit coordinates '
+      'change',
+      (tester) async {
+        final locationController = StreamController<LocationState>.broadcast();
+        final mockRecCubit = _MockRecommendedHotelsCubit();
+        final mockNearbyCubit = _MockNearbyHotelsCubit();
+
+        when(() => mockRecCubit.state).thenReturn(
+          const RecommendedHotelsInitial(),
+        );
+        when(
+          () => mockRecCubit.loadRecommendedHotels(
+            latitude: any(named: 'latitude'),
+            longitude: any(named: 'longitude'),
+          ),
+        ).thenAnswer((_) async {});
+
+        when(() => mockNearbyCubit.state).thenReturn(
+          const NearbyHotelsInitial(),
+        );
+        when(
+          () => mockNearbyCubit.loadNearbyHotels(
+            latitude: any(named: 'latitude'),
+            longitude: any(named: 'longitude'),
+          ),
+        ).thenAnswer((_) async {});
+
+        when(() => locationCubit.stream).thenAnswer(
+          (_) => locationController.stream,
+        );
+
+        await tester.pumpApp(
+          buildSubject(
+            recommendedHotelsCubit: mockRecCubit,
+            nearbyHotelsCubit: mockNearbyCubit,
+          ),
+        );
+
+        locationController.add(
+          const LocationState(
+            userLocation: UserLocation(
+              latitude: -8.4095,
+              longitude: 115.1889,
+              cityName: 'Bali, Indonesia',
+            ),
+          ),
+        );
+        await tester.pump();
+
+        verify(
+          () => mockRecCubit.loadRecommendedHotels(
+            latitude: -8.4095,
+            longitude: 115.1889,
+          ),
+        ).called(1);
+
+        verify(
+          () => mockNearbyCubit.loadNearbyHotels(
+            latitude: -8.4095,
+            longitude: 115.1889,
+          ),
+        ).called(1);
+
+        await locationController.close();
+      },
+    );
+
+    testWidgets(
+      'delayed response for location A completing after location B only leaves '
+      'location B results visible',
+      (tester) async {
+        final locationController = StreamController<LocationState>.broadcast();
+        final mockRepo = _MockHotelRepository();
+
+        final recCompleterA = Completer<List<domain.Hotel>>();
+        final recCompleterB = Completer<List<domain.Hotel>>();
+        final nearbyCompleterA = Completer<List<domain.Hotel>>();
+        final nearbyCompleterB = Completer<List<domain.Hotel>>();
+
+        const locationA = UserLocation(
+          latitude: 10,
+          longitude: 20,
+          cityName: 'Location A',
+        );
+        const locationB = UserLocation(
+          latitude: 30,
+          longitude: 40,
+          cityName: 'Location B',
+        );
+
+        const hotelA = domain.Hotel(
+          id: 'hotel-a',
+          name: 'Hotel Alpha In A',
+          city: 'Location A',
+          country: 'Indonesia',
+        );
+        const hotelB = domain.Hotel(
+          id: 'hotel-b',
+          name: 'Hotel Bravo In B',
+          city: 'Location B',
+          country: 'Indonesia',
+        );
+
+        when(
+          () => mockRepo.recommendedHotels(
+            latitude: locationA.latitude,
+            longitude: locationA.longitude,
+            radiusKm: any(named: 'radiusKm'),
+          ),
+        ).thenAnswer((_) => recCompleterA.future);
+
+        when(
+          () => mockRepo.recommendedHotels(
+            latitude: locationB.latitude,
+            longitude: locationB.longitude,
+            radiusKm: any(named: 'radiusKm'),
+          ),
+        ).thenAnswer((_) => recCompleterB.future);
+
+        when(
+          () => mockRepo.nearbyHotels(
+            latitude: locationA.latitude,
+            longitude: locationA.longitude,
+            radiusKm: any(named: 'radiusKm'),
+          ),
+        ).thenAnswer((_) => nearbyCompleterA.future);
+
+        when(
+          () => mockRepo.nearbyHotels(
+            latitude: locationB.latitude,
+            longitude: locationB.longitude,
+            radiusKm: any(named: 'radiusKm'),
+          ),
+        ).thenAnswer((_) => nearbyCompleterB.future);
+
+        when(() => locationCubit.stream).thenAnswer(
+          (_) => locationController.stream,
+        );
+
+        final recCubit = RecommendedHotelsCubit(hotelRepository: mockRepo);
+        final nearbyCubit = NearbyHotelsCubit(hotelRepository: mockRepo);
+
+        await tester.pumpApp(
+          buildSubject(
+            recommendedHotelsCubit: recCubit,
+            nearbyHotelsCubit: nearbyCubit,
+          ),
+        );
+
+        // Location A update triggers initial loads
+        locationController.add(const LocationState(userLocation: locationA));
+        await tester.pump();
+
+        // Location B update triggers subsequent loads before Location A
+        // resolves
+        locationController.add(const LocationState(userLocation: locationB));
+        await tester.pump();
+
+        // Location B completes first
+        recCompleterB.complete([hotelB]);
+        nearbyCompleterB.complete([hotelB]);
+        await tester.pumpAndSettle();
+
+        // Verify Location B results are visible
+        expect(find.text('Hotel Bravo In B'), findsWidgets);
+        expect(find.text('Hotel Alpha In A'), findsNothing);
+
+        // Location A finishes afterwards (delayed response)
+        recCompleterA.complete([hotelA]);
+        nearbyCompleterA.complete([hotelA]);
+        await tester.pumpAndSettle();
+
+        // Verify Location B results remain visible and stale Location A
+        // results are suppressed
+        expect(find.text('Hotel Bravo In B'), findsWidgets);
+        expect(find.text('Hotel Alpha In A'), findsNothing);
+
+        await locationController.close();
+      },
+    );
 
     group('back navigation behavior', () {
       testWidgets(

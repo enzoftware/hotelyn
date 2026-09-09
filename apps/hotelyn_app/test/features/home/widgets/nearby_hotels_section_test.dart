@@ -41,7 +41,11 @@ void main() {
     );
   });
 
-  Widget buildSubject({FilterCubit? filterCubit}) {
+  Widget buildSubject({
+    FilterCubit? filterCubit,
+    VoidCallback? onSeeAllTap,
+    VoidCallback? onFilterTap,
+  }) {
     return MaterialApp(
       home: Scaffold(
         body: MultiBlocProvider(
@@ -52,9 +56,12 @@ void main() {
               value: filterCubit ?? mockFilterCubit,
             ),
           ],
-          child: const CustomScrollView(
+          child: CustomScrollView(
             slivers: [
-              NearbyHotelsSection(),
+              NearbyHotelsSection(
+                onSeeAllTap: onSeeAllTap,
+                onFilterTap: onFilterTap,
+              ),
             ],
           ),
         ),
@@ -63,7 +70,9 @@ void main() {
   }
 
   group('NearbyHotelsSection', () {
-    testWidgets('renders section title and Filter action', (tester) async {
+    testWidgets('renders section title, Filter, and See All actions', (
+      tester,
+    ) async {
       when(() => mockNearbyCubit.state).thenReturn(
         const NearbyHotelsInitial(),
       );
@@ -72,6 +81,48 @@ void main() {
 
       expect(find.text('Nearby Hotels'), findsOneWidget);
       expect(find.text('Filter'), findsOneWidget);
+      expect(find.text('See All'), findsOneWidget);
+    });
+
+    testWidgets('invokes onFilterTap callback when tapped', (tester) async {
+      var tapped = false;
+      when(() => mockNearbyCubit.state).thenReturn(
+        const NearbyHotelsInitial(),
+      );
+
+      await tester.pumpWidget(buildSubject(onFilterTap: () => tapped = true));
+      await tester.tap(find.text('Filter'));
+      await tester.pump();
+
+      expect(tapped, isTrue);
+    });
+
+    testWidgets('invokes onSeeAllTap callback when tapped', (tester) async {
+      var tapped = false;
+      when(() => mockNearbyCubit.state).thenReturn(
+        const NearbyHotelsInitial(),
+      );
+
+      await tester.pumpWidget(buildSubject(onSeeAllTap: () => tapped = true));
+      await tester.tap(find.text('See All'));
+      await tester.pump();
+
+      expect(tapped, isTrue);
+    });
+
+    testWidgets('See All action is disabled when onSeeAllTap is null', (
+      tester,
+    ) async {
+      when(() => mockNearbyCubit.state).thenReturn(
+        const NearbyHotelsInitial(),
+      );
+
+      await tester.pumpWidget(buildSubject());
+
+      final textButton = tester.widget<TextButton>(
+        find.widgetWithText(TextButton, 'See All'),
+      );
+      expect(textButton.onPressed, isNull);
     });
 
     testWidgets('renders shimmer placeholders when loading', (tester) async {
@@ -146,6 +197,52 @@ void main() {
       expect(find.text('Connection timed out'), findsOneWidget);
       expect(find.text('Retry'), findsOneWidget);
       expect(find.text('Choose Location'), findsOneWidget);
+    });
+
+    testWidgets('applies filter sorting when criteria updates', (
+      tester,
+    ) async {
+      const hotels = [
+        domain.Hotel(
+          id: 'n1',
+          name: 'Hotel Far',
+          city: 'Purwokerto',
+          country: 'Indonesia',
+          distanceKm: 10,
+          popularity: 5,
+        ),
+        domain.Hotel(
+          id: 'n2',
+          name: 'Hotel Close',
+          city: 'Purwokerto',
+          country: 'Indonesia',
+          distanceKm: 1,
+          popularity: 20,
+        ),
+      ];
+
+      when(() => mockNearbyCubit.state).thenReturn(
+        const NearbyHotelsLoaded(hotels: hotels),
+      );
+
+      when(() => mockFilterCubit.state).thenReturn(
+        const FilterState(
+          criteria: HotelFilterCriteria(
+            sortBy: HotelSortOption.nearestDistance,
+          ),
+        ),
+      );
+
+      await tester.pumpWidget(buildSubject());
+
+      final cardTitles = tester
+          .widgetList<CaliforniaProductCard>(
+            find.byType(CaliforniaProductCard),
+          )
+          .map((card) => card.title)
+          .toList();
+
+      expect(cardTitles, equals(['Hotel Close', 'Hotel Far']));
     });
   });
 }
