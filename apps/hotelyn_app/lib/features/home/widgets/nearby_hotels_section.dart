@@ -57,7 +57,8 @@ class NearbyHotelsSection extends StatelessWidget {
                       onPressed:
                           onFilterTap ??
                           () {
-                            final cubit = context.read<FilterCubit>();
+                            final cubit = context.read<FilterCubit?>();
+                            if (cubit == null) return;
                             unawaited(
                               HotelFilterBottomSheet.show(
                                 context,
@@ -117,14 +118,23 @@ class NearbyHotelsSection extends StatelessWidget {
     List<domain.Hotel> hotels,
     HotelFilterCriteria criteria,
   ) {
-    var result = hotels;
+    // 1. Filter hotels by criteria
+    final result = hotels.where((h) => h.matchesFilter(criteria)).toList();
 
-    if (criteria.sortBy == HotelSortOption.nearestDistance) {
-      result = List<domain.Hotel>.from(result)
-        ..sort((a, b) => (a.distanceKm ?? 0).compareTo(b.distanceKm ?? 0));
-    } else if (criteria.sortBy == HotelSortOption.highestPopularity) {
-      result = List<domain.Hotel>.from(result)
-        ..sort((a, b) => (b.popularity ?? 0).compareTo(a.popularity ?? 0));
+    // 2. Sort hotels
+    switch (criteria.sortBy) {
+      case HotelSortOption.nearestDistance:
+        result.sort((a, b) {
+          final distA = a.distanceKm ?? double.infinity;
+          final distB = b.distanceKm ?? double.infinity;
+          return distA.compareTo(distB);
+        });
+      case HotelSortOption.lowestPrice:
+        result.sort((a, b) => a.pricePerNight.compareTo(b.pricePerNight));
+      case HotelSortOption.highestRating:
+        result.sort((a, b) => b.rating.compareTo(a.rating));
+      case HotelSortOption.highestPopularity:
+        result.sort((a, b) => (b.popularity ?? 0).compareTo(a.popularity ?? 0));
     }
 
     return result;
@@ -168,10 +178,10 @@ class _NearbyHotelItem extends StatelessWidget {
       image: const AssetImage('assets/images/hotelyn/hotelyn.png'),
       title: hotel.name,
       location: locationText,
-      pricePerNight: r'$84',
+      pricePerNight: '\$${hotel.pricePerNight.round()}',
       pricePeriodLabel: ' / Night',
-      rating: 4.8,
-      reviewCount: 84,
+      rating: hotel.rating,
+      reviewCount: hotel.reviewCount,
       reviewCountLabel: (count) => ' ($count Reviews)',
       onTap: () {
         // TODO(FE-1305): Navigate to hotel detail.

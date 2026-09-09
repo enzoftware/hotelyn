@@ -192,7 +192,8 @@ void main() {
       final delegate = HotelynHeader(userName: 'Maria');
       expect(delegate.maxExtent, 250.0);
       expect(delegate.minExtent, 240.0);
-      expect(delegate.shouldRebuild(HotelynHeader()), isFalse);
+      expect(delegate.shouldRebuild(HotelynHeader(userName: 'Maria')), isFalse);
+      expect(delegate.shouldRebuild(HotelynHeader(userName: 'Alex')), isTrue);
     });
   });
 }

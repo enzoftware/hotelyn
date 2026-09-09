@@ -244,5 +244,85 @@ void main() {
 
       expect(cardTitles, equals(['Hotel Close', 'Hotel Far']));
     });
+
+    testWidgets(
+      'places hotels with null distance at the end when sorting nearest',
+      (
+        tester,
+      ) async {
+        const hotels = [
+          domain.Hotel(
+            id: 'n1',
+            name: 'Hotel Unknown Dist',
+            city: 'Purwokerto',
+            country: 'Indonesia',
+          ),
+          domain.Hotel(
+            id: 'n2',
+            name: 'Hotel Known Dist',
+            city: 'Purwokerto',
+            country: 'Indonesia',
+            distanceKm: 5,
+          ),
+        ];
+
+        when(() => mockNearbyCubit.state).thenReturn(
+          const NearbyHotelsLoaded(hotels: hotels),
+        );
+
+        when(() => mockFilterCubit.state).thenReturn(
+          const FilterState(
+            criteria: HotelFilterCriteria(
+              sortBy: HotelSortOption.nearestDistance,
+            ),
+          ),
+        );
+
+        await tester.pumpWidget(buildSubject());
+
+        final cardTitles = tester
+            .widgetList<CaliforniaProductCard>(
+              find.byType(CaliforniaProductCard),
+            )
+            .map((card) => card.title)
+            .toList();
+
+        expect(cardTitles, equals(['Hotel Known Dist', 'Hotel Unknown Dist']));
+      },
+    );
+
+    testWidgets('filters out hotels that do not match criteria', (
+      tester,
+    ) async {
+      const hotels = [
+        domain.Hotel(
+          id: 'h1',
+          name: 'Budget Lodge',
+          city: 'Purwokerto',
+          country: 'Indonesia',
+        ),
+      ];
+
+      when(() => mockNearbyCubit.state).thenReturn(
+        const NearbyHotelsLoaded(hotels: hotels),
+      );
+
+      // Set minPrice to 900 so the hotel with price < 450 is filtered out
+      when(() => mockFilterCubit.state).thenReturn(
+        const FilterState(
+          criteria: HotelFilterCriteria(
+            minPrice: 900,
+          ),
+        ),
+      );
+
+      await tester.pumpWidget(buildSubject());
+
+      expect(find.byType(CaliforniaProductCard), findsNothing);
+      expect(
+        find.text('No nearby hotels found in this area.'),
+        findsOneWidget,
+      );
+    });
   });
 }

@@ -48,6 +48,45 @@ class FilterCubit extends Cubit<FilterState> {
     );
   }
 
+  /// Sets sort option.
+  void setSortOption(HotelSortOption sortBy) {
+    emit(
+      FilterState(
+        criteria: state.criteria.copyWith(
+          sortBy: sortBy,
+        ),
+      ),
+    );
+  }
+
+  /// Toggles an amenity in the filter criteria.
+  void toggleAmenity(HotelAmenity amenity) {
+    final updatedAmenities = Set<HotelAmenity>.from(state.criteria.amenities);
+    if (updatedAmenities.contains(amenity)) {
+      updatedAmenities.remove(amenity);
+    } else {
+      updatedAmenities.add(amenity);
+    }
+    emit(
+      FilterState(
+        criteria: state.criteria.copyWith(
+          amenities: updatedAmenities,
+        ),
+      ),
+    );
+  }
+
+  /// Sets all selected amenities.
+  void setAmenities(Set<HotelAmenity> amenities) {
+    emit(
+      FilterState(
+        criteria: state.criteria.copyWith(
+          amenities: amenities,
+        ),
+      ),
+    );
+  }
+
   /// Resets all filters back to default unfiltered state.
   void reset() {
     emit(const FilterState());

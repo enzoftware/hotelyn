@@ -51,9 +51,11 @@ class _HotelFilterBottomSheetState extends State<HotelFilterBottomSheet> {
   @override
   void initState() {
     super.initState();
+    final min = widget.initialCriteria.minPrice.clamp(0.0, 1000.0);
+    final max = widget.initialCriteria.maxPrice.clamp(0.0, 1000.0);
     _priceRange = RangeValues(
-      widget.initialCriteria.minPrice,
-      widget.initialCriteria.maxPrice,
+      min <= max ? min : 0.0,
+      min <= max ? max : 1000.0,
     );
     _availableNow = widget.initialCriteria.availableNow;
     _selectedRating = widget.initialCriteria.minRating;
@@ -279,6 +281,30 @@ class _HotelFilterBottomSheetState extends State<HotelFilterBottomSheet> {
                   ),
                 ],
               ),
+              const SizedBox(height: 24),
+              // Amenities Section
+              const Text('Amenities', style: HotelynTextStyle.h3),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final amenity in HotelAmenity.values)
+                    FilterChip(
+                      label: Text(_amenityLabel(amenity)),
+                      selected: _selectedAmenities.contains(amenity),
+                      onSelected: (selected) {
+                        setState(() {
+                          if (selected) {
+                            _selectedAmenities.add(amenity);
+                          } else {
+                            _selectedAmenities.remove(amenity);
+                          }
+                        });
+                      },
+                    ),
+                ],
+              ),
               const SizedBox(height: 32),
               // Apply Button
               CaliforniaButton.primary(
@@ -292,4 +318,13 @@ class _HotelFilterBottomSheetState extends State<HotelFilterBottomSheet> {
       ),
     );
   }
+
+  static String _amenityLabel(HotelAmenity amenity) => switch (amenity) {
+    HotelAmenity.wifi => 'Wifi',
+    HotelAmenity.swimmingPool => 'Swimming Pool',
+    HotelAmenity.parking => 'Parking',
+    HotelAmenity.restaurant => 'Restaurant',
+    HotelAmenity.gym => 'Gym',
+    HotelAmenity.freeBreakfast => 'Free Breakfast',
+  };
 }

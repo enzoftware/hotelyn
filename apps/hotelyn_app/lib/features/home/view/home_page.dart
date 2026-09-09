@@ -224,7 +224,8 @@ class HomeTab extends StatelessWidget {
             onFilterTap:
                 onFilterTap ??
                 () {
-                  final filterCubit = context.read<FilterCubit>();
+                  final filterCubit = context.read<FilterCubit?>();
+                  if (filterCubit == null) return;
                   unawaited(
                     HotelFilterBottomSheet.show(
                       context,
