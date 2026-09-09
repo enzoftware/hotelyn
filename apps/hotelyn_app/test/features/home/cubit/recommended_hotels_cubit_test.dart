@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hotelyn/features/home/cubit/recommended_hotels_cubit.dart';
@@ -133,5 +135,125 @@ void main() {
         ).called(1);
       },
     );
+
+    test('ignores results from earlier overlapping request', () async {
+      final completer1 = Completer<List<domain.Hotel>>();
+      final completer2 = Completer<List<domain.Hotel>>();
+
+      when(
+        () => mockRepository.recommendedHotels(
+          latitude: 1,
+          longitude: 1,
+          radiusKm: any(named: 'radiusKm'),
+        ),
+      ).thenAnswer((_) => completer1.future);
+
+      when(
+        () => mockRepository.recommendedHotels(
+          latitude: 2,
+          longitude: 2,
+          radiusKm: any(named: 'radiusKm'),
+        ),
+      ).thenAnswer((_) => completer2.future);
+
+      final cubit = RecommendedHotelsCubit(hotelRepository: mockRepository);
+
+      final future1 = cubit.loadRecommendedHotels(
+        latitude: 1,
+        longitude: 1,
+      );
+      final future2 = cubit.loadRecommendedHotels(
+        latitude: 2,
+        longitude: 2,
+      );
+
+      completer2.complete([testHotels[1]]);
+      await future2;
+
+      expect(
+        cubit.state,
+        isA<RecommendedHotelsLoaded>().having(
+          (s) => s.hotels,
+          'hotels',
+          [testHotels[1]],
+        ),
+      );
+
+      // Older request finishes afterwards
+      completer1.complete([testHotels[0]]);
+      await future1;
+
+      // State remains from the newer request
+      expect(
+        cubit.state,
+        isA<RecommendedHotelsLoaded>().having(
+          (s) => s.hotels,
+          'hotels',
+          [testHotels[1]],
+        ),
+      );
+
+      await cubit.close();
+    });
+
+    test('ignores errors from earlier overlapping request', () async {
+      final completer1 = Completer<List<domain.Hotel>>();
+      final completer2 = Completer<List<domain.Hotel>>();
+
+      when(
+        () => mockRepository.recommendedHotels(
+          latitude: 1,
+          longitude: 1,
+          radiusKm: any(named: 'radiusKm'),
+        ),
+      ).thenAnswer((_) => completer1.future);
+
+      when(
+        () => mockRepository.recommendedHotels(
+          latitude: 2,
+          longitude: 2,
+          radiusKm: any(named: 'radiusKm'),
+        ),
+      ).thenAnswer((_) => completer2.future);
+
+      final cubit = RecommendedHotelsCubit(hotelRepository: mockRepository);
+
+      final future1 = cubit.loadRecommendedHotels(
+        latitude: 1,
+        longitude: 1,
+      );
+      final future2 = cubit.loadRecommendedHotels(
+        latitude: 2,
+        longitude: 2,
+      );
+
+      completer2.complete([testHotels[1]]);
+      await future2;
+
+      expect(
+        cubit.state,
+        isA<RecommendedHotelsLoaded>().having(
+          (s) => s.hotels,
+          'hotels',
+          [testHotels[1]],
+        ),
+      );
+
+      // Older request fails afterwards
+      completer1.completeError(Exception('Old network error'));
+      await future1;
+
+      // State remains loaded from the newer request, not failure
+      expect(
+        cubit.state,
+        isA<RecommendedHotelsLoaded>().having(
+          (s) => s.hotels,
+          'hotels',
+          [testHotels[1]],
+        ),
+      );
+
+      await cubit.close();
+    });
   });
 }

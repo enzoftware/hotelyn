@@ -98,8 +98,10 @@ coverage/
 
 # Environment variables / secrets
 .env
+*.env
 .env.*
 !.env.example
+!**/.env.example
 
 # Dart compile-time defines (--dart-define-from-file)
 # Only *.json.example files are committed; real files stay local.
