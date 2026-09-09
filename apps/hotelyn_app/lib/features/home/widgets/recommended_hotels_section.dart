@@ -17,13 +17,15 @@ import 'package:hotelyn_domain/hotelyn_domain.dart' as domain;
 class RecommendedHotelsSection extends StatelessWidget {
   const RecommendedHotelsSection({
     super.key,
+    this.onSeeAllTap,
     this.onRetry,
   });
 
-  /// Optional callback invoked when the user taps Retry in the error state.
-  ///
-  /// If not provided, defaults to reloading recommended hotels using the
-  /// current location from [LocationCubit].
+  /// Optional callback invoked when the "See All" button is tapped.
+  final VoidCallback? onSeeAllTap;
+
+  /// Optional callback invoked when the "Retry" button is tapped on error.
+  /// If null, retries by reloading using current [LocationCubit] coordinates.
   final VoidCallback? onRetry;
 
   @override
@@ -43,9 +45,7 @@ class RecommendedHotelsSection extends StatelessWidget {
                   style: HotelynTextStyle.h2,
                 ),
                 TextButton(
-                  onPressed: () {
-                    // TODO(FE-1304): Navigate to full recommended list.
-                  },
+                  onPressed: onSeeAllTap,
                   child: Text(
                     'See All',
                     style: HotelynTextStyle.description.copyWith(
@@ -207,18 +207,20 @@ class _ErrorCard extends StatelessWidget {
                     onRetry!();
                     return;
                   }
-                  final location = context
-                      .read<LocationCubit>()
-                      .state
+                  final loc = context
+                      .read<LocationCubit?>()
+                      ?.state
                       .userLocation;
-                  unawaited(
-                    context
-                        .read<RecommendedHotelsCubit>()
-                        .loadRecommendedHotels(
-                          latitude: location.latitude,
-                          longitude: location.longitude,
-                        ),
-                  );
+                  if (loc != null) {
+                    unawaited(
+                      context
+                          .read<RecommendedHotelsCubit>()
+                          .loadRecommendedHotels(
+                            latitude: loc.latitude,
+                            longitude: loc.longitude,
+                          ),
+                    );
+                  }
                 },
                 child: const Text('Retry'),
               ),

@@ -9,10 +9,22 @@ import 'package:hotelyn_domain/hotelyn_domain.dart' as domain;
 /// catalogue is returned so the UI never shows an empty state on first launch.
 class AppHotelRepository implements domain.HotelRepository {
   /// Creates a repository backed by [apiClient].
-  const AppHotelRepository({required this.apiClient});
+  ///
+  /// Set [fallbackToMock] to `false` to propagate [ApiException]s and return
+  /// empty lists directly from the API without substituting [_mockHotels].
+  /// Defaults to `true` to ensure the home screen never renders empty in
+  /// local development before the backend is running and seeded.
+  const AppHotelRepository({
+    required this.apiClient,
+    this.fallbackToMock = true,
+  });
 
   /// The underlying API client.
   final HotelynApiClient apiClient;
+
+  /// Whether to fallback to [_mockHotels] when the API returns an empty list
+  /// or throws an [ApiException].
+  final bool fallbackToMock;
 
   @override
   Future<List<domain.Hotel>> recommendedHotels({
@@ -36,8 +48,10 @@ class AppHotelRepository implements domain.HotelRepository {
       );
       if (nearby.isNotEmpty) return nearby;
 
+      if (!fallbackToMock) return <domain.Hotel>[];
       return _mockHotels;
     } on ApiException {
+      if (!fallbackToMock) rethrow;
       return _mockHotels;
     }
   }
@@ -54,9 +68,10 @@ class AppHotelRepository implements domain.HotelRepository {
         lng: longitude,
         radiusKm: radiusKm,
       );
-      if (hotels.isNotEmpty) return hotels;
+      if (hotels.isNotEmpty || !fallbackToMock) return hotels;
       return _mockHotels;
     } on ApiException {
+      if (!fallbackToMock) rethrow;
       return _mockHotels;
     }
   }

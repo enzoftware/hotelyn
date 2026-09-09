@@ -7,31 +7,53 @@ import 'package:hotelyn/features/home/cubit/recommended_hotels_cubit.dart';
 import 'package:hotelyn/features/home/widgets/recommended_hotels_section.dart';
 import 'package:hotelyn/features/location/location.dart';
 import 'package:hotelyn_domain/hotelyn_domain.dart' as domain;
-
 import 'package:mocktail/mocktail.dart';
-
-import '../../../helpers/helpers.dart';
 
 class _MockRecommendedHotelsCubit extends MockCubit<RecommendedHotelsState>
     implements RecommendedHotelsCubit {}
 
+class _MockLocationCubit extends MockCubit<LocationState>
+    implements LocationCubit {}
+
 void main() {
   late _MockRecommendedHotelsCubit mockCubit;
+  late _MockLocationCubit mockLocationCubit;
 
   setUp(() {
     mockCubit = _MockRecommendedHotelsCubit();
+    mockLocationCubit = _MockLocationCubit();
+
+    when(() => mockLocationCubit.state).thenReturn(
+      const LocationState(
+        permissionStatus: LocationPermissionStatus.granted,
+        userLocation: UserLocation(
+          latitude: -7.4243,
+          longitude: 109.2391,
+          cityName: 'Purwokerto, Indonesia',
+        ),
+      ),
+    );
   });
 
-  Widget buildSubject() {
+  Widget buildSubject({
+    VoidCallback? onSeeAllTap,
+    VoidCallback? onRetry,
+  }) {
     return MaterialApp(
       home: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            BlocProvider<RecommendedHotelsCubit>.value(
-              value: mockCubit,
-              child: const RecommendedHotelsSection(),
-            ),
+        body: MultiBlocProvider(
+          providers: [
+            BlocProvider<LocationCubit>.value(value: mockLocationCubit),
+            BlocProvider<RecommendedHotelsCubit>.value(value: mockCubit),
           ],
+          child: CustomScrollView(
+            slivers: [
+              RecommendedHotelsSection(
+                onSeeAllTap: onSeeAllTap,
+                onRetry: onRetry,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -122,40 +144,37 @@ void main() {
       expect(find.text('Retry'), findsOneWidget);
     });
 
-    testWidgets('tapping Retry calls onRetry when provided', (tester) async {
+    testWidgets('invokes onSeeAllTap callback when tapped', (tester) async {
+      var tapped = false;
       when(() => mockCubit.state).thenReturn(
-        const RecommendedHotelsFailure(message: 'Network error'),
-      );
-      var retried = false;
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: CustomScrollView(
-              slivers: [
-                BlocProvider<RecommendedHotelsCubit>.value(
-                  value: mockCubit,
-                  child: RecommendedHotelsSection(
-                    onRetry: () => retried = true,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        const RecommendedHotelsInitial(),
       );
 
-      await tester.tap(find.text('Retry'));
+      await tester.pumpWidget(buildSubject(onSeeAllTap: () => tapped = true));
+      await tester.tap(find.text('See All'));
       await tester.pump();
 
-      expect(retried, isTrue);
+      expect(tapped, isTrue);
+    });
+
+    testWidgets('See All action is disabled when onSeeAllTap is null', (
+      tester,
+    ) async {
+      when(() => mockCubit.state).thenReturn(
+        const RecommendedHotelsInitial(),
+      );
+
+      await tester.pumpWidget(buildSubject());
+
+      final textButton = tester.widget<TextButton>(
+        find.widgetWithText(TextButton, 'See All'),
+      );
+      expect(textButton.onPressed, isNull);
     });
 
     testWidgets(
-      'tapping Retry uses LocationCubit to reload hotels by default',
-      (
-        tester,
-      ) async {
+      'tapping Retry triggers loadRecommendedHotels using LocationCubit',
+      (tester) async {
         when(() => mockCubit.state).thenReturn(
           const RecommendedHotelsFailure(message: 'Network error'),
         );
@@ -166,49 +185,38 @@ void main() {
           ),
         ).thenAnswer((_) async {});
 
-        final mockLocationCubit = MockLocationCubit();
-        when(() => mockLocationCubit.state).thenReturn(
-          const LocationState(
-            userLocation: UserLocation(
-              latitude: 10,
-              longitude: 20,
-              cityName: 'Test City',
-            ),
-          ),
-        );
-
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: CustomScrollView(
-                slivers: [
-                  MultiBlocProvider(
-                    providers: [
-                      BlocProvider<RecommendedHotelsCubit>.value(
-                        value: mockCubit,
-                      ),
-                      BlocProvider<LocationCubit>.value(
-                        value: mockLocationCubit,
-                      ),
-                    ],
-                    child: const RecommendedHotelsSection(),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-
+        await tester.pumpWidget(buildSubject());
         await tester.tap(find.text('Retry'));
         await tester.pump();
 
         verify(
           () => mockCubit.loadRecommendedHotels(
-            latitude: 10,
-            longitude: 20,
+            latitude: -7.4243,
+            longitude: 109.2391,
           ),
         ).called(1);
       },
     );
+
+    testWidgets('tapping Retry invokes custom onRetry when provided', (
+      tester,
+    ) async {
+      var retried = false;
+      when(() => mockCubit.state).thenReturn(
+        const RecommendedHotelsFailure(message: 'Network error'),
+      );
+
+      await tester.pumpWidget(buildSubject(onRetry: () => retried = true));
+      await tester.tap(find.text('Retry'));
+      await tester.pump();
+
+      expect(retried, isTrue);
+      verifyNever(
+        () => mockCubit.loadRecommendedHotels(
+          latitude: any(named: 'latitude'),
+          longitude: any(named: 'longitude'),
+        ),
+      );
+    });
   });
 }

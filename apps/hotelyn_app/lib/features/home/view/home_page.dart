@@ -6,9 +6,10 @@ import 'package:hotelyn/components/navigation_bar/navigation_bar.dart';
 import 'package:hotelyn/components/navigation_bar/navigation_bar_cubit.dart';
 import 'package:hotelyn/components/navigation_bar/navigation_bar_state.dart';
 import 'package:hotelyn/core/services/clarity_service.dart';
+import 'package:hotelyn/features/home/cubit/nearby_hotels_cubit.dart';
 import 'package:hotelyn/features/home/cubit/recommended_hotels_cubit.dart';
-import 'package:hotelyn/features/home/widgets/featured_hotels_section.dart';
 import 'package:hotelyn/features/home/widgets/home_header.dart';
+import 'package:hotelyn/features/home/widgets/nearby_hotels_section.dart';
 import 'package:hotelyn/features/home/widgets/recommended_hotels_section.dart';
 import 'package:hotelyn/features/location/location.dart';
 import 'package:hotelyn/features/messages/messages_cubit.dart';
@@ -27,6 +28,7 @@ class HomePage extends StatelessWidget {
     this.messagesCubit,
     this.searchCubit,
     this.recommendedHotelsCubit,
+    this.nearbyHotelsCubit,
   });
 
   static const route = '/home';
@@ -36,6 +38,7 @@ class HomePage extends StatelessWidget {
   final MessagesCubit? messagesCubit;
   final SearchCubit? searchCubit;
   final RecommendedHotelsCubit? recommendedHotelsCubit;
+  final NearbyHotelsCubit? nearbyHotelsCubit;
 
   @override
   Widget build(BuildContext context) {
@@ -93,6 +96,28 @@ class HomePage extends StatelessWidget {
               return cubit;
             },
           ),
+        if (nearbyHotelsCubit != null)
+          BlocProvider.value(value: nearbyHotelsCubit!)
+        else
+          BlocProvider(
+            create: (context) {
+              final hotelRepo = context.read<domain.HotelRepository?>();
+              if (hotelRepo == null) {
+                return NearbyHotelsCubit.uninitialized();
+              }
+              final cubit = NearbyHotelsCubit(
+                hotelRepository: hotelRepo,
+              );
+              final location = context.read<LocationCubit>().state.userLocation;
+              unawaited(
+                cubit.loadNearbyHotels(
+                  latitude: location.latitude,
+                  longitude: location.longitude,
+                ),
+              );
+              return cubit;
+            },
+          ),
       ],
       child: const HomeView(),
     );
@@ -104,7 +129,8 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NavigationBarCubit, NavigationBarState>(
+    final locationCubit = context.read<LocationCubit?>();
+    final content = BlocBuilder<NavigationBarCubit, NavigationBarState>(
       builder: (context, state) {
         final index = state.selectedTabIndex;
         return PopScope(
@@ -131,6 +157,33 @@ class HomeView extends StatelessWidget {
           ),
         );
       },
+    );
+
+    if (locationCubit == null) {
+      return content;
+    }
+
+    return BlocListener<LocationCubit, LocationState>(
+      bloc: locationCubit,
+      listenWhen: (previous, current) =>
+          previous.userLocation.latitude != current.userLocation.latitude ||
+          previous.userLocation.longitude != current.userLocation.longitude,
+      listener: (context, state) {
+        final loc = state.userLocation;
+        unawaited(
+          context.read<RecommendedHotelsCubit?>()?.loadRecommendedHotels(
+            latitude: loc.latitude,
+            longitude: loc.longitude,
+          ),
+        );
+        unawaited(
+          context.read<NearbyHotelsCubit?>()?.loadNearbyHotels(
+            latitude: loc.latitude,
+            longitude: loc.longitude,
+          ),
+        );
+      },
+      child: content,
     );
   }
 }
@@ -160,7 +213,7 @@ class HomeTab extends StatelessWidget {
           ),
         ),
         const RecommendedHotelsSection(),
-        const FeaturedHotelsSection(),
+        const NearbyHotelsSection(),
       ],
     );
   }
