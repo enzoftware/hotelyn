@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:california_ui/california_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/features/home/cubit/recommended_hotels_cubit.dart';
+import 'package:hotelyn/features/location/location.dart';
 import 'package:hotelyn_domain/hotelyn_domain.dart' as domain;
 
 /// Horizontal carousel of recommended hotel cards.
@@ -12,7 +15,16 @@ import 'package:hotelyn_domain/hotelyn_domain.dart' as domain;
 /// scrolling list, matching the Figma "Product List 1" component
 /// (node `200:13109`).
 class RecommendedHotelsSection extends StatelessWidget {
-  const RecommendedHotelsSection({super.key});
+  const RecommendedHotelsSection({
+    super.key,
+    this.onRetry,
+  });
+
+  /// Optional callback invoked when the user taps Retry in the error state.
+  ///
+  /// If not provided, defaults to reloading recommended hotels using the
+  /// current location from [LocationCubit].
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +68,7 @@ class RecommendedHotelsSection extends StatelessWidget {
               ),
               RecommendedHotelsFailure(:final message) => _ErrorCard(
                 message: message,
+                onRetry: onRetry,
               ),
             },
           ),
@@ -154,9 +167,13 @@ class _EmptyPlaceholder extends StatelessWidget {
 }
 
 class _ErrorCard extends StatelessWidget {
-  const _ErrorCard({required this.message});
+  const _ErrorCard({
+    required this.message,
+    this.onRetry,
+  });
 
   final String message;
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -186,7 +203,22 @@ class _ErrorCard extends StatelessWidget {
               const SizedBox(height: 12),
               TextButton(
                 onPressed: () {
-                  // Retry by re-reading location from cubit.
+                  if (onRetry != null) {
+                    onRetry!();
+                    return;
+                  }
+                  final location = context
+                      .read<LocationCubit>()
+                      .state
+                      .userLocation;
+                  unawaited(
+                    context
+                        .read<RecommendedHotelsCubit>()
+                        .loadRecommendedHotels(
+                          latitude: location.latitude,
+                          longitude: location.longitude,
+                        ),
+                  );
                 },
                 child: const Text('Retry'),
               ),
