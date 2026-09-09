@@ -9,6 +9,7 @@ import 'package:hotelyn/components/theme/hotelyn_colors.dart';
 import 'package:hotelyn/core/domain/repository/repository.dart';
 import 'package:hotelyn/core/services/clarity_service.dart';
 import 'package:hotelyn/features/location/location.dart';
+import 'package:hotelyn_api_client/hotelyn_api_client.dart';
 import 'package:hotelyn_domain/hotelyn_domain.dart' as domain;
 
 class HotelynApp extends StatelessWidget {
@@ -39,6 +40,10 @@ class HotelynApp extends StatelessWidget {
           RepositoryProvider<domain.HotelRepository>.value(
             value: hotelRepository,
           ),
+          if (hotelRepository is AppHotelRepository)
+            RepositoryProvider<HotelynApiClient>.value(
+              value: (hotelRepository as AppHotelRepository).apiClient,
+            ),
         ],
         child: BlocProvider(
           create: (_) {

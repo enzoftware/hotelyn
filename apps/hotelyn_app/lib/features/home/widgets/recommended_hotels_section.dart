@@ -4,8 +4,10 @@ import 'package:california_ui/california_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hotelyn/components/text_style/hotelyn_text_style.dart';
 import 'package:hotelyn/features/home/cubit/recommended_hotels_cubit.dart';
+import 'package:hotelyn/features/hotel_detail/hotel_detail.dart';
 import 'package:hotelyn/features/location/location.dart';
 import 'package:hotelyn_domain/hotelyn_domain.dart' as domain;
 
@@ -113,7 +115,7 @@ class _HotelCarousel extends StatelessWidget {
                 ),
               ],
               onTap: () {
-                // TODO(FE-1305): Navigate to hotel detail.
+                unawaited(context.push(HotelDetailPage.route, extra: hotel));
               },
             ),
           );
