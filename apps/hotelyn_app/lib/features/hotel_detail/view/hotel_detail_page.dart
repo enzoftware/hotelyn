@@ -42,7 +42,12 @@ class HotelDetailPage extends StatelessWidget {
 
     return BlocProvider(
       create: (context) {
-        final apiClient = context.read<HotelynApiClient?>();
+        HotelynApiClient? apiClient;
+        try {
+          apiClient = context.read<HotelynApiClient>();
+        } on Exception catch (_) {
+          apiClient = null;
+        }
         final c = HotelDetailCubit(hotel: hotel, apiClient: apiClient);
         unawaited(c.checkAvailability());
         return c;
@@ -189,11 +194,16 @@ class _HotelDetailViewState extends State<_HotelDetailView> {
             bottom: 0,
             child: BlocBuilder<HotelDetailCubit, HotelDetailState>(
               builder: (context, state) {
-                final displayPrice = state.rooms.isNotEmpty
-                    ? '\$${state.rooms.first.pricePerNight.toStringAsFixed(0)}'
+                final availableRooms = state.rooms.where(
+                  (room) => room.availableNow,
+                );
+                final displayPrice = availableRooms.isNotEmpty
+                    ? '\$${availableRooms.first.pricePerNight.toStringAsFixed(
+                        0,
+                      )}'
                     : '\$${hotel.pricePerNight.round()}';
                 final isAvailable =
-                    state.status != HotelDetailStatus.loading &&
+                    state.status == HotelDetailStatus.loaded &&
                     state.hasAvailableRoom;
                 return HotelDetailBottomBar(
                   price: displayPrice,

@@ -30,15 +30,12 @@ class AppRouter {
       ),
       GoRoute(
         path: '/hotel-detail',
+        redirect: (context, state) {
+          if (state.extra is! domain.Hotel) return '/home';
+          return null;
+        },
         builder: (context, state) {
-          final hotel = state.extra is domain.Hotel
-              ? state.extra! as domain.Hotel
-              : const domain.Hotel(
-                  id: 'default',
-                  name: 'Grand Royal Hotel',
-                  city: 'Purwokerto',
-                  country: 'Indonesia',
-                );
+          final hotel = state.extra! as domain.Hotel;
           return HotelDetailPage(hotel: hotel);
         },
       ),

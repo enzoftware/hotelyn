@@ -50,13 +50,12 @@ class HotelDetailCubit extends Cubit<HotelDetailState> {
         name: 'HotelDetailCubit',
       );
       if (isClosed) return;
-      // If endpoint fails or is offline, fall back to available to not block
-      // booking.
       emit(
         state.copyWith(
-          status: HotelDetailStatus.loaded,
+          status: HotelDetailStatus.failure,
           rooms: const [],
-          hasAvailableRoom: true,
+          hasAvailableRoom: false,
+          errorMessage: error.toString(),
         ),
       );
     } on Exception catch (error, stack) {

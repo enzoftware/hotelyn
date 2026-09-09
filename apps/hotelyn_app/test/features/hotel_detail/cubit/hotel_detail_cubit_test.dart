@@ -134,7 +134,7 @@ void main() {
     );
 
     blocTest<HotelDetailCubit, HotelDetailState>(
-      'checkAvailability handles ApiException gracefully with fallback',
+      'checkAvailability handles ApiException with failure status',
       build: () {
         when(
           () => apiClient.getRooms(hotelId: 'hotel-1'),
@@ -150,10 +150,14 @@ void main() {
           hotel: testHotel,
           status: HotelDetailStatus.loading,
         ),
-        const HotelDetailState(
-          hotel: testHotel,
-          status: HotelDetailStatus.loaded,
-        ),
+        isA<HotelDetailState>()
+            .having((s) => s.status, 'status', HotelDetailStatus.failure)
+            .having((s) => s.hasAvailableRoom, 'hasAvailableRoom', isFalse)
+            .having(
+              (s) => s.errorMessage,
+              'errorMessage',
+              contains('Server error'),
+            ),
       ],
     );
 

@@ -38,21 +38,25 @@ class HotelDetailBottomBar extends StatelessWidget {
           ),
           child: Row(
             children: [
-              GestureDetector(
-                onTap: onMessageTap,
-                child: Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: CaliforniaColors.borderDefault,
+              Semantics(
+                button: true,
+                label: 'Message the host',
+                child: GestureDetector(
+                  onTap: onMessageTap,
+                  child: Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: CaliforniaColors.borderDefault,
+                      ),
                     ),
-                  ),
-                  child: const Icon(
-                    CupertinoIcons.chat_bubble_2,
-                    size: 20,
-                    color: CaliforniaColors.textPrimary,
+                    child: const Icon(
+                      CupertinoIcons.chat_bubble_2,
+                      size: 20,
+                      color: CaliforniaColors.textPrimary,
+                    ),
                   ),
                 ),
               ),
