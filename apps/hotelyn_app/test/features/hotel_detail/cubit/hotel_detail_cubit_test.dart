@@ -108,6 +108,32 @@ void main() {
     );
 
     blocTest<HotelDetailCubit, HotelDetailState>(
+      'checkAvailability emits loaded with hasAvailableRoom false '
+      'when hotel has no rooms in catalogue',
+      build: () {
+        when(
+          () => apiClient.getRooms(hotelId: 'hotel-1'),
+        ).thenAnswer((_) async => []);
+        return HotelDetailCubit(
+          hotel: testHotel,
+          apiClient: apiClient,
+        );
+      },
+      act: (cubit) => cubit.checkAvailability(),
+      expect: () => [
+        const HotelDetailState(
+          hotel: testHotel,
+          status: HotelDetailStatus.loading,
+        ),
+        const HotelDetailState(
+          hotel: testHotel,
+          status: HotelDetailStatus.loaded,
+          hasAvailableRoom: false,
+        ),
+      ],
+    );
+
+    blocTest<HotelDetailCubit, HotelDetailState>(
       'checkAvailability handles ApiException gracefully with fallback',
       build: () {
         when(

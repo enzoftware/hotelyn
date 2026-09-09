@@ -78,7 +78,9 @@ class AppHotelRepository implements domain.HotelRepository {
 
   @override
   Future<domain.Hotel?> hotelById(String hotelId) async {
-    // Not needed for FE-1302; will be implemented in FE-1305.
+    for (final hotel in _mockHotels) {
+      if (hotel.id == hotelId) return hotel;
+    }
     return null;
   }
 

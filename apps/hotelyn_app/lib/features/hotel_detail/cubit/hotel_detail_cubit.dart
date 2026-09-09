@@ -11,19 +11,30 @@ part 'hotel_detail_state.dart';
 class HotelDetailCubit extends Cubit<HotelDetailState> {
   HotelDetailCubit({
     required this.hotel,
-    required this.apiClient,
+    this.apiClient,
   }) : super(HotelDetailState.initial(hotel: hotel));
 
   final domain.Hotel hotel;
-  final HotelynApiClient apiClient;
+  final HotelynApiClient? apiClient;
 
   /// Fetches rooms for the current hotel and updates live availability.
   Future<void> checkAvailability() async {
     emit(state.copyWith(status: HotelDetailStatus.loading));
+    if (apiClient == null) {
+      emit(
+        state.copyWith(
+          status: HotelDetailStatus.loaded,
+          rooms: const [],
+          hasAvailableRoom: true,
+        ),
+      );
+      return;
+    }
     try {
-      final rooms = await apiClient.getRooms(hotelId: hotel.id);
+      final rooms = await apiClient!.getRooms(hotelId: hotel.id);
+      if (isClosed) return;
       final hasAvailableRoom =
-          rooms.isEmpty || rooms.any((room) => room.availableNow);
+          rooms.isNotEmpty && rooms.any((room) => room.availableNow);
       emit(
         state.copyWith(
           status: HotelDetailStatus.loaded,
@@ -38,6 +49,7 @@ class HotelDetailCubit extends Cubit<HotelDetailState> {
         stackTrace: stack,
         name: 'HotelDetailCubit',
       );
+      if (isClosed) return;
       // If endpoint fails or is offline, fall back to available to not block
       // booking.
       emit(
@@ -54,6 +66,7 @@ class HotelDetailCubit extends Cubit<HotelDetailState> {
         stackTrace: stack,
         name: 'HotelDetailCubit',
       );
+      if (isClosed) return;
       emit(
         state.copyWith(
           status: HotelDetailStatus.failure,

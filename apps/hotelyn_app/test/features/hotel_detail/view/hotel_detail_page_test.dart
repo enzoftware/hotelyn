@@ -121,5 +121,54 @@ void main() {
       await tester.tap(favoriteFinder);
       await tester.pumpAndSettle();
     });
+
+    testWidgets('renders distance when distanceKm is present on hotel', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(800, 1600);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+
+      const hotelWithDistance = domain.Hotel(
+        id: 'hotel-dist',
+        name: 'Hilltop Resort',
+        city: 'Bandung',
+        country: 'Indonesia',
+        distanceKm: 2.5,
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: HotelDetailPage(
+            hotel: hotelWithDistance,
+            cubit: mockCubit,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('2.5 km · Bandung, Indonesia'), findsOneWidget);
+    });
+
+    testWidgets(
+      'renders successfully using default cubit without injected cubit',
+      (
+        tester,
+      ) async {
+        tester.view.physicalSize = const Size(800, 1600);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: HotelDetailPage(hotel: testHotel),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text('Grand Royal Palace'), findsNWidgets(2));
+        expect(find.text('Book Now'), findsOneWidget);
+      },
+    );
   });
 }

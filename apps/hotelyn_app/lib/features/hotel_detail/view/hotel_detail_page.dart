@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hotelyn/features/filter/filter.dart';
 import 'package:hotelyn/features/hotel_detail/cubit/hotel_detail_cubit.dart';
 import 'package:hotelyn/features/hotel_detail/widgets/hotel_detail_bottom_bar.dart';
 import 'package:hotelyn/features/hotel_detail/widgets/hotel_detail_facilities.dart';
@@ -41,7 +42,7 @@ class HotelDetailPage extends StatelessWidget {
 
     return BlocProvider(
       create: (context) {
-        final apiClient = context.read<HotelynApiClient>();
+        final apiClient = context.read<HotelynApiClient?>();
         final c = HotelDetailCubit(hotel: hotel, apiClient: apiClient);
         unawaited(c.checkAvailability());
         return c;
@@ -67,11 +68,15 @@ class _HotelDetailViewState extends State<_HotelDetailView> {
   @override
   Widget build(BuildContext context) {
     final hotel = widget.hotel;
-    final locationText = '${hotel.city}, ${hotel.country}';
+    final distanceText = hotel.distanceKm != null
+        ? '${hotel.distanceKm!.toStringAsFixed(1)} km · '
+        : '';
+    final locationText = '$distanceText${hotel.city}, ${hotel.country}';
     final description =
         hotel.description ??
-        '${hotel.name} is a high rated hotel in $locationText with luxury '
-            'amenities, comfortable rooms, and exceptional customer service.';
+        '${hotel.name} is a high rated hotel in ${hotel.city}, '
+            '${hotel.country} with luxury amenities, comfortable rooms, '
+            'and exceptional customer service.';
 
     return Scaffold(
       backgroundColor: CaliforniaColors.surfacePrimary,
@@ -127,7 +132,8 @@ class _HotelDetailViewState extends State<_HotelDetailView> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '4.8 (120+ Reviews)',
+                            '${hotel.rating.toStringAsFixed(1)} '
+                            '(${hotel.reviewCount}+ Reviews)',
                             style: CaliforniaTypography.p14Medium.copyWith(
                               color: CaliforniaColors.textSecondary,
                             ),
@@ -185,10 +191,13 @@ class _HotelDetailViewState extends State<_HotelDetailView> {
               builder: (context, state) {
                 final displayPrice = state.rooms.isNotEmpty
                     ? '\$${state.rooms.first.pricePerNight.toStringAsFixed(0)}'
-                    : r'$46';
+                    : '\$${hotel.pricePerNight.round()}';
+                final isAvailable =
+                    state.status != HotelDetailStatus.loading &&
+                    state.hasAvailableRoom;
                 return HotelDetailBottomBar(
                   price: displayPrice,
-                  isAvailable: state.hasAvailableRoom,
+                  isAvailable: isAvailable,
                   onBookNow: () {
                     unawaited(context.push(PaymentPage.route));
                   },
