@@ -6,11 +6,14 @@ import 'package:hotelyn/features/hotel_detail/widgets/hotel_detail_bottom_bar.da
 import 'package:hotelyn/features/hotel_detail/widgets/hotel_detail_facilities.dart';
 import 'package:hotelyn/features/hotel_detail/widgets/hotel_detail_location_card.dart';
 import 'package:hotelyn/features/hotel_detail/widgets/hotel_detail_reviews_section.dart';
+import 'package:hotelyn_api_client/hotelyn_api_client.dart';
 import 'package:hotelyn_domain/hotelyn_domain.dart' as domain;
 import 'package:mocktail/mocktail.dart';
 
 class MockHotelDetailCubit extends MockCubit<HotelDetailState>
     implements HotelDetailCubit {}
+
+class MockHotelynApiClient extends Mock implements HotelynApiClient {}
 
 void main() {
   group('HotelDetailPage', () {
@@ -30,6 +33,7 @@ void main() {
         const HotelDetailState(
           hotel: testHotel,
           status: HotelDetailStatus.loaded,
+          hasAvailableRoom: true,
         ),
       );
     });
@@ -96,7 +100,6 @@ void main() {
         const HotelDetailState(
           hotel: testHotel,
           status: HotelDetailStatus.loaded,
-          hasAvailableRoom: false,
         ),
       );
 
@@ -151,7 +154,7 @@ void main() {
     });
 
     testWidgets(
-      'renders Unavailable button using default cubit without injected client',
+      'renders Unavailable button when apiClient returns no available rooms',
       (
         tester,
       ) async {
@@ -159,9 +162,17 @@ void main() {
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.resetPhysicalSize);
 
+        final mockApiClient = MockHotelynApiClient();
+        when(
+          () => mockApiClient.getRooms(hotelId: 'hotel-123'),
+        ).thenAnswer((_) async => []);
+
         await tester.pumpWidget(
-          const MaterialApp(
-            home: HotelDetailPage(hotel: testHotel),
+          MaterialApp(
+            home: HotelDetailPage(
+              hotel: testHotel,
+              apiClient: mockApiClient,
+            ),
           ),
         );
         await tester.pumpAndSettle();

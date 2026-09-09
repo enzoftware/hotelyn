@@ -23,6 +23,7 @@ class HotelDetailPage extends StatelessWidget {
   const HotelDetailPage({
     required this.hotel,
     this.cubit,
+    this.apiClient,
     super.key,
   });
 
@@ -30,6 +31,7 @@ class HotelDetailPage extends StatelessWidget {
 
   final domain.Hotel hotel;
   final HotelDetailCubit? cubit;
+  final HotelynApiClient? apiClient;
 
   @override
   Widget build(BuildContext context) {
@@ -42,13 +44,8 @@ class HotelDetailPage extends StatelessWidget {
 
     return BlocProvider(
       create: (context) {
-        HotelynApiClient? apiClient;
-        try {
-          apiClient = context.read<HotelynApiClient>();
-        } on Exception catch (_) {
-          apiClient = null;
-        }
-        final c = HotelDetailCubit(hotel: hotel, apiClient: apiClient);
+        final client = apiClient ?? context.read<HotelynApiClient>();
+        final c = HotelDetailCubit(hotel: hotel, apiClient: client);
         unawaited(c.checkAvailability());
         return c;
       },

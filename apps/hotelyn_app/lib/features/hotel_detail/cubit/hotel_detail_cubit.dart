@@ -11,28 +11,17 @@ part 'hotel_detail_state.dart';
 class HotelDetailCubit extends Cubit<HotelDetailState> {
   HotelDetailCubit({
     required this.hotel,
-    this.apiClient,
+    required this.apiClient,
   }) : super(HotelDetailState.initial(hotel: hotel));
 
   final domain.Hotel hotel;
-  final HotelynApiClient? apiClient;
+  final HotelynApiClient apiClient;
 
   /// Fetches rooms for the current hotel and updates live availability.
   Future<void> checkAvailability() async {
     emit(state.copyWith(status: HotelDetailStatus.loading));
-    if (apiClient == null) {
-      emit(
-        state.copyWith(
-          status: HotelDetailStatus.failure,
-          rooms: const [],
-          hasAvailableRoom: false,
-          errorMessage: 'API client not available',
-        ),
-      );
-      return;
-    }
     try {
-      final rooms = await apiClient!.getRooms(hotelId: hotel.id);
+      final rooms = await apiClient.getRooms(hotelId: hotel.id);
       if (isClosed) return;
       final hasAvailableRoom =
           rooms.isNotEmpty && rooms.any((room) => room.availableNow);

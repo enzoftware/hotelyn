@@ -14,7 +14,7 @@ class HotelDetailState extends Equatable {
     required this.hotel,
     this.status = HotelDetailStatus.initial,
     this.rooms = const [],
-    this.hasAvailableRoom = true,
+    this.hasAvailableRoom = false,
     this.errorMessage,
   });
 

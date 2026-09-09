@@ -44,13 +44,13 @@ void main() {
       apiClient = MockHotelynApiClient();
     });
 
-    test('initial state has status initial and hasAvailableRoom true', () {
+    test('initial state has status initial and hasAvailableRoom false', () {
       final cubit = HotelDetailCubit(
         hotel: testHotel,
         apiClient: apiClient,
       );
       expect(cubit.state.status, equals(HotelDetailStatus.initial));
-      expect(cubit.state.hasAvailableRoom, isTrue);
+      expect(cubit.state.hasAvailableRoom, isFalse);
       expect(cubit.state.rooms, isEmpty);
     });
 
@@ -76,6 +76,7 @@ void main() {
           hotel: testHotel,
           status: HotelDetailStatus.loaded,
           rooms: [testRoomAvailable],
+          hasAvailableRoom: true,
         ),
       ],
     );
@@ -102,7 +103,6 @@ void main() {
           hotel: testHotel,
           status: HotelDetailStatus.loaded,
           rooms: [testRoomUnavailable],
-          hasAvailableRoom: false,
         ),
       ],
     );
@@ -128,7 +128,6 @@ void main() {
         const HotelDetailState(
           hotel: testHotel,
           status: HotelDetailStatus.loaded,
-          hasAvailableRoom: false,
         ),
       ],
     );
@@ -184,30 +183,6 @@ void main() {
               (s) => s.errorMessage,
               'errorMessage',
               contains('Unexpected error'),
-            ),
-      ],
-    );
-
-    blocTest<HotelDetailCubit, HotelDetailState>(
-      'checkAvailability emits failure when apiClient is null',
-      build: () {
-        return HotelDetailCubit(
-          hotel: testHotel,
-        );
-      },
-      act: (cubit) => cubit.checkAvailability(),
-      expect: () => [
-        const HotelDetailState(
-          hotel: testHotel,
-          status: HotelDetailStatus.loading,
-        ),
-        isA<HotelDetailState>()
-            .having((s) => s.status, 'status', HotelDetailStatus.failure)
-            .having((s) => s.hasAvailableRoom, 'hasAvailableRoom', isFalse)
-            .having(
-              (s) => s.errorMessage,
-              'errorMessage',
-              contains('API client not available'),
             ),
       ],
     );
