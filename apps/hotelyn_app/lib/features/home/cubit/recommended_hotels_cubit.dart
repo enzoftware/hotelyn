@@ -30,6 +30,8 @@ class RecommendedHotelsCubit extends Cubit<RecommendedHotelsState> {
   /// Default search radius in kilometres.
   static const _defaultRadiusKm = 50.0;
 
+  int _loadGeneration = 0;
+
   /// Loads recommended hotels for the given coordinates.
   ///
   /// Safe to call multiple times; a subsequent call cancels the prior result
@@ -42,6 +44,7 @@ class RecommendedHotelsCubit extends Cubit<RecommendedHotelsState> {
     final repo = hotelRepository;
     if (repo == null) return;
 
+    final generation = ++_loadGeneration;
     emit(const RecommendedHotelsLoading());
     try {
       final hotels = await repo.recommendedHotels(
@@ -49,8 +52,10 @@ class RecommendedHotelsCubit extends Cubit<RecommendedHotelsState> {
         longitude: longitude,
         radiusKm: radiusKm,
       );
+      if (isClosed || generation != _loadGeneration) return;
       emit(RecommendedHotelsLoaded(hotels: hotels));
     } on ApiException catch (error, stack) {
+      if (isClosed || generation != _loadGeneration) return;
       log(
         'API error loading recommended hotels',
         error: error,
@@ -59,6 +64,7 @@ class RecommendedHotelsCubit extends Cubit<RecommendedHotelsState> {
       );
       emit(RecommendedHotelsFailure(message: error.toString()));
     } on Exception catch (error, stack) {
+      if (isClosed || generation != _loadGeneration) return;
       log(
         'Failed to load recommended hotels',
         error: error,

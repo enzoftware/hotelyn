@@ -43,6 +43,7 @@ void main() {
       expect(find.text('Price Range'), findsOneWidget);
       expect(find.text('Rating'), findsOneWidget);
       expect(find.text('Sort By'), findsOneWidget);
+      expect(find.text('Amenities'), findsOneWidget);
       expect(find.text('Apply Filter'), findsOneWidget);
     });
 
@@ -88,6 +89,28 @@ void main() {
 
       expect(applied, isNotNull);
       expect(applied!.sortBy, equals(HotelSortOption.lowestPrice));
+    });
+
+    testWidgets('selecting amenity chip updates selected amenities', (
+      tester,
+    ) async {
+      HotelFilterCriteria? applied;
+      await pumpSubject(tester, onApply: (criteria) => applied = criteria);
+
+      await tester.tap(find.text('Wifi'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Swimming Pool'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Apply Filter'));
+      await tester.pumpAndSettle();
+
+      expect(applied, isNotNull);
+      expect(
+        applied!.amenities,
+        containsAll([HotelAmenity.wifi, HotelAmenity.swimmingPool]),
+      );
     });
 
     testWidgets('tapping Reset resets all criteria', (tester) async {

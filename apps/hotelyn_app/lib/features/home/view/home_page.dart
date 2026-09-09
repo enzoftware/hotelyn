@@ -138,7 +138,8 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NavigationBarCubit, NavigationBarState>(
+    final locationCubit = context.read<LocationCubit?>();
+    final content = BlocBuilder<NavigationBarCubit, NavigationBarState>(
       builder: (context, state) {
         final index = state.selectedTabIndex;
         return PopScope(
@@ -165,6 +166,33 @@ class HomeView extends StatelessWidget {
           ),
         );
       },
+    );
+
+    if (locationCubit == null) {
+      return content;
+    }
+
+    return BlocListener<LocationCubit, LocationState>(
+      bloc: locationCubit,
+      listenWhen: (previous, current) =>
+          previous.userLocation.latitude != current.userLocation.latitude ||
+          previous.userLocation.longitude != current.userLocation.longitude,
+      listener: (context, state) {
+        final loc = state.userLocation;
+        unawaited(
+          context.read<RecommendedHotelsCubit?>()?.loadRecommendedHotels(
+            latitude: loc.latitude,
+            longitude: loc.longitude,
+          ),
+        );
+        unawaited(
+          context.read<NearbyHotelsCubit?>()?.loadNearbyHotels(
+            latitude: loc.latitude,
+            longitude: loc.longitude,
+          ),
+        );
+      },
+      child: content,
     );
   }
 }
@@ -196,7 +224,8 @@ class HomeTab extends StatelessWidget {
             onFilterTap:
                 onFilterTap ??
                 () {
-                  final filterCubit = context.read<FilterCubit>();
+                  final filterCubit = context.read<FilterCubit?>();
+                  if (filterCubit == null) return;
                   unawaited(
                     HotelFilterBottomSheet.show(
                       context,

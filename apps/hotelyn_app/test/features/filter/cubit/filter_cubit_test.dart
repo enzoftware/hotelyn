@@ -80,6 +80,49 @@ void main() {
     );
 
     blocTest<FilterCubit, FilterState>(
+      'setSortOption updates sort option in state',
+      build: FilterCubit.new,
+      act: (cubit) => cubit.setSortOption(HotelSortOption.lowestPrice),
+      expect: () => [
+        const FilterState(
+          criteria: HotelFilterCriteria(sortBy: HotelSortOption.lowestPrice),
+        ),
+      ],
+    );
+
+    blocTest<FilterCubit, FilterState>(
+      'toggleAmenity adds and removes amenity from criteria',
+      build: FilterCubit.new,
+      act: (cubit) {
+        cubit
+          ..toggleAmenity(HotelAmenity.wifi)
+          ..toggleAmenity(HotelAmenity.wifi);
+      },
+      expect: () => [
+        const FilterState(
+          criteria: HotelFilterCriteria(amenities: {HotelAmenity.wifi}),
+        ),
+        const FilterState(),
+      ],
+    );
+
+    blocTest<FilterCubit, FilterState>(
+      'setAmenities updates all selected amenities',
+      build: FilterCubit.new,
+      act: (cubit) => cubit.setAmenities({
+        HotelAmenity.swimmingPool,
+        HotelAmenity.freeBreakfast,
+      }),
+      expect: () => [
+        const FilterState(
+          criteria: HotelFilterCriteria(
+            amenities: {HotelAmenity.swimmingPool, HotelAmenity.freeBreakfast},
+          ),
+        ),
+      ],
+    );
+
+    blocTest<FilterCubit, FilterState>(
       'reset restores default criteria',
       build: FilterCubit.new,
       seed: () => const FilterState(

@@ -130,8 +130,12 @@ class HotelynHeader extends SliverPersistentHeaderDelegate {
   double get minExtent => _minExtent;
 
   @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
-    return false;
+  bool shouldRebuild(covariant HotelynHeader oldDelegate) {
+    return oldDelegate.userName != userName ||
+        oldDelegate.onNotificationTap != onNotificationTap ||
+        oldDelegate.onSearchTap != onSearchTap ||
+        oldDelegate.onLocationTap != onLocationTap ||
+        oldDelegate.onFilterTap != onFilterTap;
   }
 }
 
