@@ -9,6 +9,7 @@ import 'package:hotelyn/components/theme/hotelyn_colors.dart';
 import 'package:hotelyn/core/domain/repository/repository.dart';
 import 'package:hotelyn/core/services/clarity_service.dart';
 import 'package:hotelyn/features/location/location.dart';
+import 'package:hotelyn_domain/hotelyn_domain.dart' as domain;
 
 class HotelynApp extends StatelessWidget {
   const HotelynApp({
@@ -16,6 +17,7 @@ class HotelynApp extends StatelessWidget {
     required this.authRepository,
     required this.clarityService,
     required this.locationRepository,
+    required this.hotelRepository,
     super.key,
   });
 
@@ -23,6 +25,7 @@ class HotelynApp extends StatelessWidget {
   final AuthRepository authRepository;
   final ClarityService clarityService;
   final LocationRepository locationRepository;
+  final domain.HotelRepository hotelRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +36,9 @@ class HotelynApp extends StatelessWidget {
           RepositoryProvider.value(value: authRepository),
           RepositoryProvider.value(value: clarityService),
           RepositoryProvider.value(value: locationRepository),
+          RepositoryProvider<domain.HotelRepository>.value(
+            value: hotelRepository,
+          ),
         ],
         child: BlocProvider(
           create: (_) {

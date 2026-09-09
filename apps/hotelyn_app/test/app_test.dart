@@ -4,6 +4,7 @@ import 'package:hotelyn/core/domain/repository/auth_repository.dart';
 import 'package:hotelyn/core/domain/repository/intro_repository.dart';
 import 'package:hotelyn/core/services/clarity_service.dart';
 import 'package:hotelyn/features/location/location.dart';
+import 'package:hotelyn_domain/hotelyn_domain.dart' as domain;
 import 'package:mocktail/mocktail.dart';
 
 import 'helpers/helpers.dart';
@@ -14,12 +15,14 @@ void main() {
     late AuthRepository authRepository;
     late ClarityService clarityService;
     late LocationRepository locationRepository;
+    late domain.HotelRepository hotelRepository;
 
     setUp(() {
       preferenceRepository = MockPreferenceRepository();
       authRepository = MockAuthRepository();
       clarityService = MockClarityService();
       locationRepository = MockLocationRepository();
+      hotelRepository = MockHotelRepository();
 
       when(() => preferenceRepository.isIntroPassed())
           .thenAnswer((_) async => false);
@@ -28,6 +31,13 @@ void main() {
           .thenAnswer((_) async => UserLocation.defaultFallback);
       when(() => locationRepository.getPermissionStatus())
           .thenAnswer((_) async => LocationPermissionStatus.unknown);
+      when(
+        () => hotelRepository.recommendedHotels(
+          latitude: any(named: 'latitude'),
+          longitude: any(named: 'longitude'),
+          radiusKm: any(named: 'radiusKm'),
+        ),
+      ).thenAnswer((_) async => <domain.Hotel>[]);
     });
 
     testWidgets(
@@ -39,6 +49,7 @@ void main() {
             authRepository: authRepository,
             clarityService: clarityService,
             locationRepository: locationRepository,
+            hotelRepository: hotelRepository,
           ),
         );
         // Just verify the widget tree is built without navigating
