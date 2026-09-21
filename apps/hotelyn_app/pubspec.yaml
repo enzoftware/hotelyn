@@ -15,7 +15,7 @@ dependencies:
     path: ../../packages/california_ui
   clarity_flutter: ^1.10.0
   cupertino_icons: ^1.0.8
-  equatable: ^2.0.8
+  equatable: ^3.0.0
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
