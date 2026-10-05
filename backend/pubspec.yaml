@@ -11,7 +11,7 @@ environment:
 dependencies:
   dart_frog: ^1.2.0
   hotelyn_domain: any
-  supabase: ^2.16.1
+  supabase: ^2.16.2
 
 dev_dependencies:
   mocktail: ^1.0.4
